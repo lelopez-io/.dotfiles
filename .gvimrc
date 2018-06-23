@@ -1,0 +1,12 @@
+" color scheme of the moment:
+syntax on
+
+colorscheme adobe
+
+set guifont=Anonymous\ Pro:h14
+set macthinstrokes
+set transparency=45
+set blurradius=9
+
+highlight Normal guibg=#e9e5de
+highlight Normal guifg=#4c2f2d
