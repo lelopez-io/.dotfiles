@@ -5,7 +5,7 @@ set nocompatible
 filetype off
 
 " TODO: Load plugins here (pathogen or vundle)
-" execute pathogen#infect()
+execute pathogen#infect()
 
 " Turn on syntax highlighting
 syntax on
@@ -20,7 +20,7 @@ filetype plugin indent on
 set modelines=0
 
 " Show line numbers
-set number
+" set number
 
 " Show file stats
 set ruler
@@ -30,9 +30,6 @@ set visualbell
 
 " Encoding
 set encoding=utf-8
-
-" Mouse
-set mouse=a
 
 " Whitespace
 set wrap
@@ -102,15 +99,7 @@ set listchars=tab:▸\ ,eol:¬
 map <leader>l :set list!<CR> " Toggle tabs and EOL
 
 " Color scheme (terminal)
-set background=dark
-colorscheme gruvbox
-
-if &term =~ '256color'
-  " disable Background Color Erase (BCE) so that color schemes
-  " render properly when inside 256-color tmux and GNU screen.
-  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-  set t_ut=
-endif
+" Leave iTerm settings
 
 set nobackup
 set nowritebackup
