@@ -71,8 +71,10 @@ eval "$(pyenv init -)"
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # Aliases
-alias ll='gls -lG --color=auto'
-alias la='gls -lGa --color=auto'
+alias l='gls -lFh --color=auto --group-directories-first'
+alias ll='gls -lFh --color=auto --group-directories-first'
+alias ls='gls -lFh --color=auto --group-directories-first'
+alias la='gls -lFha --color=auto --group-directories-first'
 
 eval `gdircolors ~/.oh-my-zsh/custom/themes/dircolors.256dark`
 
