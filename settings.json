@@ -1,0 +1,36 @@
+    //VSCode Settings
+    
+    // Terminal
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.shell.osx": "/bin/bash",
+    "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
+    // View
+    "editor.fontSize": 14,
+    "editor.rulers": [80, 120],
+    "window.zoomLevel": 0,
+    "workbench.colorTheme": "Relaxed",
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#2A4F67"
+    },
+    // Formatting
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": false,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "prettier.tabWidth": 4,
+    // Behavior
+    "git.autofetch": true,
+    "files.autoSave": "onFocusChange",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "auto-rename-tag.activationOnLanguage": [
+        "*"
+    ],
+    // Other
+    "files.associations": {
+        "*.cmake": "c"
+    },
