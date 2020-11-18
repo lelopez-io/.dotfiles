@@ -1,13 +1,14 @@
     //VSCode Settings
     
     // Terminal
-    "terminal.integrated.fontSize": 14,
-    "terminal.integrated.shell.osx": "/bin/bash",
-    "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
+    "terminal.integrated.fontSize": 18,
+    "terminal.integrated.shell.linux": "/usr/bin/zsh",
+    "terminal.integrated.fontFamily": "Anonymice Nerd Font Mono",
     // View
     "editor.fontSize": 14,
     "editor.rulers": [80, 120],
-    "window.zoomLevel": 0,
+    "window.zoomLevel": 2,
+    "workbench.fontAliasing": "antialiased",
     "workbench.colorTheme": "Relaxed",
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#2A4F67"
