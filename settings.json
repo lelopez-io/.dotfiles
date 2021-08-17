@@ -5,21 +5,18 @@
     "terminal.integrated.fontFamily": "Anonymice Nerd Font Mono",
     // View
     "editor.fontSize": 14,
-    "editor.rulers": [
-        80,
-        120
-    ],
-    "editor.wordWrapColumn": 80,
+    "editor.rulers": [80, 120],
+    "editor.wordWrapColumn": 120,
     "editor.wordWrap": "wordWrapColumn",
-    "window.zoomLevel": -1,
     "workbench.colorTheme": "Relaxed",
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#2A4F67"
     },
     "workbench.sideBar.location": "right",
-    "explorer.openEditors.visible": 0,
+    "workbench.action.toggleMaximizedPanel": "cmd + shift + t",
     // Formatting
     "editor.minimap.enabled": false,
+    "files.autoSave": "onFocusChange",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
@@ -27,19 +24,46 @@
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "prettier.tabWidth": 4,
     // Behavior
     "git.autofetch": true,
-    "files.autoSave": "onFocusChange",
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "auto-rename-tag.activationOnLanguage": [
-        "*"
-    ],
+    "auto-rename-tag.activationOnLanguage": ["*"],
     // Other
     "files.associations": {
         "*.cmake": "c"
     },
-    "prettier.requireConfig": true
+    "prettier.requireConfig": true,
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 4,
+    "prettier.semi": false,
+    "prettier.bracketSpacing": true,
+    "prettier.printWidth": 80,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "cSpell.userWords": [
+        "Storyshots",
+        "gitlab",
+        "loggedin",
+        "react"
+    ],
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+            "source.sortImports": true,
+        },
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    // End
 }
