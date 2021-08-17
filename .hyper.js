@@ -26,7 +26,8 @@ module.exports = {
         // letter spacing as a relative unit
         letterSpacing: 0,
 
-        activeTab: "🙃",
+        // active tab label icon
+        activeTab: "🧐",
 
         // terminal cursor background color and opacity (hex, rgb, hsl, hsv, hwb or cmyk)
         cursorColor: 'rgba(248,28,229,0.8)',
@@ -149,12 +150,13 @@ module.exports = {
     //   `@company/project`
     //   `project#1.0.1`
     plugins: [
-        "hyper-one-dark",
         "hyper-font-ligatures",
         "hyper-active-tab",
         "hyper-samewd",
-        "hyper-search"
+        "hyper-search",
+        "hyper-relaxed",
     ],
+
 
     // in development, you can create a directory under
     // `~/.hyper_plugins/local/` and include it here
@@ -162,11 +164,12 @@ module.exports = {
     localPlugins: [],
 
     keymaps: {
-        // Example
-        // 'window:devtools': 'cmd+alt+o',
         "pane:close": "ctrl+w",
-        "tab:new": "ctrl+t",
         "pane:close": "cmd+w",
+        "tab:new": "ctrl+t",
         "tab:new": "cmd+t",
+    },
+    env: {
+        TERM: 'xterm-256color',
     },
 };
