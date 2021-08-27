@@ -21,7 +21,7 @@ export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_301.jdk/Contents/Ho
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Path to Andriod Platform Tools
-export PATH="/Users/luis/Library/Android/sdk/platform-tools:$PATH"
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
 
 # Path to serverless 
 export PATH="$HOME/.serverless/bin:$PATH"
