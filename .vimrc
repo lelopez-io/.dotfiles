@@ -27,3 +27,8 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 syntax on
+
+set tabstop=2
+set expandtab
+set shiftwidth=2
+set autoindent
