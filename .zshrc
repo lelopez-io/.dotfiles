@@ -1,5 +1,5 @@
 # Path to oh-my-zsh installation.
-export ZSH="/Users/luis/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Path to rbenv installation and init
 export PATH="$HOME/.rbenv/bin:$PATH"
