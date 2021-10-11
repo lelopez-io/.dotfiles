@@ -24,46 +24,85 @@
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    // Behavior
-    "git.autofetch": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "auto-rename-tag.activationOnLanguage": ["*"],
-    // Other
-    "files.associations": {
-        "*.cmake": "c"
-    },
-    "prettier.requireConfig": true,
     "prettier.singleQuote": true,
     "prettier.tabWidth": 4,
     "prettier.semi": false,
     "prettier.bracketSpacing": true,
     "prettier.printWidth": 80,
+    "auto-rename-tag.activationOnLanguage": ["*"],
     "javascript.updateImportsOnFileMove.enabled": "always",
-    "cSpell.userWords": [
-        "Storyshots",
-        "gitlab",
-        "loggedin",
-        "react"
-    ],
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true
+    },
     "[dart]": {
         "editor.defaultFormatter": "Dart-Code.dart-code",
         "editor.formatOnSave": true,
         "editor.formatOnType": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": true,
-            "source.sortImports": true,
-        },
+            "source.sortImports": true
+        }
+    },
+    "[python]": {
+        "editor.defaultFormatter": null,
+        "editor.formatOnPaste": false,
+        "editor.formatOnSaveMode": "file"
+    },
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Args": [
+        "--aggressive",
+        "--max-line-length",
+        "80"
+    ],
+    // Behavior
+    "git.autofetch": true,
+    "editor.suggestSelection": "first",
+    // Files
+    "files.associations": {
+        "*.cmake": "c",
+        "*.adoc": "asciidoc"
     },
     "workbench.editorAssociations": {
         "*.ipynb": "jupyter-notebook"
     },
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "notebook.cellToolbarLocation": {
         "default": "right",
         "jupyter-notebook": "left"
     },
+    "redhat.telemetry.enabled": true,
+    // Spelling // Docs
+    "grammarly.autoActivate": false,
+    "[adoc]": {
+        "grammarly.autoActivate": true,
+        "grammarly.userWords": [
+            "Storyshots",
+            "adoc",
+            ".adoc",
+            "antora",
+            "gitlab",
+            "lelopez",
+            "loggedin",
+            "react",
+            "wagmo",
+            "webclient"
+        ]
+    },
+    "cSpell.userWords": [
+        ".adoc",
+        "Storyshots",
+        "adoc",
+        "antora",
+        "gitlab",
+        "lelopez",
+        "loggedin",
+        "react",
+        "wagmo",
+        "webclient"
+    ]
     // End
 }
