@@ -1,6 +1,9 @@
 # Path to oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# 
+export PATH=/bin:/usr/bin:/usr/local/bin:${PATH}
+
 # Path to rbenv installation and init
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - zsh)"
@@ -32,15 +35,25 @@ export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 # PATH for the Google Cloud SDK.
-if [ -f '/Users/luis/za/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/luis/za/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f $HOME'/za/google-cloud-sdk/path.zsh.inc' ]; then . $HOME'/za/google-cloud-sdk/path.zsh.inc'; fi
 
 # Enable command completion for gcloud.
-if [ -f '/Users/luis/za/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/luis/za/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f $HOME'/za/google-cloud-sdk/completion.zsh.inc' ]; then . $HOME'/za/google-cloud-sdk/completion.zsh.inc'; fi
 
 # Terminal Style options
 ZSH_THEME="spaceship"
-COMPLETION_WAITING_DOTS="true"
 
+# Options
+COMPLETION_WAITING_DOTS=true
+SPACESHIP_GCLOUD_SHOW=false
+SPACESHIP_DOCKER_SHOW=false
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
+SPACESHIP_CHAR_SYMBOL=''
+
+KUBE_PS1_SYMBOL_ENABLE=false
+KUBE_PS1_PREFIX=''
+KUBE_PS1_SUFFIX=' '
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
@@ -58,6 +71,13 @@ plugins=(
 # User configuration
 source $ZSH/oh-my-zsh.sh
 source $(dirname $(gem which colorls))/tab_complete.sh
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+
+PROMPT_KUBE=$'\n''$(kube_ps1)'
+PROMPT_DIVIDER=$'\033[0;32m∴ \033[0m'
+PROMPT_ARROW=$'\n'"%(?:%{$fg_bold[green]%}%{%G➜%} :%{$fg_bold[red]%}%{%G➜%} )"
+PROMPT=$PROMPT_KUBE$PROMPT_DIVIDER$PROMPT$PROMPT_ARROW
+
 
 # Tmux/venv config
 if [ -n "$VIRTUAL_ENV" ]; then
@@ -76,13 +96,19 @@ alias pv='source ./venv/bin/activate'
 alias pd='deactivate'
 
 alias k='kubectl'
+alias kd='k --dry-run=client -o yaml'
 alias kn='k config set-context --current --namespace'
 alias ka='k get deploy,rs,po,svc,ep'
-alias kns='kubens'
-alias kctx='kubectx'
+alias kn='kubens'
+alias kc='kubectx'
 
 alias mk='minikube'
 alias dc='docker-compose'
 
+complete -F __start_kubectl k
+fpath=(~/.zsh/completions $fpath)
+autoload -U compinit && compinit
+
 # fix Hyper first line precent sign
 unsetopt PROMPT_SP
+export LC_ALL=en_US.UTF-8
