@@ -53,15 +53,17 @@
         "editor.formatOnPaste": false,
         "editor.formatOnSaveMode": "file"
     },
-    "python.formatting.provider": "autopep8",
-    "python.formatting.autopep8Args": [
-        "--aggressive",
-        "--max-line-length",
-        "80"
-    ],
     // Behavior
     "git.autofetch": true,
+    "git.enabled": true,
+    "git.path": "/usr/bin/git",
     "editor.suggestSelection": "first",
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": false,
+        "plaintext": false,
+        "markdown": false
+    },
     // Files
     "files.associations": {
         "*.cmake": "c",
@@ -74,7 +76,7 @@
         "default": "right",
         "jupyter-notebook": "left"
     },
-    "redhat.telemetry.enabled": true,
+    "redhat.telemetry.enabled": false,
     // Spelling // Docs
     "grammarly.autoActivate": false,
     "[adoc]": {
