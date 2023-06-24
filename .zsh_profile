@@ -1,0 +1,42 @@
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+# colorls
+source $(dirname $(gem which colorls))/tab_complete.sh
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# rancher-desktop
+export PATH="$HOME/.rd/bin:$PATH"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# tmux/venv
+[ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
+
+# kubectl
+complete -F __start_kubectl k
+fpath=(~/.zsh/completions $fpath)
+autoload -U compinit && compinit
+
+# gcloud
+[ -s "$HOME/.gcloud/path.zsh.inc" ] && \. "$HOME/.gcloud/path.zsh.inc"
+[ -s "$HOME/.gcloud/completion.zsh.inc" ] && \. "$HOME/.gcloud/completion.zsh.inc"
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
+# concourse-ci
+export PATH="$HOME/.concourse/fly:$PATH"
+
+# flutter
+export PATH="$HOME/.flutter/bin:$PATH"
+
+# andriod sdk
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
