@@ -1,0 +1,17 @@
+# directory/navigation
+alias ls='colorls --group-directories-first'
+alias l='colorls --group-directories-first --almost-all'
+alias ll='colorls --group-directories-first --long'
+alias lt='tree -LFC 2 --dirsfirst'
+
+# kubernetes
+alias k='kubectl'
+alias ka='k get deploy,rs,po,svc,ep'
+alias kd='k --dry-run=client -o yaml'
+alias kc='kubectx'
+alias kn='kubens'
+alias ko='kc -u && kubeoff'
+alias ki='kubeon'
+
+# neovim
+alias vim='nvim'
