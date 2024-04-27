@@ -5,8 +5,7 @@ return {
 
         local fugitive_group = vim.api.nvim_create_augroup("fugitive", {})
 
-        local autocmd = vim.api.nvim_create_autocmd
-        autocmd("BufWinEnter", {
+        vim.api.nvim_create_autocmd("BufWinEnter", {
             group = fugitive_group,
             pattern = "*",
             callback = function()
