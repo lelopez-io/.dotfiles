@@ -5,7 +5,7 @@ The following repo uses GNU Stow for easy setup on new machines. It also allows 
 <!-- prettier-ignore -->
 | | | 
 |-|-|
-| Tip: | For a more detailed guide feel free to visit the following article [here][_r0] |
+| Tip: | For a more detailed guide feel free to visit the following article [here][_r00] |
 
 ## Quick Guide
 
@@ -36,20 +36,23 @@ stow . --adopt
 
 ## Resources
 
--   [Setting the Stage][_r0]
--   [Manage dotfiles with GNU Stow][_r1]
--   [How I manage my dotfiles using GNU Stow][_r2]
--   [GNU Stow Default Ignore List][_r3]
--   [Stow Adopt Workflow][_r4]
--   [ThePrimeagen's init.lua][_r5]
--   [Neovim - Autocmd Groups][_r6]
+-   [Setting the Stage][_r00]
+-   [Manage dotfiles with GNU Stow][_r01]
+-   [How I manage my dotfiles using GNU Stow][_r02]
+-   [GNU Stow Default Ignore List][_r03]
+-   [Stow Adopt Workflow][_r04]
+-   [ThePrimeagen's init.lua][_r05]
+-   [Neovim - Autocmd Groups][_r06]
 
-[_r0]: https://www.lelopez.io/blog/dev-environement
-[_r1]: https://dr563105.github.io/blog/manage-dotfiles-with-gnu-stow/
-[_r2]: https://tamerlan.dev/how-i-manage-my-dotfiles-using-gnu-stow/
-[_r3]: https://www.gnu.org/software/stow/manual/stow.html#Types-And-Syntax-Of-Ignore-Lists
-[_r4]: https://unix.stackexchange.com/a/698982
-[_r5]: https://github.com/ThePrimeagen/init.lua/tree/master
-[_r6]: https://neovim.io/doc/user/autocmd.html#autocmd-groups
-[_r7]: https://github.com/nvim-neotest/nvim-nio
-[_r8]: https://github.com/ThePrimeagen/harpoon/issues/302
+[_r00]: https://www.lelopez.io/blog/dev-environement
+[_r01]: https://dr563105.github.io/blog/manage-dotfiles-with-gnu-stow/
+[_r02]: https://tamerlan.dev/how-i-manage-my-dotfiles-using-gnu-stow/
+[_r03]: https://www.gnu.org/software/stow/manual/stow.html#Types-And-Syntax-Of-Ignore-Lists
+[_r04]: https://unix.stackexchange.com/a/698982
+[_r05]: https://github.com/ThePrimeagen/init.lua/tree/master
+[_r06]: https://neovim.io/doc/user/autocmd.html#autocmd-groups
+[_r07]: https://github.com/nvim-neotest/nvim-nio
+[_r08]: https://github.com/ThePrimeagen/harpoon/issues/302
+[_r09]: https://github.com/kmarius/jsregexp
+[_r10]: https://github.com/L3MON4D3/LuaSnip/issues/569
+[_r11]: https://github.com/L3MON4D3/LuaSnip/issues/759
