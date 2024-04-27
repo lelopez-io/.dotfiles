@@ -1,1 +1,1 @@
-require("xo")
+require("lelopez")
