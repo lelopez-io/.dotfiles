@@ -28,7 +28,7 @@ avoid having to rerun stow when sub directories/files are added.
 
 ```sh
 # delete the existing one if everything is already matching
-rm rf ~/.config/nvim
+rm -Rf ~/.config/nvim
 
 # re-run stow so that we create a link to to the `nvim` directory in this repo
 stow . --adopt
