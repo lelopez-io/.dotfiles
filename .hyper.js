@@ -144,7 +144,7 @@ module.exports = {
         'hyper-font-ligatures',
         'hyper-active-tab',
         'hyper-samewd',
-        'hyper-search',
+        // 'hyper-search',
         'hyper-relaxed',
     ],
     // in development, you can create a directory under

@@ -1,8 +1,16 @@
+# neovim
+alias vim='nvim'
+
 # directory/navigation
 alias ls='colorls --group-directories-first'
 alias l='colorls --group-directories-first --almost-all'
 alias ll='colorls --group-directories-first --long'
 alias lt='tree -LFC 2 --dirsfirst'
+
+# gitkraken
+gitk() {
+    /Applications/GitKraken.app/Contents/MacOS/GitKraken -p $(pwd)
+}
 
 # kubernetes
 alias k='kubectl'
@@ -13,5 +21,13 @@ alias kn='kubens'
 alias ko='kc -u && kubeoff'
 alias ki='kubeon'
 
-# neovim
-alias vim='nvim'
+# yt-dlp
+alias ytf='yt-dlp -F --extractor-args youtube:player_client=default,ios --verbose'
+alias ytd='yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose'
+alias ttf='yt-dlp -F --verbose'
+ttd() {
+    yt-dlp --verbose -o "[%(uploader)s-%(id)s] $2.%(ext)s" $1
+}
+
+
+
