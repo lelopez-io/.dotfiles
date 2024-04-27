@@ -24,7 +24,7 @@ stow . --adopt
 <!-- prettier-ignore -->
 | | | 
 |-|-|
-| Important: | Remember to re-run the `stow` command whenever you add new files. Otherwise their symlink will not exist and will result in module not found issues |
+| Important: | Remember to re-run the `stow` command whenever you add new files. Otherwise their symlink will not exist and will result in module not found issues. Alternatively, you can delete entire directories such as `nvim` and rerun the stow command so that the entire root dir get's a symlink and so any changes within do not have to be "synced" |
 
 ## Resources
 
