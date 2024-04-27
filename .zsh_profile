@@ -41,7 +41,10 @@ export PATH="$HOME/.flutter/bin:$PATH"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
 
-# rust 
+# go
+export PATH="/usr/local/go/bin:$PATH"
+
+# rust
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # yarn
