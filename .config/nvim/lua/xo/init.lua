@@ -3,10 +3,9 @@ require("xo.remap")
 require("xo.lazy")
 
 local augroup = vim.api.nvim_create_augroup
-local ThePrimeagenGroup = augroup('ThePrimeagen', {})
-
+local lsp_group = augroup('lsp', {})
+local yank_group = augroup('yank', {})
 local autocmd = vim.api.nvim_create_autocmd
-local yank_group = augroup('HighlightYank', {})
 
 function R(name)
     require("plenary.reload").reload_module(name)
@@ -30,13 +29,13 @@ autocmd('TextYankPost', {
 })
 
 autocmd({"BufWritePre"}, {
-    group = ThePrimeagenGroup,
+    group = lsp_group,
     pattern = "*",
     command = [[%s/\s\+$//e]],
 })
 
 autocmd('LspAttach', {
-    group = ThePrimeagenGroup,
+    group = lsp_group,
     callback = function(e)
         local opts = { buffer = e.buf }
         vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
