@@ -1,48 +1,46 @@
 # Dotfiles
 
-The following repo uses GNU Stow for easy setup on new machines. It also allows me to freely edit my dotfiles while making use of git for versioning.
+This repository utilizes GNU Stow for easy setup on new machines, facilitating the management of dotfiles with Git versioning.
 
 <!-- prettier-ignore -->
-| | | 
+| | |
 |-|-|
-| Tip: | For a more detailed guide feel free to visit the following article [here][_r00] |
+| Tip: | For a more detailed guide, check [this article][_r00]. |
 
 ## Quick Guide
 
 ```sh
-# install stow package
+# Install Stow package
 brew install stow
 
-# create symlinks (this won't overwrite any files that may exist)
+# Create symlinks (this won't overwrite any existing files)
 stow . --adopt
 
-# verify changes in git and commit any we actually want to adopt
-# feel free to discard all "adopted" changes if we only want to
-# use what is present in this repo
+# Review changes in Git and commit any you want to adopt
+# Discard all "adopted" changes if you only want to use what is present in this repo
 ```
 
 ## Directories
 
-It may be more beneficial to link entire directories such as `nvim` in order to
-avoid having to rerun stow when sub directories/files are added.
+Linking entire directories, such as `nvim`, is recommended to avoid rerunning Stow when subdirectories or files are added.
 
 ```sh
-# delete the existing one if everything is already matching
+# Delete the existing directory if everything already matches
 rm -Rf ~/.config/nvim
 
-# re-run stow so that we create a link to to the `nvim` directory in this repo
+# Re-run Stow to create a link to the `nvim` directory in this repo
 stow . --adopt
 ```
 
 ## Resources
 
--   [Setting the Stage][_r00]
--   [Manage dotfiles with GNU Stow][_r01]
--   [How I manage my dotfiles using GNU Stow][_r02]
--   [GNU Stow Default Ignore List][_r03]
--   [Stow Adopt Workflow][_r04]
--   [ThePrimeagen's init.lua][_r05]
--   [Neovim - Autocmd Groups][_r06]
+- [Setting the Stage][_r00]
+- [Manage dotfiles with GNU Stow][_r01]
+- [How I manage my dotfiles using GNU Stow][_r02]
+- [GNU Stow Default Ignore List][_r03]
+- [Stow Adopt Workflow][_r04]
+- [ThePrimeagen's init.lua][_r05]
+- [Neovim - Autocmd Groups][_r06]
 
 [_r00]: https://www.lelopez.io/blog/dev-environement
 [_r01]: https://dr563105.github.io/blog/manage-dotfiles-with-gnu-stow/
@@ -56,3 +54,4 @@ stow . --adopt
 [_r09]: https://github.com/kmarius/jsregexp
 [_r10]: https://github.com/L3MON4D3/LuaSnip/issues/569
 [_r11]: https://github.com/L3MON4D3/LuaSnip/issues/759
+
