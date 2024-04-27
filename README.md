@@ -17,8 +17,8 @@ brew install stow
 stow . --adopt
 
 # verify changes in git and commit any we actually want to adopt
-# feel free to discard all adopted changes if we just want to use
-# what is present in this repo
+# feel free to discard all "adopted" changes if we only want to
+# use what is present in this repo
 ```
 
 ## Resources
