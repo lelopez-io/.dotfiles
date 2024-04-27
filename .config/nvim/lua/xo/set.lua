@@ -1,8 +1,5 @@
 vim.opt.guicursor = ""
 
--- TODO: ensure this actually works for copying to system clipboard
-vim.opt.clipboard = unnamed
-
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
