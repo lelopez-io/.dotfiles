@@ -21,6 +21,11 @@ stow . --adopt
 # use what is present in this repo
 ```
 
+<!-- prettier-ignore -->
+| | | 
+|-|-|
+| Important: | Remember to re-run the `stow` command whenever you add new files. Otherwise their symlink will not exist and will result in module not found issues |
+
 ## Resources
 
 -   [Setting the Stage][_r0]

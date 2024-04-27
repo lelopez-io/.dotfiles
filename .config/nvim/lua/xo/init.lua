@@ -1,6 +1,6 @@
 require("xo.set")
 require("xo.remap")
-require("xo.lazy_init")
+require("xo.lazy")
 
 local augroup = vim.api.nvim_create_augroup
 local ThePrimeagenGroup = augroup('ThePrimeagen', {})
