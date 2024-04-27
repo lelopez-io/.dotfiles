@@ -1,6 +1,6 @@
-require("lelopez.set")
-require("lelopez.remap")
-require("lelopez.lazy_init")
+require("xo.set")
+require("xo.remap")
+require("xo.lazy_init")
 
 local augroup = vim.api.nvim_create_augroup
 local ThePrimeagenGroup = augroup('ThePrimeagen', {})
