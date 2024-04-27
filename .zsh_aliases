@@ -1,5 +1,6 @@
 # neovim
 alias vim='nvim'
+alias obs='nvim $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/.'
 
 # directory/navigation
 alias ls='colorls --group-directories-first'
