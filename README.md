@@ -21,10 +21,18 @@ stow . --adopt
 # use what is present in this repo
 ```
 
-<!-- prettier-ignore -->
-| | | 
-|-|-|
-| Important: | Remember to re-run the `stow` command whenever you add new files. Otherwise their symlink will not exist and will result in module not found issues. Alternatively, you can delete entire directories such as `nvim` and rerun the stow command so that the entire root dir get's a symlink and so any changes within do not have to be "synced" |
+## Directories
+
+It may be more beneficial to link entire directories such as `nvim` in order to
+avoid having to rerun stow when sub directories/files are added.
+
+```sh
+# delete the existing one if everything is already matching
+rm rf ~/.config/nvim
+
+# re-run stow so that we create a link to to the `nvim` directory in this repo
+stow . --adopt
+```
 
 ## Resources
 
