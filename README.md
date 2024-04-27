@@ -43,3 +43,5 @@ stow . --adopt
 [_r4]: https://unix.stackexchange.com/a/698982
 [_r5]: https://github.com/ThePrimeagen/init.lua/tree/master
 [_r6]: https://neovim.io/doc/user/autocmd.html#autocmd-groups
+[_r7]: https://github.com/nvim-neotest/nvim-nio
+[_r8]: https://github.com/ThePrimeagen/harpoon/issues/302
