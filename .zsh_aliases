@@ -31,5 +31,3 @@ ttd() {
     yt-dlp --verbose -o "[%(uploader)s-%(id)s] $2.%(ext)s" $1
 }
 
-
-

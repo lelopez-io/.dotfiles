@@ -13,19 +13,18 @@ return {
         telescope.setup({
             pickers = {
                 live_grep = {
-                    file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+                    file_ignore_patterns = { "node_modules", ".git", ".venv" },
                     additional_args = function(_)
                         return { "--hidden" }
-                    end
+                    end,
                 },
                 find_files = {
-                    file_ignore_patterns = { 'node_modules', '.git', '.venv' },
-                    hidden = true
-                }
-
+                    file_ignore_patterns = { "node_modules", ".git", ".venv" },
+                    hidden = true,
+                },
             },
             extensions = {
-                "fzf"
+                "fzf",
             },
         })
         telescope.load_extension("fzf")
@@ -44,7 +43,7 @@ return {
         vim.keymap.set("n", "<leader>ps", function()
             builtin.grep_string({
                 search = vim.fn.input("Grep > "),
-                additional_args = { "--hidden" }
+                additional_args = { "--hidden" },
             })
         end)
         vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
