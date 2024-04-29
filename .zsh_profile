@@ -57,3 +57,7 @@ unsetopt nomatch
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
     PATH="$HOME/Library/Python/3.6/bin/:$PATH"
 fi
+
+# prettierd
+export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
+

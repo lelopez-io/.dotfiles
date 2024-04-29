@@ -34,13 +34,13 @@ stow . --adopt
 
 ## Resources
 
-- [Setting the Stage][_r00]
-- [Manage dotfiles with GNU Stow][_r01]
-- [How I manage my dotfiles using GNU Stow][_r02]
-- [GNU Stow Default Ignore List][_r03]
-- [Stow Adopt Workflow][_r04]
-- [ThePrimeagen's init.lua][_r05]
-- [Neovim - Autocmd Groups][_r06]
+-   [Setting the Stage][_r00]
+-   [Manage dotfiles with GNU Stow][_r01]
+-   [How I manage my dotfiles using GNU Stow][_r02]
+-   [GNU Stow Default Ignore List][_r03]
+-   [Stow Adopt Workflow][_r04]
+-   [ThePrimeagen's init.lua][_r05]
+-   [Neovim - Autocmd Groups][_r06]
 
 [_r00]: https://www.lelopez.io/blog/dev-environement
 [_r01]: https://dr563105.github.io/blog/manage-dotfiles-with-gnu-stow/
@@ -54,4 +54,3 @@ stow . --adopt
 [_r09]: https://github.com/kmarius/jsregexp
 [_r10]: https://github.com/L3MON4D3/LuaSnip/issues/569
 [_r11]: https://github.com/L3MON4D3/LuaSnip/issues/759
-
