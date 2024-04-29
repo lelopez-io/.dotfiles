@@ -16,6 +16,8 @@ return {
             log_level = vim.log.levels.ERROR,
             -- Conform will notify you when a formatter errors
             notify_on_error = true,
+            -- Make sure to install the formaters and ensure the command is available.
+            -- Check while in a file with :ConformInfo
             formatters_by_ft = {
                 lua = { "stylua" },
                 -- Conform will run multiple formatters sequentially
