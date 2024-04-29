@@ -25,7 +25,10 @@ return {
                 -- Use a sub-list to run only the first available formatter
                 javascript = { { "prettierd", "prettier" } },
 
-                markdown = { "prettierd" },
+                -- markdown = { "prettierd" },
+                -- Use the "_" filetype to run formatters on filetypes that don't
+                -- have other formatters configured.
+                ["_"] = { "prettierd" },
             },
         })
 
