@@ -4,20 +4,34 @@ return {
 
     config = function()
         require("conform").setup({
+            -- If this is set, Conform will run the formatter on save.
+            -- It will pass the table to conform.format().
+            -- This can also be a function that returns the table.
+            format_on_save = {
+                -- I recommend these options. See :help conform.format for details.
+                lsp_fallback = true,
+                timeout_ms = 500,
+            },
+            -- Set the log level. Use `:ConformInfo` to see the location of the log file.
+            log_level = vim.log.levels.ERROR,
+            -- Conform will notify you when a formatter errors
+            notify_on_error = true,
             formatters_by_ft = {
                 lua = { "stylua" },
                 -- Conform will run multiple formatters sequentially
                 python = { "isort", "black" },
                 -- Use a sub-list to run only the first available formatter
                 javascript = { { "prettierd", "prettier" } },
+
+                markdown = { "mdformat" },
             },
         })
 
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            pattern = "*",
-            callback = function(args)
-                require("conform").format({ bufnr = args.buf })
-            end,
-        })
+        vim.keymap.set("n", "<leader>f", function()
+            local fc = require("conform").format({ timeout_ms = 500 })
+            if not fc then
+                vim.lsp.buf.format()
+            end
+        end)
     end,
 }
