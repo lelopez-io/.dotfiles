@@ -47,9 +47,6 @@ export GOPATH=$HOME/.go
 # rust
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# yarn
-export PATH="$(yarn global bin):$PATH"
-
 # zsh-no-matches-found
 unsetopt nomatch
 
@@ -61,3 +58,5 @@ fi
 # prettierd
 export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
 
+# gnu-sed
+PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
