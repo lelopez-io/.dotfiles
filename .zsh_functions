@@ -1,0 +1,24 @@
+gitk() {
+    /Applications/GitKraken.app/Contents/MacOS/GitKraken -p $(pwd)
+}
+
+ttd() {
+    yt-dlp --verbose -o "[%(uploader)s-%(id)s] $2.%(ext)s" $1
+}
+
+webm2mp4() {
+    input_file="$1"
+    output_file="${input_file%.*}.mp4"
+    ffmpeg -i "$input_file" -c:v libx264 -crf 23 -c:a aac -q:a 100 "$output_file"
+    echo "Converted $input_file to $output_file"
+}
+
+ytd() {
+    output=$(yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose --get-filename "$1")
+    yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose "$1"
+    
+    if [[ "$output" == *.webm ]]; then
+        webm2mp4 "$output"
+        rm "$output"
+    fi
+}

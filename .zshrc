@@ -19,3 +19,4 @@ source $ZSH/oh-my-zsh.sh
 source $HOME/.zsh_prompt
 source $HOME/.zsh_profile
 source $HOME/.zsh_aliases
+source $HOME/.zsh_functions

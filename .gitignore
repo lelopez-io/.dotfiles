@@ -1,0 +1,8 @@
+# local env files
+.env
+.env*.prod
+.env*.local
+.env*.aider
+
+# aider
+.aider*
