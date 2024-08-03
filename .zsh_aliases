@@ -1,3 +1,7 @@
+# git
+alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
+alias gsc='git stash clear'
+
 # neovim
 alias vim='nvim'
 alias obs='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/. && nvim . && cd -'
