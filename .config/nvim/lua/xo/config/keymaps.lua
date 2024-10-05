@@ -2,12 +2,8 @@ vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>jj", vim.cmd.Ex)
 
 vim.keymap.set("i", "<S-Tab>", "<C-d>", { noremap = true, silent = true, desc = "Allow shift-tab to unindent" })
-vim.keymap.set(
-    "i",
-    "<C-s>",
-    "<Esc>:w<CR>",
-    { noremap = true, silent = true, desc = "Allow Ctrl+s to save while editing" }
-)
+vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S" })
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S in insert mode" })
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
@@ -39,4 +35,6 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>")
 
-vim.keymap.set("n", "<leader><leader>", function() vim.cmd("so") end)
+vim.keymap.set("n", "<leader><leader>", function()
+    vim.cmd("so")
+end)

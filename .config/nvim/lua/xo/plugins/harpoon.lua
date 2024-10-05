@@ -7,7 +7,7 @@ return {
         harpoon:setup()
 
         local append_file = function()
-            harpoon:list():append()
+            harpoon:list():add()
         end
         local toggle_menu = function()
             harpoon.ui:toggle_quick_menu(harpoon:list())
