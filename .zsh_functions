@@ -22,3 +22,17 @@ ytd() {
         rm "$output"
     fi
 }
+
+print_env_vars() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: print_env_vars <file_path>"
+        return 1
+    fi
+
+    if [[ ! -f "$1" ]]; then
+        echo "Error: File not found: $1"
+        return 1
+    fi
+
+    grep -oE '^[A-Za-z_][A-Za-z0-9_]*=' "$1" | sed 's/=$//' | sort
+}

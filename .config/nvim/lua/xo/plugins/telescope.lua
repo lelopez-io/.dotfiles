@@ -33,22 +33,22 @@ return {
         telescope.load_extension("fzf")
 
         local builtin = require("telescope.builtin")
-        vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
-        vim.keymap.set("n", "<leader>pg", builtin.git_files, {})
-        vim.keymap.set("n", "<leader>pws", function()
+        vim.keymap.set("n", "<leader>kk", builtin.find_files, {})
+        vim.keymap.set("n", "<leader>ki", builtin.git_files, {})
+        vim.keymap.set("n", "<leader>kws", function()
             local word = vim.fn.expand("<cword>")
             builtin.grep_string({ search = word })
         end)
-        vim.keymap.set("n", "<leader>pWs", function()
+        vim.keymap.set("n", "<leader>kWs", function()
             local word = vim.fn.expand("<cWORD>")
             builtin.grep_string({ search = word })
         end)
-        vim.keymap.set("n", "<leader>ps", function()
+        vim.keymap.set("n", "<leader>ksa", function()
             builtin.grep_string({
                 search = vim.fn.input("Grep > "),
                 additional_args = { "--hidden" },
             })
         end)
-        vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
+        vim.keymap.set("n", "<leader>kh", builtin.help_tags, {})
     end,
 }
