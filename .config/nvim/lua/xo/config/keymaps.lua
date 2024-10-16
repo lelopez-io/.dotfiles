@@ -1,7 +1,18 @@
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>jj", vim.cmd.Ex)
 
-vim.keymap.set("i", "<S-Tab>", "<C-d>", { noremap = true, silent = true, desc = "Allow shift-tab to unindent" })
+vim.keymap.set(
+    "i",
+    "<S-Tab>",
+    "<C-d>",
+    { noremap = true, silent = true, desc = "Allow shift-tab to unindent in insert mode" }
+)
+vim.keymap.set(
+    "n",
+    "<S-Tab>",
+    "<<",
+    { noremap = true, silent = true, desc = "Allow shift-tab to unindent in normal mode" }
+)
 vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S" })
 vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S in insert mode" })
 
