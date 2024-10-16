@@ -36,3 +36,27 @@ print_env_vars() {
 
     grep -oE '^[A-Za-z_][A-Za-z0-9_]*=' "$1" | sed 's/=$//' | sort
 }
+
+git_summary() {
+    local default_branch
+
+    # Determine the default branch (main or master)
+    if git show-ref --quiet refs/heads/main; then
+        default_branch="main"
+    elif git show-ref --quiet refs/heads/master; then
+        default_branch="master"
+    else
+        echo "Error: Neither 'main' nor 'master' branch found."
+        return 1
+    fi
+
+    # Generate log file
+    git -P log --oneline ${default_branch}..HEAD > git-log.txt
+    echo "Generated git-log.txt"
+
+    # Generate diff file
+    git -P diff -U0 ${default_branch}..HEAD > git-diff.txt
+    echo "Generated git-diff.txt"
+
+    echo "Git summary completed. Files created: git-log.txt and git-diff.txt"
+}
