@@ -15,6 +15,7 @@ declare -A editors
 declare -A browsers
 declare -A productivity_apps
 declare -A dev_tools
+declare -A utility_apps
 
 # Initialize default selections (all optional set to 0)
 editors=(
@@ -30,7 +31,6 @@ browsers=(
 
 productivity_apps=(
     ["Obsidian"]=0
-    ["1Password"]=0
     ["Spark"]=0
     ["Grammarly"]=0
     ["MeetingBar"]=0
@@ -40,6 +40,12 @@ dev_tools=(
     ["Rancher"]=0
     ["kubectx"]=0
     ["kube-ps1"]=0
+)
+
+utility_apps=(
+    ["1Password"]=0
+    ["Swish"]=0
+    ["Discord"]=0
 )
 
 # Helper Functions
@@ -209,6 +215,23 @@ generate_config() {
         done
     fi
 
+    # Optional Utility Apps
+    if [ -n "$(printf '%s\n' "${utility_apps[@]}" | grep -w "1")" ]; then
+        echo "# Utility Apps" >> "$BREWFILE"
+        for app in "${!utility_apps[@]}"; do
+            if [ "${utility_apps[$app]}" -eq 1 ]; then
+                case $app in
+                    "Swish")
+                        echo "cask \"swish\"" >> "$BREWFILE"
+                        ;;
+                    "Discord")
+                        echo "cask \"discord\"" >> "$BREWFILE"
+                        ;;
+                esac
+            fi
+        done
+    fi
+
     echo -e "${GREEN}Configuration files generated successfully!${NC}"
     echo "Generated files:"
     echo "- $BREWFILE"
@@ -296,6 +319,23 @@ setup_config() {
         done
     fi
 
+    # Utility Apps Selection
+    print_header "Utility Applications"
+    if confirm "Would you like to install utility applications?"; then
+        echo "Currently selected utility applications:"
+        for app in "${!utility_apps[@]}"; do
+            print_current_selection utility_apps "$app"
+        done
+        
+        for app in "${!utility_apps[@]}"; do
+            if confirm "Include $app?"; then
+                utility_apps[$app]=1
+            else
+                utility_apps[$app]=0
+            fi
+        done
+    fi
+
     # Review Selections
     print_header "Configuration Review"
     
@@ -317,6 +357,11 @@ setup_config() {
     echo -e "\nSelected Productivity Applications:"
     for app in "${!productivity_apps[@]}"; do
         print_current_selection productivity_apps "$app"
+    done
+
+    echo -e "\nSelected Utility Applications:"
+    for app in "${!utility_apps[@]}"; do
+        print_current_selection utility_apps "$app"
     done
 
     # Generate Configuration
