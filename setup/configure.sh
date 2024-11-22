@@ -67,12 +67,12 @@ confirm() {
 }
 
 print_current_selection() {
-    local -n array=$1
-    local name=$2
-    if [ "${array[$name]}" -eq 1 ]; then
-        echo -e "[${GREEN}✓${NC}] $name"
+    local array_name=$1
+    local key=$2
+    if [ "${!array_name[$key]}" = "1" ]; then
+        echo -e "[${GREEN}✓${NC}] $key"
     else
-        echo -e "[${RED}✗${NC}] $name"
+        echo -e "[${RED}✗${NC}] $key"
     fi
 }
 
@@ -261,15 +261,42 @@ setup_config() {
     # Load existing configuration
     load_existing_config
     
-    echo "This script will help you configure your development environment."
-    echo "Essential development tools will be installed automatically."
-    echo "You can choose which optional tools to install."
+    echo "The following essential tools will be installed automatically:"
+    echo ""
+    echo "Development Tools:"
+    echo "  - stow (dotfile management)"
+    echo "  - mise (version management)"
+    echo "  - tree (directory visualization)"
+    echo "  - tmux (terminal multiplexer)"
+    echo "  - neovim (text editor)"
+    echo "  - prettierd (code formatting)"
+    echo ""
+    echo "Media & Download Tools:"
+    echo "  - yt-dlp (video download)"
+    echo "  - ffmpeg (media processing)"
+    echo ""
+    echo "Search & Processing Tools:"
+    echo "  - the_silver_searcher (code search)"
+    echo "  - ripgrep (fast search)"
+    echo "  - wget (file download)"
+    echo "  - jq (JSON processing)"
+    echo ""
+    echo "UI Tools:"
+    echo "  - hiddenbar (menu bar management)"
+    echo "  - stylua (lua formatting)"
+    echo ""
+    echo "You can now choose additional optional tools to install."
     echo "Press Enter to continue..."
     read
 
     # Editors Selection
-    print_header "Code Editors and IDEs"
-    if confirm "Would you like to install additional editors/IDEs?"; then
+    print_header "Additional Code Editors and IDEs"
+    echo "Available editors to install:"
+    echo "  - VSCode (Visual Studio Code - popular IDE)"
+    echo "  - GitKraken (Git GUI Client)"
+    echo "  - Hyper (Terminal Emulator)"
+    echo ""
+    if confirm "Would you like to install any of these additional editors?"; then
         echo "Currently selected editors:"
         for editor in "${!editors[@]}"; do
             print_current_selection editors "$editor"
@@ -286,7 +313,11 @@ setup_config() {
 
     # Browsers Selection
     print_header "Web Browsers"
-    if confirm "Would you like to install browsers?"; then
+    echo "Available browsers to install:"
+    echo "  - Firefox"
+    echo "  - Chrome"
+    echo ""
+    if confirm "Would you like to install any browsers?"; then
         echo "Currently selected browsers:"
         for browser in "${!browsers[@]}"; do
             print_current_selection browsers "$browser"
@@ -303,7 +334,12 @@ setup_config() {
 
     # Development Tools Selection
     print_header "Additional Development Tools"
-    if confirm "Would you like to install additional development tools (Rancher, kubectl tools)?"; then
+    echo "Available development tools:"
+    echo "  - Rancher (Container Management)"
+    echo "  - kubectx (Kubernetes Context Switcher)"
+    echo "  - kube-ps1 (Kubernetes Shell Prompt)"
+    echo ""
+    if confirm "Would you like to install any of these Kubernetes tools?"; then
         echo "Currently selected development tools:"
         for tool in "${!dev_tools[@]}"; do
             print_current_selection dev_tools "$tool"
@@ -320,7 +356,13 @@ setup_config() {
 
     # Productivity Apps Selection
     print_header "Productivity Applications"
-    if confirm "Would you like to install productivity applications?"; then
+    echo "Available productivity apps:"
+    echo "  - Obsidian (Note Taking)"
+    echo "  - Spark (Email Client)"
+    echo "  - Grammarly (Writing Assistant)"
+    echo "  - MeetingBar (Calendar in Menu Bar)"
+    echo ""
+    if confirm "Would you like to install any productivity applications?"; then
         echo "Currently selected productivity applications:"
         for app in "${!productivity_apps[@]}"; do
             print_current_selection productivity_apps "$app"
@@ -337,7 +379,13 @@ setup_config() {
 
     # Utility Apps Selection
     print_header "Utility Applications"
-    if confirm "Would you like to install utility applications?"; then
+    echo "Available utility apps:"
+    echo "  - Swish (Window Management)"
+    echo "  - Discord (Communication)"
+    echo "  - Raycast (Spotlight Replacement)"
+    echo "  - AnyDesk (Remote Desktop)"
+    echo ""
+    if confirm "Would you like to install any utility applications?"; then
         echo "Currently selected utility applications:"
         for app in "${!utility_apps[@]}"; do
             print_current_selection utility_apps "$app"
