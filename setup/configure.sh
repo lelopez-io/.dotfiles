@@ -292,7 +292,7 @@ setup_config() {
     echo ""
     if confirm "Would you like to install any of these additional editors?"; then
         for editor in "VSCode" "GitKraken" "Hyper"; do
-            if confirm "Include $editor? ($editor - currently: $([ "${editors[$editor]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+            if confirm "Include $editor?"; then
                 editors[$editor]=1
             else
                 editors[$editor]=0
@@ -308,7 +308,7 @@ setup_config() {
     echo ""
     if confirm "Would you like to install any browsers?"; then
         for browser in "Firefox" "Chrome"; do
-            if confirm "Include $browser? ($browser - currently: $([ "${browsers[$browser]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+            if confirm "Include $browser?"; then
                 browsers[$browser]=1
             else
                 browsers[$browser]=0
@@ -325,7 +325,7 @@ setup_config() {
     echo ""
     if confirm "Would you like to install any of these Kubernetes tools?"; then
         for tool in "Rancher" "kubectx" "kube-ps1"; do
-            if confirm "Include $tool? ($tool - currently: $([ "${dev_tools[$tool]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+            if confirm "Include $tool?"; then
                 dev_tools[$tool]=1
             else
                 dev_tools[$tool]=0
@@ -343,7 +343,7 @@ setup_config() {
     echo ""
     if confirm "Would you like to install any productivity applications?"; then
         for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
-            if confirm "Include $app? ($app - currently: $([ "${productivity_apps[$app]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+            if confirm "Include $app?"; then
                 productivity_apps[$app]=1
             else
                 productivity_apps[$app]=0
@@ -362,7 +362,7 @@ setup_config() {
     echo ""
     if confirm "Would you like to install any utility applications?"; then
         for app in "OnePassword" "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar"; do
-            if confirm "Include $app? ($app - currently: $([ "${utility_apps[$app]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+            if confirm "Include $app?"; then
                 utility_apps[$app]=1
             else
                 utility_apps[$app]=0
