@@ -48,6 +48,7 @@ utility_apps=(
     ["Discord"]=0
     ["Raycast"]=0
     ["AnyDesk"]=0
+    ["HiddenBar"]=0
 )
 
 # Helper Functions
@@ -136,7 +137,6 @@ generate_config() {
     echo "brew \"wget\"" >> "$BREWFILE"
     echo "brew \"ripgrep\"" >> "$BREWFILE"
     echo "brew \"jq\"" >> "$BREWFILE"
-    echo "cask \"hiddenbar\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Optional Editors
@@ -243,6 +243,9 @@ generate_config() {
                     "AnyDesk")
                         echo "cask \"anydesk\"" >> "$BREWFILE"
                         ;;
+                    "HiddenBar")
+                        echo "cask \"hiddenbar\"" >> "$BREWFILE"
+                        ;;
                 esac
             fi
         done
@@ -281,9 +284,6 @@ setup_config() {
     echo "  - ripgrep (fast search)"
     echo "  - wget (file download)"
     echo "  - jq (JSON processing)"
-    echo ""
-    echo "UI Tools:"
-    echo "  - hiddenbar (menu bar management)"
     echo ""
     echo "You can now choose additional optional tools to install."
     echo "Press Enter to continue..."
@@ -384,6 +384,7 @@ setup_config() {
     echo "  - Discord (Communication)"
     echo "  - Raycast (Spotlight Replacement)"
     echo "  - AnyDesk (Remote Desktop)"
+    echo "  - HiddenBar (Menu Bar Management)"
     echo ""
     if confirm "Would you like to install any utility applications?"; then
         echo "Currently selected utility applications:"
