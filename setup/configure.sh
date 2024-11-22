@@ -129,6 +129,8 @@ generate_config() {
     echo "brew \"tmux\"" >> "$BREWFILE"
     echo "brew \"neovim\"" >> "$BREWFILE"
     echo "brew \"prettierd\"" >> "$BREWFILE"
+    echo "brew \"yt-dlp\"" >> "$BREWFILE"
+    echo "brew \"ffmpeg\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Optional Editors
