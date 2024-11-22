@@ -11,6 +11,8 @@ This repository provides a streamlined setup for managing dotfiles and configuri
 xcode-select --install
 ```
 
+Note: Homebrew Cask is included with Homebrew and will be used to install macOS applications automatically. This eliminates the need for manual "drag and drop" installation of GUI applications.
+
 ### Linux (Debian/Ubuntu)
 
 1. Install build essentials and git:
