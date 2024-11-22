@@ -9,3 +9,8 @@
 
 # aider
 .aider*
+
+# Setup generated configurations
+setup/Brewfile
+setup/git-config.sh
+setup/*.bak
