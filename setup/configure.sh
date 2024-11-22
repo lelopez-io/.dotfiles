@@ -297,13 +297,8 @@ setup_config() {
     echo "  - Hyper (Terminal Emulator)"
     echo ""
     if confirm "Would you like to install any of these additional editors?"; then
-        echo "Currently selected editors:"
         for editor in "${!editors[@]}"; do
-            print_current_selection editors "$editor"
-        done
-        
-        for editor in "${!editors[@]}"; do
-            if confirm "Include $editor?"; then
+            if confirm "Include $editor? (${editor} - currently: $([ "${editors[$editor]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 editors[$editor]=1
             else
                 editors[$editor]=0
