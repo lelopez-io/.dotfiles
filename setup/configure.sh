@@ -113,6 +113,9 @@ generate_config() {
     echo "brew \"tmux\"" >> "$BREWFILE"
     echo "brew \"neovim\"" >> "$BREWFILE"
     echo "brew \"git\"" >> "$BREWFILE"
+    echo "brew \"prettierd\"" >> "$BREWFILE"
+    echo "brew \"kubectx\"" >> "$BREWFILE"
+    echo "brew \"kube-ps1\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Selected applications
