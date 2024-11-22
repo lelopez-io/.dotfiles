@@ -30,3 +30,4 @@ pip install --user pipenv black
 
 echo "Installing global Ruby packages..."
 gem install bundler
+gem install colorls
