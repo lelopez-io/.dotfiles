@@ -33,6 +33,9 @@ source "$SCRIPTS_DIR/apps.sh"
 echo "Setting up language environments..."
 source "$SCRIPTS_DIR/languages.sh"
 
+echo "Setting up shell environment..."
+source "$SCRIPTS_DIR/shell.sh"
+
 # Setup dotfiles with stow
 echo "Setting up dotfiles..."
 cd "$HOME/.dotfiles" && stow .
