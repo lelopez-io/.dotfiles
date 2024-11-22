@@ -132,6 +132,11 @@ generate_config() {
     echo "brew \"yt-dlp\"" >> "$BREWFILE"
     echo "brew \"ffmpeg\"" >> "$BREWFILE"
     echo "brew \"the_silver_searcher\"" >> "$BREWFILE"
+    echo "brew \"stylua\"" >> "$BREWFILE"
+    echo "brew \"wget\"" >> "$BREWFILE"
+    echo "brew \"ripgrep\"" >> "$BREWFILE"
+    echo "brew \"jq\"" >> "$BREWFILE"
+    echo "cask \"hiddenbar\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Optional Editors
