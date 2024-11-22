@@ -15,17 +15,18 @@ Note: Homebrew Cask is included with Homebrew and will be used to install macOS 
 
 ### Linux (Debian/Ubuntu)
 
-1. Install build essentials and git:
+1. Install build essentials, git, and ZSH:
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential git
+sudo apt-get install -y build-essential git zsh
 ```
 
-2. Install ZSH:
+2. Set ZSH as default shell (restart required):
 ```bash
-sudo apt-get install -y zsh
-sudo chsh -s $(which zsh)
+chsh -s $(which zsh)
 ```
+
+Note: You'll need to log out and back in for the shell change to take effect.
 
 ## Quick Start
 
