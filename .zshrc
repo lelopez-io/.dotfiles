@@ -12,6 +12,7 @@ plugins=(
     kubectl
     kube-ps1
     zsh-syntax-highlighting
+    zsh-autosuggestions
 )
 
 # config-files
