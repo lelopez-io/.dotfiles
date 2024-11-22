@@ -35,7 +35,14 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 fi
 
 # Install nerd fonts
-if [ ! -f "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" ]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    FONT_DIR="$HOME/Library/Fonts"
+else
+    FONT_DIR="$HOME/.local/share/fonts"
+    mkdir -p "$FONT_DIR"
+fi
+
+if [ ! -f "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" ]; then
     echo "Installing nerd fonts..."
-    curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
+    curl -fLo "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
 fi
