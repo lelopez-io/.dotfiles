@@ -1,13 +1,28 @@
 # Dotfiles
 
-This repository provides a streamlined setup for managing dotfiles and configuring a new development environment on macOS, utilizing GNU Stow for dotfile management.
+This repository provides a streamlined setup for managing dotfiles and configuring a new development environment on macOS and Linux, utilizing GNU Stow for dotfile management.
 
 ## Prerequisites
 
-1. Install Xcode Command Line Tools:
+### MacOS
 
+1. Install Xcode Command Line Tools:
 ```bash
 xcode-select --install
+```
+
+### Linux (Debian/Ubuntu)
+
+1. Install build essentials and git:
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential git
+```
+
+2. Install ZSH:
+```bash
+sudo apt-get install -y zsh
+sudo chsh -s $(which zsh)
 ```
 
 ## Quick Start
@@ -15,7 +30,7 @@ xcode-select --install
 1. Clone the repository:
 
 ```bash
-git clone git@github.com:lelopez-io/.dotfiles.git ~/.dotfiles
+git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ```
 
