@@ -51,6 +51,9 @@ After running the install script, you should:
 This will:
 
 -   Configure your preferences (applications, git settings)
+    - Git name and email
+    - Global gitignore file
+    - Default branch name (main)
 -   Install core tools via Homebrew
 -   Setup language environments (Node.js, Python, Ruby)
 -   Link dotfiles using GNU Stow

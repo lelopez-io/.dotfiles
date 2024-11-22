@@ -4,7 +4,10 @@ set -e
 echo "=== Setting up Language Environments ==="
 
 # Ensure mise is in PATH
-eval "$(mise activate bash)"
+if ! eval "$(mise activate bash)"; then
+    echo "Error: Failed to activate mise"
+    exit 1
+fi
 
 # Install and set up Node.js
 echo "Setting up Node.js..."

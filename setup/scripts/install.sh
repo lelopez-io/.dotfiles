@@ -23,6 +23,11 @@ if [ -z "$(git config --global user.email)" ]; then
     git config --global user.email "$git_email"
 fi
 
+# Set default branch to main if not set
+if [ -z "$(git config --global init.defaultBranch)" ]; then
+    git config --global init.defaultBranch main
+fi
+
 # Run installation scripts
 echo "Installing core dependencies..."
 source "$SCRIPTS_DIR/core.sh"
