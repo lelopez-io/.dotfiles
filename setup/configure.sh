@@ -297,8 +297,8 @@ setup_config() {
     echo "  - Hyper (Terminal Emulator)"
     echo ""
     if confirm "Would you like to install any of these additional editors?"; then
-        for editor in "${!editors[@]}"; do
-            if confirm "Include $editor? (${editor} - currently: $([ "${editors[$editor]}" = "1" ] && echo "installed" || echo "not installed"))"; then
+        for editor in "VSCode" "GitKraken" "Hyper"; do
+            if confirm "Include $editor? ($editor - currently: $([ "${editors[$editor]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 editors[$editor]=1
             else
                 editors[$editor]=0
