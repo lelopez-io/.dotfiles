@@ -1,15 +1,42 @@
 # Dotfiles
 
-This repository utilizes GNU Stow for easy setup on new machines, facilitating the management of dotfiles with Git versioning.
+This repository provides a streamlined setup for managing dotfiles and configuring a new development environment on macOS, utilizing GNU Stow for dotfile management.
 
-<!-- prettier-ignore -->
-| | |
-|-|-|
-| Tip: | For a more detailed guide, check [this article][_r00]. |
+## Prerequisites
 
-## Quick Guide
+1. Install Xcode Command Line Tools:
 
-```sh
+```bash
+xcode-select --install
+```
+
+## Quick Start
+
+1. Clone the repository:
+
+```bash
+git clone git@github.com:lelopez-io/.dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+```
+
+2. Run the setup script:
+
+```bash
+./setup/scripts/install.sh
+```
+
+This will:
+
+-   Configure your preferences (applications, git settings)
+-   Install core tools via Homebrew
+-   Setup language environments (Node.js, Python, Ruby)
+-   Link dotfiles using GNU Stow
+
+## Manual Configuration
+
+If you prefer to manage dotfiles manually without the automatic setup:
+
+```bash
 # Install Stow package
 brew install stow
 
@@ -20,16 +47,31 @@ stow . --adopt
 # Discard all "adopted" changes if you only want to use what is present in this repo
 ```
 
-## Directories
+### Working with Directories
 
 Linking entire directories, such as `nvim`, is recommended to avoid rerunning Stow when subdirectories or files are added.
 
-```sh
+```bash
 # Delete the existing directory if everything already matches
 rm -Rf ~/.config/nvim
 
 # Re-run Stow to create a link to the `nvim` directory in this repo
 stow . --adopt
+```
+
+## Customization
+
+The setup is configurable through an interactive prompt that allows you to:
+
+-   Select which applications to install
+-   Configure Git credentials
+-   Choose development tools
+-   Select productivity applications
+
+To reconfigure at any time:
+
+```bash
+./setup/configure.sh
 ```
 
 ## Resources
