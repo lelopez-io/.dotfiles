@@ -45,4 +45,10 @@ fi
 if [ ! -f "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" ]; then
     echo "Installing nerd fonts..."
     curl -fLo "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
+    
+    # Refresh font cache on Linux
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+        echo "Refreshing font cache..."
+        fc-cache -f -v
+    fi
 fi
