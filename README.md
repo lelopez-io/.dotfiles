@@ -47,6 +47,22 @@ stow . --adopt
 # Discard all "adopted" changes if you only want to use what is present in this repo
 ```
 
+## Additional Development Tools
+
+The following tools can be installed after the initial setup, depending on your development needs:
+
+### Version Control Setup
+- [Generate SSH Keys for Github](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)
+- [Add SSH Key to Github](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+
+### Mobile Development
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)
+- [Android Studio](https://developer.android.com/studio)
+- [Xcode](https://developer.apple.com/xcode/) (MacOS only)
+
+### Cloud Development
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
+
 ### Working with Directories
 
 Linking entire directories, such as `nvim`, is recommended to avoid rerunning Stow when subdirectories or files are added.
