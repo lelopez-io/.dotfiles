@@ -115,6 +115,7 @@ generate_config() {
     echo "brew \"prettierd\"" >> "$BREWFILE"
     echo "brew \"kubectx\"" >> "$BREWFILE"
     echo "brew \"kube-ps1\"" >> "$BREWFILE"
+    echo "brew \"rancher\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Selected applications
