@@ -31,5 +31,12 @@ source "$SCRIPTS_DIR/languages.sh"
 echo "Setting up dotfiles..."
 cd "$HOME/.dotfiles" && stow .
 
+echo "Setting up additional symlinks..."
+ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
+ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
+
+# Configure git to use global gitignore
+git config --global core.excludesfile ~/.gitignore
+
 echo "=== Setup Complete! ==="
 echo "NOTE: You may need to restart your terminal for all changes to take effect."

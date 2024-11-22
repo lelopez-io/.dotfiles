@@ -74,6 +74,13 @@ To reconfigure at any time:
 ./setup/configure.sh
 ```
 
+### Additional Configurations
+
+The setup also creates symlinks for:
+
+-   `.gitignore` → `~/.gitignore` (used as global git excludes file)
+-   `.env.aider` → `~/.env.aider` (for aider configuration access from any directory)
+
 ## Resources
 
 -   [Setting the Stage][_r00]
