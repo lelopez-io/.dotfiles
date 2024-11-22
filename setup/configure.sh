@@ -131,6 +131,7 @@ generate_config() {
     echo "brew \"prettierd\"" >> "$BREWFILE"
     echo "brew \"yt-dlp\"" >> "$BREWFILE"
     echo "brew \"ffmpeg\"" >> "$BREWFILE"
+    echo "brew \"the_silver_searcher\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
     
     # Optional Editors
