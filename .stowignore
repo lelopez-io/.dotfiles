@@ -1,0 +1,6 @@
+\.git
+^/README.*
+^/setup
+^/\.stowignore
+^/\.env\..*
+^/\.aider\..*
