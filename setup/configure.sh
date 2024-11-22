@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Colors for better readability
 RED='\033[0;31m'
@@ -43,7 +43,7 @@ dev_tools=(
 )
 
 utility_apps=(
-    ["1Password"]=0
+    ["OnePassword"]=0
     ["Swish"]=0
     ["Discord"]=0
     ["Raycast"]=0
@@ -187,7 +187,7 @@ generate_config() {
                     "Obsidian")
                         echo "cask \"obsidian\"" >> "$BREWFILE"
                         ;;
-                    "1Password")
+                    "OnePassword")
                         echo "cask \"1password\"" >> "$BREWFILE"
                         ;;
                     "Spark")
