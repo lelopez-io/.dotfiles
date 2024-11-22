@@ -359,9 +359,10 @@ setup_config() {
     echo "  - Raycast (Spotlight Replacement)"
     echo "  - AnyDesk (Remote Desktop)"
     echo "  - HiddenBar (Menu Bar Management)"
+    echo "  - OnePassword (Password Manager)"
     echo ""
     if confirm "Would you like to install any utility applications?"; then
-        for app in "OnePassword" "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar"; do
+        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
             if confirm "Include $app?"; then
                 utility_apps[$app]=1
             else
