@@ -42,6 +42,11 @@ cd ~/.dotfiles
 ./setup/scripts/install.sh
 ```
 
+After running the install script, you should:
+1. Restart your terminal
+2. Run `tmux` and press `prefix + I` to install tmux plugins
+3. Open neovim to install plugins automatically
+
 This will:
 
 -   Configure your preferences (applications, git settings)
