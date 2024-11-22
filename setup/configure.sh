@@ -9,10 +9,8 @@ NC='\033[0m' # No Color
 # Config directory
 CONFIG_DIR="$HOME/.dotfiles/setup"
 BREWFILE="$CONFIG_DIR/Brewfile"
-GIT_CONFIG="$CONFIG_DIR/git-config.sh"
 
 # Store selections
-declare -A config
 declare -A browsers
 declare -A dev_tools
 declare -A productivity_apps
@@ -37,7 +35,7 @@ productivity_apps=(
     ["MeetingBar"]=1
 )
 
-# Helper Functions
+# Helper Functions remain the same...
 print_header() {
     echo -e "\n${BLUE}=== $1 ===${NC}\n"
 }
@@ -57,12 +55,6 @@ confirm() {
 load_existing_config() {
     mkdir -p "$CONFIG_DIR"
     
-    # Load Git config if it exists
-    if [ -f "$GIT_CONFIG" ]; then
-        config["git_name"]=$(git config --global user.name)
-        config["git_email"]=$(git config --global user.email)
-    fi
-
     # Load Brewfile selections if they exist
     if [ -f "$BREWFILE" ]; then
         # Parse existing Brewfile for selections
@@ -105,7 +97,6 @@ backup_file() {
 generate_config() {
     # Backup existing files
     backup_file "$BREWFILE"
-    backup_file "$GIT_CONFIG"
 
     # Create Brewfile based on selections
     echo "# Generated Brewfile - $(date)" > "$BREWFILE"
@@ -181,19 +172,9 @@ generate_config() {
         fi
     done
 
-    # Create or update git config
-    cat > "$GIT_CONFIG" << EOF
-#!/bin/bash
-# Generated Git config - $(date)
-git config --global user.name "${config[git_name]}"
-git config --global user.email "${config[git_email]}"
-EOF
-    chmod +x "$GIT_CONFIG"
-
     echo -e "${GREEN}Configuration files generated successfully!${NC}"
     echo "Generated files:"
     echo "- $BREWFILE"
-    echo "- $GIT_CONFIG"
     echo -e "\nBackups of previous configurations (if any) were created"
 }
 
@@ -208,27 +189,6 @@ setup_config() {
     echo "Existing configurations will be preserved and can be modified."
     echo "Press Enter to continue..."
     read
-
-    # Git Configuration
-    print_header "Git Configuration"
-    if [ -n "${config[git_name]}" ]; then
-        echo "Current Git configuration:"
-        echo "Name: ${config[git_name]}"
-        echo "Email: ${config[git_email]}"
-        if ! confirm "Would you like to modify Git configuration?"; then
-            echo "Keeping existing Git configuration"
-        else
-            read -p "Enter your Git name: " git_name
-            read -p "Enter your Git email: " git_email
-            config["git_name"]=$git_name
-            config["git_email"]=$git_email
-        fi
-    else
-        read -p "Enter your Git name: " git_name
-        read -p "Enter your Git email: " git_email
-        config["git_name"]=$git_name
-        config["git_email"]=$git_email
-    fi
 
     # Browser Selection
     print_header "Browser Selection"
@@ -283,10 +243,6 @@ setup_config() {
 
     # Review Selections
     print_header "Configuration Review"
-    echo "Git Configuration:"
-    echo "Name: ${config[git_name]}"
-    echo "Email: ${config[git_email]}"
-    
     echo -e "\nSelected Browsers:"
     for browser in "${!browsers[@]}"; do
         print_current_selection browsers "$browser"
