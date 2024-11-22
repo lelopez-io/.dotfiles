@@ -313,13 +313,8 @@ setup_config() {
     echo "  - Chrome"
     echo ""
     if confirm "Would you like to install any browsers?"; then
-        echo "Currently selected browsers:"
-        for browser in "${!browsers[@]}"; do
-            print_current_selection browsers "$browser"
-        done
-        
-        for browser in "${!browsers[@]}"; do
-            if confirm "Include $browser?"; then
+        for browser in "Firefox" "Chrome"; do
+            if confirm "Include $browser? ($browser - currently: $([ "${browsers[$browser]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 browsers[$browser]=1
             else
                 browsers[$browser]=0
@@ -335,13 +330,8 @@ setup_config() {
     echo "  - kube-ps1 (Kubernetes Shell Prompt)"
     echo ""
     if confirm "Would you like to install any of these Kubernetes tools?"; then
-        echo "Currently selected development tools:"
-        for tool in "${!dev_tools[@]}"; do
-            print_current_selection dev_tools "$tool"
-        done
-        
-        for tool in "${!dev_tools[@]}"; do
-            if confirm "Include $tool?"; then
+        for tool in "Rancher" "kubectx" "kube-ps1"; do
+            if confirm "Include $tool? ($tool - currently: $([ "${dev_tools[$tool]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 dev_tools[$tool]=1
             else
                 dev_tools[$tool]=0
@@ -358,13 +348,8 @@ setup_config() {
     echo "  - MeetingBar (Calendar in Menu Bar)"
     echo ""
     if confirm "Would you like to install any productivity applications?"; then
-        echo "Currently selected productivity applications:"
-        for app in "${!productivity_apps[@]}"; do
-            print_current_selection productivity_apps "$app"
-        done
-        
-        for app in "${!productivity_apps[@]}"; do
-            if confirm "Include $app?"; then
+        for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
+            if confirm "Include $app? ($app - currently: $([ "${productivity_apps[$app]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 productivity_apps[$app]=1
             else
                 productivity_apps[$app]=0
@@ -382,13 +367,8 @@ setup_config() {
     echo "  - HiddenBar (Menu Bar Management)"
     echo ""
     if confirm "Would you like to install any utility applications?"; then
-        echo "Currently selected utility applications:"
-        for app in "${!utility_apps[@]}"; do
-            print_current_selection utility_apps "$app"
-        done
-        
-        for app in "${!utility_apps[@]}"; do
-            if confirm "Include $app?"; then
+        for app in "OnePassword" "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar"; do
+            if confirm "Include $app? ($app - currently: $([ "${utility_apps[$app]}" = "1" ] && echo "installed" || echo "not installed"))"; then
                 utility_apps[$app]=1
             else
                 utility_apps[$app]=0
