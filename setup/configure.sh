@@ -15,7 +15,7 @@ declare -a EDITOR_NAMES=("VSCode" "GitKraken" "Hyper")
 declare -a BROWSER_NAMES=("Firefox" "Chrome")
 declare -a PRODUCTIVITY_NAMES=("Obsidian" "Spark" "Grammarly" "MeetingBar")
 declare -a DEV_TOOL_NAMES=("Rancher" "kubectx" "kube-ps1")
-declare -a UTILITY_NAMES=("OnePassword" "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar")
+declare -a UTILITY_NAMES=("Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password")
 
 # Initialize arrays to store selections (0 = not selected, 1 = selected)
 editors=()
@@ -181,7 +181,7 @@ generate_config() {
                     "Obsidian")
                         echo "cask \"obsidian\"" >> "$BREWFILE"
                         ;;
-                    "OnePassword")
+                    "1Password")
                         echo "cask \"1password\"" >> "$BREWFILE"
                         ;;
                     "Spark")
@@ -340,6 +340,7 @@ setup_config() {
     echo "  - Spark (Email Client)"
     echo "  - Grammarly (Writing Assistant)"
     echo "  - MeetingBar (Calendar in Menu Bar)"
+    echo "  - 1Password (Password Manager)"
     echo ""
     if confirm "Would you like to install any productivity applications?"; then
         for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
@@ -375,27 +376,27 @@ setup_config() {
     print_header "Configuration Review"
     
     echo -e "\nSelected Editors:"
-    for editor in "${!editors[@]}"; do
+    for editor in "VSCode" "GitKraken" "Hyper"; do
         print_current_selection editors "$editor"
     done
     
     echo -e "\nSelected Browsers:"
-    for browser in "${!browsers[@]}"; do
+    for browser in "Firefox" "Chrome"; do
         print_current_selection browsers "$browser"
     done
     
     echo -e "\nSelected Development Tools:"
-    for tool in "${!dev_tools[@]}"; do
+    for tool in "Rancher" "kubectx" "kube-ps1"; do
         print_current_selection dev_tools "$tool"
     done
     
     echo -e "\nSelected Productivity Applications:"
-    for app in "${!productivity_apps[@]}"; do
+    for app in "Obsidian" "Spark" "Grammarly" "MeetingBar" "1Password"; do
         print_current_selection productivity_apps "$app"
     done
 
     echo -e "\nSelected Utility Applications:"
-    for app in "${!utility_apps[@]}"; do
+    for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password"; do
         print_current_selection utility_apps "$app"
     done
 
