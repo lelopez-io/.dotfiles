@@ -7,14 +7,20 @@ SCRIPTS_DIR="$SETUP_DIR/scripts"
 echo "=== Starting Development Environment Setup ==="
 
 # Run configuration if needed
-if [ ! -f "$SETUP_DIR/Brewfile" ] || [ ! -f "$SETUP_DIR/git-config.sh" ]; then
+if [ ! -f "$SETUP_DIR/Brewfile" ]; then
     echo "Initial configuration required..."
     "$SETUP_DIR/configure.sh"
 fi
 
-# Source the git config if it exists
-if [ -f "$SETUP_DIR/git-config.sh" ]; then
-    source "$SETUP_DIR/git-config.sh"
+# Configure git if not already set
+if [ -z "$(git config --global user.name)" ]; then
+    read -p "Enter your Git name: " git_name
+    git config --global user.name "$git_name"
+fi
+
+if [ -z "$(git config --global user.email)" ]; then
+    read -p "Enter your Git email: " git_email
+    git config --global user.email "$git_email"
 fi
 
 # Run installation scripts
