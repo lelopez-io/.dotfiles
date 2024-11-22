@@ -47,6 +47,7 @@ utility_apps=(
     ["Swish"]=0
     ["Discord"]=0
     ["Raycast"]=0
+    ["AnyDesk"]=0
 )
 
 # Helper Functions
@@ -230,6 +231,9 @@ generate_config() {
                         ;;
                     "Raycast")
                         echo "cask \"raycast\"" >> "$BREWFILE"
+                        ;;
+                    "AnyDesk")
+                        echo "cask \"anydesk\"" >> "$BREWFILE"
                         ;;
                 esac
             fi
