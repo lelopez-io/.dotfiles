@@ -11,45 +11,39 @@ CONFIG_DIR="$HOME/.dotfiles/setup"
 BREWFILE="$CONFIG_DIR/Brewfile"
 
 # Store selections
-declare -A editors
-declare -A browsers
-declare -A productivity_apps
-declare -A dev_tools
-declare -A utility_apps
+declare -a EDITOR_NAMES=("VSCode" "GitKraken" "Hyper")
+declare -a BROWSER_NAMES=("Firefox" "Chrome")
+declare -a PRODUCTIVITY_NAMES=("Obsidian" "Spark" "Grammarly" "MeetingBar")
+declare -a DEV_TOOL_NAMES=("Rancher" "kubectx" "kube-ps1")
+declare -a UTILITY_NAMES=("OnePassword" "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar")
 
-# Initialize default selections (all optional set to 0)
-editors=(
-    ["VSCode"]=0
-    ["GitKraken"]=0
-    ["Hyper"]=0
-)
+# Initialize arrays to store selections (0 = not selected, 1 = selected)
+editors=()
+browsers=()
+productivity_apps=()
+dev_tools=()
+utility_apps=()
 
-browsers=(
-    ["Firefox"]=0
-    ["Chrome"]=0
-)
+# Initialize all arrays with 0s
+for name in "${EDITOR_NAMES[@]}"; do
+    editors[$name]=0
+done
 
-productivity_apps=(
-    ["Obsidian"]=0
-    ["Spark"]=0
-    ["Grammarly"]=0
-    ["MeetingBar"]=0
-)
+for name in "${BROWSER_NAMES[@]}"; do
+    browsers[$name]=0
+done
 
-dev_tools=(
-    ["Rancher"]=0
-    ["kubectx"]=0
-    ["kube-ps1"]=0
-)
+for name in "${PRODUCTIVITY_NAMES[@]}"; do
+    productivity_apps[$name]=0
+done
 
-utility_apps=(
-    ["OnePassword"]=0
-    ["Swish"]=0
-    ["Discord"]=0
-    ["Raycast"]=0
-    ["AnyDesk"]=0
-    ["HiddenBar"]=0
-)
+for name in "${DEV_TOOL_NAMES[@]}"; do
+    dev_tools[$name]=0
+done
+
+for name in "${UTILITY_NAMES[@]}"; do
+    utility_apps[$name]=0
+done
 
 # Helper Functions
 print_header() {
