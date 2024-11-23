@@ -60,3 +60,20 @@ git_summary() {
 
     echo "Git summary completed. Files created: git-log.txt and git-diff.txt"
 }
+
+ask() {
+    local ask_dir="$HOME/xo/ask"
+    local current_dir=$(pwd)
+    
+    # Create directories if they don't exist
+    mkdir -p "$ask_dir"
+    
+    # Change to the ask directory
+    cd "$ask_dir"
+    
+    # Start aider session with full options
+    aider --env-file ~/.env.aider --dry-run --chat-mode ask
+    
+    # Return to previous directory
+    cd "$current_dir"
+}
