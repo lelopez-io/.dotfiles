@@ -18,11 +18,11 @@ declare -a DEV_TOOL_NAMES=("Rancher" "kubectx" "kube-ps1")
 declare -a UTILITY_NAMES=("Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword")
 
 # Initialize associative arrays for selections
-declare -A editors
-declare -A browsers
-declare -A productivity_apps
-declare -A dev_tools
-declare -A utility_apps
+declare -a editors
+declare -a browsers
+declare -a productivity_apps
+declare -a dev_tools
+declare -a utility_apps
 
 # Initialize all arrays with 0s
 for name in "${EDITOR_NAMES[@]}"; do
