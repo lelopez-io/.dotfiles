@@ -10,7 +10,43 @@ NC='\033[0m' # No Color
 CONFIG_DIR="$HOME/.dotfiles/setup"
 BREWFILE="$CONFIG_DIR/Brewfile"
 
+# Define which packages should be casks
+declare -a CASK_PACKAGES=(
+    "visual-studio-code"
+    "gitkraken"
+    "hyper"
+    "firefox"
+    "google-chrome"
+    "obsidian"
+    "spark"
+    "grammarly"
+    "meetingbar"
+    "rancher"
+    "swish"
+    "discord"
+    "raycast"
+    "anydesk"
+    "hiddenbar"
+    "1password"
+)
+
 # Data structure format: "name:description:package_name:enabled"
+declare -a ESSENTIAL_TOOLS=(
+    "Stow:Dotfile management:stow:1"
+    "Mise:Version management:mise:1"
+    "Tree:Directory visualization:tree:1"
+    "Tmux:Terminal multiplexer:tmux:1"
+    "Neovim:Text editor:neovim:1"
+    "Prettierd:Code formatting:prettierd:1"
+    "Stylua:Lua formatting:stylua:1"
+    "YT-DLP:Video download utility:yt-dlp:1"
+    "FFmpeg:Media processing:ffmpeg:1"
+    "Silver Searcher:Code search:the_silver_searcher:1"
+    "Ripgrep:Fast search utility:ripgrep:1"
+    "Wget:File download utility:wget:1"
+    "JQ:JSON processing:jq:1"
+)
+
 declare -a EDITORS=(
     "VSCode:Visual Studio Code - popular IDE:visual-studio-code:0"
     "GitKraken:Git GUI Client:gitkraken:0"
@@ -99,28 +135,60 @@ backup_file() {
     fi
 }
 
-# Load existing configuration
-load_existing_config() {
-    mkdir -p "$CONFIG_DIR"
+# Helper function to prompt for category installation
+prompt_category() {
+    local -n array=$1  # Reference to the array
+    local category_name=$2  # Display name of the category
     
-    if [ -f "$BREWFILE" ]; then
-        while IFS= read -r line; do
-            case "$line" in
-                *"visual-studio-code"*) editors["VSCode"]=1 ;;
-                *"gitkraken"*) editors["GitKraken"]=1 ;;
-                *"hyper"*) editors["Hyper"]=1 ;;
-                *"firefox"*) browsers["Firefox"]=1 ;;
-                *"google-chrome"*) browsers["Chrome"]=1 ;;
-                *"obsidian"*) productivity_apps["Obsidian"]=1 ;;
-                *"1password"*) productivity_apps["OnePassword"]=1 ;;
-                *"spark"*) productivity_apps["Spark"]=1 ;;
-                *"grammarly"*) productivity_apps["Grammarly"]=1 ;;
-                *"meetingbar"*) productivity_apps["MeetingBar"]=1 ;;
-                *"rancher"*) dev_tools["Rancher"]=1 ;;
-                *"kubectx"*) dev_tools["kubectx"]=1 ;;
-                *"kube-ps1"*) dev_tools["kube-ps1"]=1 ;;
-            esac
-        done < "$BREWFILE"
+    print_header "$category_name"
+    echo "Available ${category_name,,} to install:"
+    for item in "${array[@]}"; do
+        name=$(get_field "$item" 1)
+        desc=$(get_field "$item" 2)
+        echo "  - $name ($desc)"
+    done
+    echo ""
+    
+    if confirm "Would you like to install any of these ${category_name,,}?"; then
+        for i in "${!array[@]}"; do
+            local item="${array[$i]}"
+            local name=$(get_field "$item" 1)
+            if confirm "Include $name?"; then
+                set_enabled array $i 1
+            else
+                set_enabled array $i 0
+            fi
+        done
+    fi
+}
+
+# Helper function to generate category in Brewfile
+generate_category() {
+    local -n array=$1  # Reference to the array
+    local category_name=$2  # Category name for Brewfile comment
+    
+    # Check if any items in this category are enabled
+    local has_enabled=false
+    for item in "${array[@]}"; do
+        if [ "$(get_field "$item" 4)" = "1" ]; then
+            has_enabled=true
+            break
+        fi
+    done
+    
+    if $has_enabled; then
+        echo "# $category_name" >> "$BREWFILE"
+        for item in "${array[@]}"; do
+            if [ "$(get_field "$item" 4)" = "1" ]; then
+                local package=$(get_field "$item" 3)
+                if [[ " ${CASK_PACKAGES[@]} " =~ " ${package} " ]]; then
+                    echo "cask \"$package\"" >> "$BREWFILE"
+                else
+                    echo "brew \"$package\"" >> "$BREWFILE"
+                fi
+            fi
+        done
+        echo "" >> "$BREWFILE"
     fi
 }
 
@@ -134,135 +202,14 @@ generate_config() {
     echo "tap \"homebrew/cask\"" >> "$BREWFILE"
     echo "tap \"homebrew/core\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
-    
-    # Essential tools (always included)
-    echo "# Essential Tools" >> "$BREWFILE"
-    echo "brew \"stow\"" >> "$BREWFILE"
-    echo "brew \"mise\"" >> "$BREWFILE"
-    echo "brew \"tree\"" >> "$BREWFILE"
-    echo "brew \"tmux\"" >> "$BREWFILE"
-    echo "brew \"neovim\"" >> "$BREWFILE"
-    echo "brew \"prettierd\"" >> "$BREWFILE"
-    echo "brew \"stylua\"" >> "$BREWFILE"
-    echo "brew \"yt-dlp\"" >> "$BREWFILE"
-    echo "brew \"ffmpeg\"" >> "$BREWFILE"
-    echo "brew \"the_silver_searcher\"" >> "$BREWFILE"
-    echo "brew \"wget\"" >> "$BREWFILE"
-    echo "brew \"ripgrep\"" >> "$BREWFILE"
-    echo "brew \"jq\"" >> "$BREWFILE"
-    echo "" >> "$BREWFILE"
-    
-    # Optional Editors
-    if [ -n "$(printf '%s\n' "${editors[@]}" | grep -w "1")" ]; then
-        echo "# Editors" >> "$BREWFILE"
-        for editor in "${!editors[@]}"; do
-            if [ "${editors[$editor]}" -eq 1 ]; then
-                case $editor in
-                    "VSCode")
-                        echo "cask \"visual-studio-code\"" >> "$BREWFILE"
-                        ;;
-                    "GitKraken")
-                        echo "cask \"gitkraken\"" >> "$BREWFILE"
-                        ;;
-                    "Hyper")
-                        echo "cask \"hyper\"" >> "$BREWFILE"
-                        ;;
-                esac
-            fi
-        done
-        echo "" >> "$BREWFILE"
-    fi
-    
-    # Optional Browsers
-    if [ -n "$(printf '%s\n' "${browsers[@]}" | grep -w "1")" ]; then
-        echo "# Browsers" >> "$BREWFILE"
-        for browser in "${!browsers[@]}"; do
-            if [ "${browsers[$browser]}" -eq 1 ]; then
-                case $browser in
-                    "Firefox")
-                        echo "cask \"firefox\"" >> "$BREWFILE"
-                        ;;
-                    "Chrome")
-                        echo "cask \"google-chrome\"" >> "$BREWFILE"
-                        ;;
-                esac
-            fi
-        done
-        echo "" >> "$BREWFILE"
-    fi
-    
-    # Optional Productivity Apps
-    if [ -n "$(printf '%s\n' "${productivity_apps[@]}" | grep -w "1")" ]; then
-        echo "# Productivity" >> "$BREWFILE"
-        for app in "${!productivity_apps[@]}"; do
-            if [ "${productivity_apps[$app]}" -eq 1 ]; then
-                case $app in
-                    "Obsidian")
-                        echo "cask \"obsidian\"" >> "$BREWFILE"
-                        ;;
-                    "Spark")
-                        echo "cask \"spark\"" >> "$BREWFILE"
-                        ;;
-                    "Grammarly")
-                        echo "cask \"grammarly\"" >> "$BREWFILE"
-                        ;;
-                    "MeetingBar")
-                        echo "cask \"meetingbar\"" >> "$BREWFILE"
-                        ;;
-                esac
-            fi
-        done
-        echo "" >> "$BREWFILE"
-    fi
-    
-    # Optional Development Tools
-    if [ -n "$(printf '%s\n' "${dev_tools[@]}" | grep -w "1")" ]; then
-        echo "# Development Tools" >> "$BREWFILE"
-        for tool in "${!dev_tools[@]}"; do
-            if [ "${dev_tools[$tool]}" -eq 1 ]; then
-                case $tool in
-                    "Rancher")
-                        echo "cask \"rancher\"" >> "$BREWFILE"
-                        ;;
-                    "kubectx")
-                        echo "brew \"kubectx\"" >> "$BREWFILE"
-                        ;;
-                    "kube-ps1")
-                        echo "brew \"kube-ps1\"" >> "$BREWFILE"
-                        ;;
-                esac
-            fi
-        done
-    fi
 
-    # Optional Utility Apps
-    if [ -n "$(printf '%s\n' "${utility_apps[@]}" | grep -w "1")" ]; then
-        echo "# Utility Apps" >> "$BREWFILE"
-        for app in "${!utility_apps[@]}"; do
-            if [ "${utility_apps[$app]}" -eq 1 ]; then
-                case $app in
-                    "Swish")
-                        echo "cask \"swish\"" >> "$BREWFILE"
-                        ;;
-                    "Discord")
-                        echo "cask \"discord\"" >> "$BREWFILE"
-                        ;;
-                    "Raycast")
-                        echo "cask \"raycast\"" >> "$BREWFILE"
-                        ;;
-                    "AnyDesk")
-                        echo "cask \"anydesk\"" >> "$BREWFILE"
-                        ;;
-                    "HiddenBar")
-                        echo "cask \"hiddenbar\"" >> "$BREWFILE"
-                        ;;
-                    "OnePassword")
-                        echo "cask \"1password\"" >> "$BREWFILE"
-                        ;;
-                esac
-            fi
-        done
-    fi
+    # Generate each category
+    generate_category ESSENTIAL_TOOLS "Essential Tools"
+    generate_category EDITORS "Editors"
+    generate_category BROWSERS "Browsers"
+    generate_category DEV_TOOLS "Development Tools"
+    generate_category PRODUCTIVITY_APPS "Productivity Applications"
+    generate_category UTILITY_APPS "Utility Applications"
 
     echo -e "${GREEN}Configuration files generated successfully!${NC}"
     echo "Generated files:"
@@ -274,152 +221,34 @@ setup_config() {
     clear
     print_header "Development Environment Setup"
     
-    # Load existing configuration
-    load_existing_config
-    
     echo "The following essential tools will be installed automatically:"
     echo ""
-    echo "Development Tools:"
-    echo "  - stow (dotfile management)"
-    echo "  - mise (version management)"
-    echo "  - tree (directory visualization)"
-    echo "  - tmux (terminal multiplexer)"
-    echo "  - neovim (text editor)"
-    echo "  - prettierd (code formatting)"
-    echo "  - stylua (lua formatting)"
-    echo ""
-    echo "Media & Download Tools:"
-    echo "  - yt-dlp (video download)"
-    echo "  - ffmpeg (media processing)"
-    echo ""
-    echo "Search & Processing Tools:"
-    echo "  - the_silver_searcher (code search)"
-    echo "  - ripgrep (fast search)"
-    echo "  - wget (file download)"
-    echo "  - jq (JSON processing)"
+    for tool in "${ESSENTIAL_TOOLS[@]}"; do
+        name=$(get_field "$tool" 1)
+        desc=$(get_field "$tool" 2)
+        echo "  - $name ($desc)"
+    done
     echo ""
     echo "You can now choose additional optional tools to install."
     echo "Press Enter to continue..."
     read
 
-    # Editors Selection
-    print_header "Additional Code Editors and IDEs"
-    echo "Available editors to install:"
-    for editor in "${EDITORS[@]}"; do
-        name=$(get_field "$editor" 1)
-        desc=$(get_field "$editor" 2)
-        echo "  - $name ($desc)"
-    done
-    echo ""
-    if confirm "Would you like to install any of these additional editors?"; then
-        for i in "${!EDITORS[@]}"; do
-            editor="${EDITORS[$i]}"
-            name=$(get_field "$editor" 1)
-            if confirm "Include $name?"; then
-                set_enabled EDITORS $i 1
-            else
-                set_enabled EDITORS $i 0
-            fi
-        done
-    fi
-
-    # Browsers Selection
-    print_header "Web Browsers"
-    echo "Available browsers to install:"
-    echo "  - Firefox"
-    echo "  - Chrome"
-    echo ""
-    if confirm "Would you like to install any browsers?"; then
-        for browser in "Firefox" "Chrome"; do
-            if confirm "Include $browser?"; then
-                browsers[$browser]=1
-            else
-                browsers[$browser]=0
-            fi
-        done
-    fi
-
-    # Development Tools Selection
-    print_header "Additional Development Tools"
-    echo "Available development tools:"
-    echo "  - Rancher (Container Management)"
-    echo "  - kubectx (Kubernetes Context Switcher)"
-    echo "  - kube-ps1 (Kubernetes Shell Prompt)"
-    echo ""
-    if confirm "Would you like to install any of these Kubernetes tools?"; then
-        for tool in "Rancher" "kubectx" "kube-ps1"; do
-            if confirm "Include $tool?"; then
-                dev_tools[$tool]=1
-            else
-                dev_tools[$tool]=0
-            fi
-        done
-    fi
-
-    # Productivity Apps Selection
-    print_header "Productivity Applications"
-    echo "Available productivity apps:"
-    echo "  - Obsidian (Note Taking)"
-    echo "  - Spark (Email Client)"
-    echo "  - Grammarly (Writing Assistant)"
-    echo "  - MeetingBar (Calendar in Menu Bar)"
-    echo ""
-    if confirm "Would you like to install any productivity applications?"; then
-        for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
-            if confirm "Include $app?"; then
-                productivity_apps[$app]=1
-            else
-                productivity_apps[$app]=0
-            fi
-        done
-    fi
-
-    # Utility Apps Selection
-    print_header "Utility Applications"
-    echo "Available utility apps:"
-    echo "  - Swish (Window Management)"
-    echo "  - Discord (Communication)"
-    echo "  - Raycast (Spotlight Replacement)"
-    echo "  - AnyDesk (Remote Desktop)"
-    echo "  - HiddenBar (Menu Bar Management)"
-    echo "  - OnePassword (Password Manager)"
-    echo ""
-    if confirm "Would you like to install any utility applications?"; then
-        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
-            if confirm "Include $app?"; then
-                utility_apps[$app]=1
-            else
-                utility_apps[$app]=0
-            fi
-        done
-    fi
+    # Prompt for each category
+    prompt_category EDITORS "Code Editors and IDEs"
+    prompt_category BROWSERS "Web Browsers"
+    prompt_category DEV_TOOLS "Additional Development Tools"
+    prompt_category PRODUCTIVITY_APPS "Productivity Applications"
+    prompt_category UTILITY_APPS "Utility Applications"
 
     # Review Selections
     print_header "Configuration Review"
     
-    echo -e "\nSelected Editors:"
-    for editor in "VSCode" "GitKraken" "Hyper"; do
-        print_current_selection editors "$editor"
-    done
-    
-    echo -e "\nSelected Browsers:"
-    for browser in "Firefox" "Chrome"; do
-        print_current_selection browsers "$browser"
-    done
-    
-    echo -e "\nSelected Development Tools:"
-    for tool in "Rancher" "kubectx" "kube-ps1"; do
-        print_current_selection dev_tools "$tool"
-    done
-    
-    echo -e "\nSelected Productivity Applications:"
-    for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
-        print_current_selection productivity_apps "$app"
-    done
-
-    echo -e "\nSelected Utility Applications:"
-    for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
-        print_current_selection utility_apps "$app"
+    for category in "EDITORS" "BROWSERS" "DEV_TOOLS" "PRODUCTIVITY_APPS" "UTILITY_APPS"; do
+        echo -e "\nSelected ${category/_/ }:"
+        declare -n array=$category
+        for item in "${array[@]}"; do
+            print_current_selection "$item"
+        done
     done
 
     # Generate Configuration
