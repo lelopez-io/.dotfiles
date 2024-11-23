@@ -40,6 +40,7 @@ declare -a ESSENTIAL_TOOLS=(
     "Stylua:Lua formatting:stylua:1"
     "YT-DLP:Video download utility:yt-dlp:1"
     "FFmpeg:Media processing:ffmpeg:1"
+    "LibYAML:YAML parser:libyaml:1"
     "Silver Searcher:Code search:the_silver_searcher:1"
     "Ripgrep:Fast search utility:ripgrep:1"
     "Wget:File download utility:wget:1"

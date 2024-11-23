@@ -19,7 +19,7 @@ mise use --global python@latest
 
 # Install and set up Ruby
 echo "Setting up Ruby..."
-mise use --global ruby@latest
+RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
 
 # Install global packages
 echo "Installing global Node.js packages..."
