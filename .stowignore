@@ -4,3 +4,4 @@
 ^/\.stowignore
 ^/\.env\..*
 ^/\.aider\..*
+\.DS_Store

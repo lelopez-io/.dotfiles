@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
+# Helper function for yes/no prompts
+confirm() {
+    while true; do
+        read -p "$1 (y/n) " yn
+        case $yn in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Please answer yes (y) or no (n).";;
+        esac
+    done
+}
+
 # Parse command line arguments
 FORCE_CONFIG=false
 for arg in "$@"; do
@@ -55,7 +67,18 @@ source "$SCRIPTS_DIR/shell.sh"
 
 # Setup dotfiles with stow
 echo "Setting up dotfiles..."
-cd "$HOME/.dotfiles" && stow .
+cd "$HOME/.dotfiles"
+
+if confirm "Would you like to force repo files to overwrite existing files? (This will overwrite your current configs)"; then
+    echo "Force installing dotfiles..."
+    stow . --restow
+else
+    echo "Adopting existing files..."
+    stow . --adopt
+    echo "NOTE: Review git changes and commit what you want to keep, or"
+    echo "      discard changes if you only want what's in the repo."
+    echo "      Then re-run 'stow . --restow' to force repo versions"
+fi
 
 echo "Setting up additional symlinks..."
 ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
