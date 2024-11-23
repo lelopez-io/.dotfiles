@@ -21,13 +21,6 @@ mise use --global python@latest
 echo "Setting up Ruby..."
 RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
 
-# Install global packages
-echo "Installing global Node.js packages..."
-npm install -g prettier typescript
-
-echo "Installing global Python packages..."
-pip install --user pipenv black
-
-echo "Installing global Ruby packages..."
+# Install global Ruby packages..."
 gem install bundler
 gem install colorls
