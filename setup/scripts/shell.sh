@@ -7,6 +7,10 @@ echo "=== Setting up Shell Configuration ==="
 echo "Installing colorls..."
 mise exec ruby -- gem install colorls
 
+# Install aider for AI-assisted coding
+echo "Installing aider..."
+mise exec python -- python -m pip install -U aider-chat
+
 
 # Install oh-my-zsh if not already installed
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
