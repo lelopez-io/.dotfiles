@@ -11,18 +11,15 @@ fi
 
 # Install and set up Node.js
 echo "Setting up Node.js..."
-mise use --global node@20
-mise install node@20
+mise use --global node@lts
 
 # Install and set up Python
 echo "Setting up Python..."
-mise use --global python@3.12
-mise install python@3.12
+mise use --global python@latest
 
 # Install and set up Ruby
 echo "Setting up Ruby..."
-mise use --global ruby@3.2.2
-mise install ruby@3.2.2
+mise use --global ruby@latest
 
 # Install global packages
 echo "Installing global Node.js packages..."
