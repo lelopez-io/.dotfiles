@@ -1,19 +1,19 @@
 {
     // Terminal
     "terminal.integrated.fontSize": 16,
-    "terminal.integrated.shell.osx": "/bin/zsh",
     "terminal.integrated.fontFamily": "Anonymice Nerd Font Mono",
     // View
+    "window.zoomLevel": 1,
+    "window.commandCenter": false,
     "editor.fontSize": 14,
     "editor.rulers": [80, 120],
-    "editor.wordWrapColumn": 120,
+    "editor.wordWrapColumn": 240,
     "editor.wordWrap": "wordWrapColumn",
     "workbench.colorTheme": "Relaxed",
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#2A4F67"
     },
     "workbench.sideBar.location": "right",
-    "workbench.action.toggleMaximizedPanel": "cmd + shift + t",
     // Formatting
     "editor.minimap.enabled": false,
     "files.autoSave": "onFocusChange",
@@ -31,39 +31,15 @@
     "prettier.tabWidth": 4,
     "prettier.semi": false,
     "prettier.bracketSpacing": true,
-    "prettier.printWidth": 80,
+    "prettier.printWidth": 240,
     "auto-rename-tag.activationOnLanguage": ["*"],
     "javascript.updateImportsOnFileMove.enabled": "always",
-    "[yaml]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml",
-        "editor.formatOnSave": true,
-        "editor.formatOnType": true
-    },
-    "[dart]": {
-        "editor.defaultFormatter": "Dart-Code.dart-code",
-        "editor.formatOnSave": true,
-        "editor.formatOnType": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit",
-            "source.sortImports": "explicit"
-        }
-    },
-    "[python]": {
-        "editor.defaultFormatter": null,
-        "editor.formatOnPaste": false,
-        "editor.formatOnSaveMode": "file"
-    },
     // Behavior
     "git.autofetch": true,
-    "git.enabled": true,
-    "git.path": "/usr/bin/git",
+    "git.mergeEditor": true,
     "editor.suggestSelection": "first",
-    "github.copilot.enable": {
-        "*": true,
-        "yaml": false,
-        "plaintext": false,
-        "markdown": false
-    },
+    "editor.inlineSuggest.enabled": true,
+    "editor.renderWhitespace": "all",
     // Files
     "files.associations": {
         "*.cmake": "c",
@@ -78,33 +54,81 @@
     },
     "redhat.telemetry.enabled": false,
     // Spelling // Docs
-    "grammarly.autoActivate": false,
-    "[adoc]": {
-        "grammarly.autoActivate": true,
-        "grammarly.userWords": [
-            "Storyshots",
-            "adoc",
-            ".adoc",
-            "antora",
-            "gitlab",
-            "lelopez",
-            "loggedin",
-            "react",
-            "wagmo",
-            "webclient"
-        ]
-    },
     "cSpell.userWords": [
         ".adoc",
-        "Storyshots",
         "adoc",
         "antora",
         "gitlab",
+        "headlessui",
         "lelopez",
         "loggedin",
         "react",
+        "Storyshots",
         "wagmo",
         "webclient"
-    ]
+    ],
+
+    // Language Specific
+    "[markdown]": {
+        "editor.wordWrap": "bounded"
+    },
+    "[lua]": {
+        "editor.defaultFormatter": "JohnnyMorganz.stylua"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true
+    },
+    "[terraform]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.tabSize": 2 // optionally
+    },
+    "[terraform-vars]": {
+        "editor.tabSize": 2 // optionally
+    },
+    "[rust]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.sortImports": "explicit"
+        }
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    },
+    "[helm]": {
+        "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true
+    },
+    "[ansible]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.detectIndentation": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.quickSuggestions": {
+            "comments": true,
+            "other": true,
+            "strings": true
+        },
+        "editor.autoIndent": "advanced"
+    }
     // End
 }
