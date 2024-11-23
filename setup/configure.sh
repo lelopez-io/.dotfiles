@@ -10,40 +10,58 @@ NC='\033[0m' # No Color
 CONFIG_DIR="$HOME/.dotfiles/setup"
 BREWFILE="$CONFIG_DIR/Brewfile"
 
-# Store selections
-declare -a EDITOR_NAMES=("VSCode" "GitKraken" "Hyper")
-declare -a BROWSER_NAMES=("Firefox" "Chrome")
-declare -a PRODUCTIVITY_NAMES=("Obsidian" "Spark" "Grammarly" "MeetingBar")
-declare -a DEV_TOOL_NAMES=("Rancher" "kubectx" "kube-ps1")
-declare -a UTILITY_NAMES=("Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword")
+# Data structure format: "name:description:package_name:enabled"
+declare -a EDITORS=(
+    "VSCode:Visual Studio Code - popular IDE:visual-studio-code:0"
+    "GitKraken:Git GUI Client:gitkraken:0"
+    "Hyper:Terminal Emulator:hyper:0"
+)
 
-# Initialize associative arrays for selections
-declare -a editors
-declare -a browsers
-declare -a productivity_apps
-declare -a dev_tools
-declare -a utility_apps
+declare -a BROWSERS=(
+    "Firefox:Mozilla Firefox:firefox:0"
+    "Chrome:Google Chrome:google-chrome:0"
+)
 
-# Initialize all arrays with 0s
-for name in "${EDITOR_NAMES[@]}"; do
-    editors[$name]=0
-done
+declare -a DEV_TOOLS=(
+    "Rancher:Container Management:rancher:0"
+    "kubectx:Kubernetes Context Switcher:kubectx:0"
+    "kube-ps1:Kubernetes Shell Prompt:kube-ps1:0"
+)
 
-for name in "${BROWSER_NAMES[@]}"; do
-    browsers[$name]=0
-done
+declare -a PRODUCTIVITY_APPS=(
+    "Obsidian:Note Taking:obsidian:0"
+    "Spark:Email Client:spark:0"
+    "Grammarly:Writing Assistant:grammarly:0"
+    "MeetingBar:Calendar in Menu Bar:meetingbar:0"
+)
 
-for name in "${PRODUCTIVITY_NAMES[@]}"; do
-    productivity_apps[$name]=0
-done
+declare -a UTILITY_APPS=(
+    "Swish:Window Management:swish:0"
+    "Discord:Communication:discord:0"
+    "Raycast:Spotlight Replacement:raycast:0"
+    "AnyDesk:Remote Desktop:anydesk:0"
+    "HiddenBar:Menu Bar Management:hiddenbar:0"
+    "OnePassword:Password Manager:1password:0"
+)
 
-for name in "${DEV_TOOL_NAMES[@]}"; do
-    dev_tools[$name]=0
-done
+# Helper function to get array item by index and field
+get_field() {
+    local array_item="$1"
+    local field_index="$2"
+    echo "$array_item" | cut -d: -f$field_index
+}
 
-for name in "${UTILITY_NAMES[@]}"; do
-    utility_apps[$name]=0
-done
+# Helper function to set enabled status
+set_enabled() {
+    local -n array=$1
+    local index=$2
+    local enabled=$3
+    local item="${array[$index]}"
+    local name=$(get_field "$item" 1)
+    local desc=$(get_field "$item" 2)
+    local package=$(get_field "$item" 3)
+    array[$index]="$name:$desc:$package:$enabled"
+}
 
 # Helper Functions
 print_header() {
@@ -62,12 +80,13 @@ confirm() {
 }
 
 print_current_selection() {
-    local array_name=$1
-    local key=$2
-    if [ "${!array_name[$key]}" = "1" ]; then
-        echo -e "[${GREEN}✓${NC}] $key"
+    local item="$1"
+    local name=$(get_field "$item" 1)
+    local enabled=$(get_field "$item" 4)
+    if [ "$enabled" = "1" ]; then
+        echo -e "[${GREEN}✓${NC}] $name"
     else
-        echo -e "[${RED}✗${NC}] $key"
+        echo -e "[${RED}✗${NC}] $name"
     fi
 }
 
@@ -286,16 +305,20 @@ setup_config() {
     # Editors Selection
     print_header "Additional Code Editors and IDEs"
     echo "Available editors to install:"
-    echo "  - VSCode (Visual Studio Code - popular IDE)"
-    echo "  - GitKraken (Git GUI Client)"
-    echo "  - Hyper (Terminal Emulator)"
+    for editor in "${EDITORS[@]}"; do
+        name=$(get_field "$editor" 1)
+        desc=$(get_field "$editor" 2)
+        echo "  - $name ($desc)"
+    done
     echo ""
     if confirm "Would you like to install any of these additional editors?"; then
-        for editor in "VSCode" "GitKraken" "Hyper"; do
-            if confirm "Include $editor?"; then
-                editors[$editor]=1
+        for i in "${!EDITORS[@]}"; do
+            editor="${EDITORS[$i]}"
+            name=$(get_field "$editor" 1)
+            if confirm "Include $name?"; then
+                set_enabled EDITORS $i 1
             else
-                editors[$editor]=0
+                set_enabled EDITORS $i 0
             fi
         done
     fi
