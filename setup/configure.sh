@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -A
+#!/usr/bin/env bash
 
 # Colors for better readability
 RED='\033[0;31m'
