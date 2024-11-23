@@ -1,14 +1,17 @@
+# zsh-no-matches-found
+unsetopt nomatch
+
 # mise
 eval "$(mise activate zsh)"
 
 # colorls
 source $(dirname $(gem which colorls))/tab_complete.sh
 
-# rancher-desktop
-export PATH="$HOME/.rd/bin:$PATH"
-
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
+
+# rancher-desktop
+export PATH="$HOME/.rd/bin:$PATH"
 
 # kubectl
 complete -F __start_kubectl k
@@ -35,9 +38,6 @@ export GOPATH=$HOME/.go
 
 # rust
 export PATH="$HOME/.cargo/bin:$PATH"
-
-# zsh-no-matches-found
-unsetopt nomatch
 
 # gif-for-cli
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
