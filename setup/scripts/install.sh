@@ -69,16 +69,19 @@ source "$SCRIPTS_DIR/shell.sh"
 echo "Setting up dotfiles..."
 cd "$HOME/.dotfiles"
 
-if confirm "Would you like to force repo files to overwrite existing files? (This will overwrite your current configs)"; then
-    echo "Force installing dotfiles..."
-    stow . --restow
-else
-    echo "Adopting existing files..."
-    stow . --adopt
-    echo "NOTE: Review git changes and commit what you want to keep, or"
-    echo "      discard changes if you only want what's in the repo."
-    echo "      Then re-run 'stow . --restow' to force repo versions"
-fi
+# Adopt existing files first
+echo "Adopting existing files..."
+stow . --adopt
+
+# Show what changes were adopted
+echo -e "\nThe following changes were adopted from your existing files:"
+git diff --stat
+
+echo -e "\nNOTE: Review the changes above and decide what to keep:"
+echo "1. Keep adopted changes: git add . && git commit -m 'feat: adopt existing configs'"
+echo "2. Stash adopted changes: git stash save 'adopted configs'"
+echo "3. Discard adopted changes: git restore ."
+echo -e "   Then use 'stow . --restow' to use repo versions\n"
 
 echo "Setting up additional symlinks..."
 ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
