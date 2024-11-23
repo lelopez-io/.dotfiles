@@ -3,6 +3,11 @@ set -e
 
 echo "=== Setting up Shell Configuration ==="
 
+# Install colorls for enhanced directory listings
+echo "Installing colorls..."
+mise exec ruby -- gem install colorls
+
+
 # Install oh-my-zsh if not already installed
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "Installing oh-my-zsh..."

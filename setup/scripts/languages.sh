@@ -20,7 +20,3 @@ mise use --global python@latest
 # Install and set up Ruby
 echo "Setting up Ruby..."
 RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
-
-# Install global Ruby packages..."
-gem install bundler
-gem install colorls
