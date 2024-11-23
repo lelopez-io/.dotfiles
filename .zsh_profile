@@ -2,7 +2,7 @@
 unsetopt nomatch
 
 # colorls - use mise exec to ensure ruby/gems are available
-source $(mise exec ruby -- gem which colorls)/tab_complete.sh
+source $(dirname $(mise exec ruby -- gem which colorls))/tab_complete.sh
 
 # mise - interactive shell support
 eval "$(mise activate zsh)"
