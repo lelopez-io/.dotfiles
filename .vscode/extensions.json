@@ -4,6 +4,7 @@
         "formulahendry.auto-rename-tag",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "mischah.relaxed-theme"
     ]
 }
