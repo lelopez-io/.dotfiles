@@ -15,14 +15,14 @@ declare -a EDITOR_NAMES=("VSCode" "GitKraken" "Hyper")
 declare -a BROWSER_NAMES=("Firefox" "Chrome")
 declare -a PRODUCTIVITY_NAMES=("Obsidian" "Spark" "Grammarly" "MeetingBar")
 declare -a DEV_TOOL_NAMES=("Rancher" "kubectx" "kube-ps1")
-declare -a UTILITY_NAMES=("Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password")
+declare -a UTILITY_NAMES=("Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword")
 
-# Initialize arrays to store selections (0 = not selected, 1 = selected)
-editors=()
-browsers=()
-productivity_apps=()
-dev_tools=()
-utility_apps=()
+# Initialize associative arrays for selections
+declare -A editors
+declare -A browsers
+declare -A productivity_apps
+declare -A dev_tools
+declare -A utility_apps
 
 # Initialize all arrays with 0s
 for name in "${EDITOR_NAMES[@]}"; do
@@ -181,7 +181,7 @@ generate_config() {
                     "Obsidian")
                         echo "cask \"obsidian\"" >> "$BREWFILE"
                         ;;
-                    "1Password")
+                    "OnePassword")
                         echo "cask \"1password\"" >> "$BREWFILE"
                         ;;
                     "Spark")
@@ -240,7 +240,7 @@ generate_config() {
                     "HiddenBar")
                         echo "cask \"hiddenbar\"" >> "$BREWFILE"
                         ;;
-                    "1Password")
+                    "OnePassword")
                         echo "cask \"1password\"" >> "$BREWFILE"
                         ;;
                 esac
@@ -398,7 +398,7 @@ setup_config() {
     done
 
     echo -e "\nSelected Utility Applications:"
-    for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password"; do
+    for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
         print_current_selection utility_apps "$app"
     done
 
