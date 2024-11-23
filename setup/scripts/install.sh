@@ -74,8 +74,12 @@ echo "Adopting existing files..."
 stow . --adopt
 
 # Show what changes were adopted
-echo -e "\nThe following changes were adopted from your existing files:"
+echo -e "\nChanges adopted from existing files:"
+echo -e "\nFile changes summary:"
 git diff --stat
+
+echo -e "\nDetailed changes (side by side):"
+git -c core.pager='' diff --color=always | delta --side-by-side
 
 echo -e "\nNOTE: Review the changes above and decide what to keep:"
 echo "1. Keep adopted changes: git add . && git commit -m 'feat: adopt existing configs'"

@@ -45,6 +45,7 @@ declare -a ESSENTIAL_TOOLS=(
     "Ripgrep:Fast search utility:ripgrep:1"
     "Wget:File download utility:wget:1"
     "JQ:JSON processing:jq:1"
+    "Delta:Git diff viewer:git-delta:1"
 )
 
 declare -a EDITORS=(
