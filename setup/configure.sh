@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Check for sudo access first
+if [ "$EUID" -ne 0 ]; then 
+    echo "Please run as root (use sudo)"
+    exit 1
+fi
+
 # Colors for better readability
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -19,7 +25,6 @@ declare -a CASK_PACKAGES=(
     "google-chrome"
     "obsidian"
     "spark"
-    "grammarly"
     "meetingbar"
     "rancher"
     "swish"
@@ -49,8 +54,8 @@ declare -a ESSENTIAL_TOOLS=(
 
 declare -a EDITORS=(
     "VSCode:Visual Studio Code - popular IDE:visual-studio-code:0"
-    "GitKraken:Git GUI Client:gitkraken:0"
     "Hyper:Terminal Emulator:hyper:0"
+    "GitKraken:Git GUI Client (Paid):gitkraken:0"
 )
 
 declare -a BROWSERS=(
@@ -67,7 +72,6 @@ declare -a DEV_TOOLS=(
 declare -a PRODUCTIVITY_APPS=(
     "Obsidian:Note Taking:obsidian:0"
     "Spark:Email Client:spark:0"
-    "Grammarly:Writing Assistant:grammarly:0"
     "MeetingBar:Calendar in Menu Bar:meetingbar:0"
 )
 
@@ -199,8 +203,6 @@ generate_config() {
     # Create Brewfile based on selections
     echo "# Generated Brewfile - $(date)" > "$BREWFILE"
     echo "tap \"homebrew/bundle\"" >> "$BREWFILE"
-    echo "tap \"homebrew/cask\"" >> "$BREWFILE"
-    echo "tap \"homebrew/core\"" >> "$BREWFILE"
     echo "" >> "$BREWFILE"
 
     # Generate each category
