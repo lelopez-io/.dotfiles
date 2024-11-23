@@ -1,6 +1,10 @@
 # macOS
 .DS_Store
 
+# vscode generated files
+.vscode/extensions
+.vscode/argv.json
+
 # local env files
 .env
 .env*.prod
