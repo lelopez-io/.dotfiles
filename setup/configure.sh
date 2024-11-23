@@ -93,7 +93,7 @@ load_existing_config() {
                 *"firefox"*) browsers["Firefox"]=1 ;;
                 *"google-chrome"*) browsers["Chrome"]=1 ;;
                 *"obsidian"*) productivity_apps["Obsidian"]=1 ;;
-                *"1password"*) productivity_apps["1Password"]=1 ;;
+                *"1password"*) productivity_apps["OnePassword"]=1 ;;
                 *"spark"*) productivity_apps["Spark"]=1 ;;
                 *"grammarly"*) productivity_apps["Grammarly"]=1 ;;
                 *"meetingbar"*) productivity_apps["MeetingBar"]=1 ;;
@@ -180,9 +180,6 @@ generate_config() {
                 case $app in
                     "Obsidian")
                         echo "cask \"obsidian\"" >> "$BREWFILE"
-                        ;;
-                    "OnePassword")
-                        echo "cask \"1password\"" >> "$BREWFILE"
                         ;;
                     "Spark")
                         echo "cask \"spark\"" >> "$BREWFILE"
@@ -362,10 +359,10 @@ setup_config() {
     echo "  - Raycast (Spotlight Replacement)"
     echo "  - AnyDesk (Remote Desktop)"
     echo "  - HiddenBar (Menu Bar Management)"
-    echo "  - 1Password (Password Manager)"
+    echo "  - OnePassword (Password Manager)"
     echo ""
     if confirm "Would you like to install any utility applications?"; then
-        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password"; do
+        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
             if confirm "Include $app?"; then
                 utility_apps[$app]=1
             else
