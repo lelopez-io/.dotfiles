@@ -243,12 +243,29 @@ setup_config() {
     # Review Selections
     print_header "Configuration Review"
     
-    for category in "EDITORS" "BROWSERS" "DEV_TOOLS" "PRODUCTIVITY_APPS" "UTILITY_APPS"; do
-        echo -e "\nSelected ${category/_/ }:"
-        declare -n array=$category
-        for item in "${array[@]}"; do
-            print_current_selection "$item"
-        done
+    echo -e "\nSelected Editors:"
+    for item in "${EDITORS[@]}"; do
+        print_current_selection "$item"
+    done
+    
+    echo -e "\nSelected Browsers:"
+    for item in "${BROWSERS[@]}"; do
+        print_current_selection "$item"
+    done
+    
+    echo -e "\nSelected Development Tools:"
+    for item in "${DEV_TOOLS[@]}"; do
+        print_current_selection "$item"
+    done
+    
+    echo -e "\nSelected Productivity Applications:"
+    for item in "${PRODUCTIVITY_APPS[@]}"; do
+        print_current_selection "$item"
+    done
+
+    echo -e "\nSelected Utility Applications:"
+    for item in "${UTILITY_APPS[@]}"; do
+        print_current_selection "$item"
     done
 
     # Generate Configuration
