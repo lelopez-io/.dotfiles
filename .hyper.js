@@ -20,8 +20,6 @@ module.exports = {
         lineHeight: 1.2,
         // letter spacing as a relative unit
         letterSpacing: 0,
-        // active tab label icon
-        activeTab: '🧐',
         // terminal cursor background color and opacity (hex, rgb, hsl, hsv, hwb or cmyk)
         cursorColor: 'rgba(248,28,229,0.8)',
         // terminal text color under BLOCK cursor
@@ -95,7 +93,7 @@ module.exports = {
         //
         // Cygwin
         // - Example: `C:\\cygwin64\\bin\\bash.exe`
-        shell: '/bin/zsh',
+        shell: '',
         // for setting shell arguments (i.e. for using interactive shellArgs: `['-i']`)
         // by default `['--login']` will be used
         shellArgs: ['--login'],
@@ -108,7 +106,7 @@ module.exports = {
         // An absolute file path to a sound file on the machine.
         // bellSoundURL: '/path/to/sound/file',
         // if `true` (without backticks and without quotes), selected text will automatically be copied to the clipboard
-        copyOnSelect: true,
+        copyOnSelect: false,
         // if `true` (without backticks and without quotes), hyper will be set as the default protocol client for SSH
         defaultSSHApp: true,
         // if `true` (without backticks and without quotes), on right click selected text will be copied or pasted if no
@@ -125,7 +123,7 @@ module.exports = {
         // todo: does not pick up config changes automatically, need to restart terminal :/
         webLinksActivationKey: '',
         // if `false` (without backticks and without quotes), Hyper will use ligatures provided by some fonts
-        disableLigatures: false,
+        disableLigatures: true,
         // set to true to disable auto updates
         disableAutoUpdates: false,
         // set to true to enable screen reading apps (like NVDA) to read the contents of the terminal
@@ -140,25 +138,14 @@ module.exports = {
     //   `hyperpower`
     //   `@company/project`
     //   `project#1.0.1`
-    plugins: [
-        'hyper-font-ligatures',
-        'hyper-active-tab',
-        'hyper-samewd',
-        // 'hyper-search',
-        'hyper-relaxed',
-    ],
+    plugins: ['hyper-relaxed'],
     // in development, you can create a directory under
     // `~/.hyper_plugins/local/` and include it here
     // to load it and avoid it being `npm install`ed
     localPlugins: [],
     keymaps: {
-        'pane:close': 'ctrl+w',
-        'pane:close': 'cmd+w',
-        'tab:new': 'ctrl+t',
-        'tab:new': 'cmd+t',
-    },
-    env: {
-        TERM: 'xterm-256color',
+        // Example
+        // 'window:devtools': 'cmd+alt+o',
     },
 }
 //# sourceMappingURL=config-default.js.map
