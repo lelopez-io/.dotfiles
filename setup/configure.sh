@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# Check for sudo access first
-if [ "$EUID" -ne 0 ]; then 
-    echo "Please run as root (use sudo)"
-    exit 1
-fi
-
 # Colors for better readability
 RED='\033[0;31m'
 GREEN='\033[0;32m'

@@ -1,13 +1,25 @@
 #!/bin/bash
 set -e
 
+# Parse command line arguments
+FORCE_CONFIG=false
+for arg in "$@"; do
+    case $arg in
+        -f|--force)
+            FORCE_CONFIG=true
+            shift # Remove --force from processing
+            ;;
+    esac
+done
+
+
 SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS_DIR="$SETUP_DIR/scripts"
 
 echo "=== Starting Development Environment Setup ==="
 
 # Run configuration if needed
-if [ ! -f "$SETUP_DIR/Brewfile" ]; then
+if [ ! -f "$SETUP_DIR/Brewfile" ] || [ "$FORCE_CONFIG" = true ]; then
     echo "Initial configuration required..."
     "$SETUP_DIR/configure.sh"
 fi
