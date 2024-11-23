@@ -89,14 +89,14 @@ get_field() {
 
 # Helper function to set enabled status
 set_enabled() {
-    local -n array=$1
+    local array_name=$1
     local index=$2
     local enabled=$3
-    local item="${array[$index]}"
+    eval 'local item="${'"$array_name"'[$index]}"'
     local name=$(get_field "$item" 1)
     local desc=$(get_field "$item" 2)
     local package=$(get_field "$item" 3)
-    array[$index]="$name:$desc:$package:$enabled"
+    eval "$array_name[$index]=\"$name:$desc:$package:$enabled\""
 }
 
 # Helper Functions
@@ -137,48 +137,48 @@ backup_file() {
 
 # Helper function to prompt for category installation
 prompt_category() {
-    local -n array=$1  # Reference to the array
+    local array_name=$1  # Name of the array
     local category_name=$2  # Display name of the category
     
     print_header "$category_name"
-    echo "Available ${category_name,,} to install:"
-    for item in "${array[@]}"; do
+    echo "Available $category_name to install:"
+    eval 'for item in "${'"$array_name"'[@]}"; do
         name=$(get_field "$item" 1)
         desc=$(get_field "$item" 2)
         echo "  - $name ($desc)"
-    done
+    done'
     echo ""
     
-    if confirm "Would you like to install any of these ${category_name,,}?"; then
-        for i in "${!array[@]}"; do
-            local item="${array[$i]}"
+    if confirm "Would you like to install any of these $category_name?"; then
+        eval 'for i in "${!'"$array_name"'[@]}"; do
+            local item="${'"$array_name"'[$i]}"
             local name=$(get_field "$item" 1)
             if confirm "Include $name?"; then
-                set_enabled array $i 1
+                set_enabled '"$array_name"' $i 1
             else
-                set_enabled array $i 0
+                set_enabled '"$array_name"' $i 0
             fi
-        done
+        done'
     fi
 }
 
 # Helper function to generate category in Brewfile
 generate_category() {
-    local -n array=$1  # Reference to the array
+    local array_name=$1  # Name of the array
     local category_name=$2  # Category name for Brewfile comment
     
     # Check if any items in this category are enabled
     local has_enabled=false
-    for item in "${array[@]}"; do
+    eval 'for item in "${'"$array_name"'[@]}"; do
         if [ "$(get_field "$item" 4)" = "1" ]; then
             has_enabled=true
             break
         fi
-    done
+    done'
     
     if $has_enabled; then
         echo "# $category_name" >> "$BREWFILE"
-        for item in "${array[@]}"; do
+        eval 'for item in "${'"$array_name"'[@]}"; do
             if [ "$(get_field "$item" 4)" = "1" ]; then
                 local package=$(get_field "$item" 3)
                 if [[ " ${CASK_PACKAGES[@]} " =~ " ${package} " ]]; then
@@ -187,7 +187,7 @@ generate_category() {
                     echo "brew \"$package\"" >> "$BREWFILE"
                 fi
             fi
-        done
+        done'
         echo "" >> "$BREWFILE"
     fi
 }
