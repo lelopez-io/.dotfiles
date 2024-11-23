@@ -15,7 +15,7 @@ mise use --global node@lts
 
 # Install and set up Python
 echo "Setting up Python..."
-mise use --global python@latest
+mise use --global python@3.12
 
 # Install and set up Ruby
 echo "Setting up Ruby..."
