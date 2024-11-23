@@ -5,6 +5,7 @@
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "redhat.vscode-yaml",
-        "mischah.relaxed-theme"
+        "mischah.relaxed-theme",
+        "eamodio.gitlens"
     ]
 }
