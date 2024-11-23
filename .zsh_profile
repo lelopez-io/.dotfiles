@@ -1,10 +1,13 @@
 # zsh-no-matches-found
 unsetopt nomatch
 
-# mise
+# mise - add shims for immediate PATH access
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+# mise - interactive shell support
 eval "$(mise activate zsh)"
 
-# colorls
+# colorls (after mise shims are in PATH)
 source $(dirname $(gem which colorls))/tab_complete.sh
 
 # tmux/venv
