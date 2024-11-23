@@ -240,6 +240,9 @@ generate_config() {
                     "HiddenBar")
                         echo "cask \"hiddenbar\"" >> "$BREWFILE"
                         ;;
+                    "1Password")
+                        echo "cask \"1password\"" >> "$BREWFILE"
+                        ;;
                 esac
             fi
         done
@@ -340,7 +343,6 @@ setup_config() {
     echo "  - Spark (Email Client)"
     echo "  - Grammarly (Writing Assistant)"
     echo "  - MeetingBar (Calendar in Menu Bar)"
-    echo "  - 1Password (Password Manager)"
     echo ""
     if confirm "Would you like to install any productivity applications?"; then
         for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
@@ -360,10 +362,10 @@ setup_config() {
     echo "  - Raycast (Spotlight Replacement)"
     echo "  - AnyDesk (Remote Desktop)"
     echo "  - HiddenBar (Menu Bar Management)"
-    echo "  - OnePassword (Password Manager)"
+    echo "  - 1Password (Password Manager)"
     echo ""
     if confirm "Would you like to install any utility applications?"; then
-        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "OnePassword"; do
+        for app in "Swish" "Discord" "Raycast" "AnyDesk" "HiddenBar" "1Password"; do
             if confirm "Include $app?"; then
                 utility_apps[$app]=1
             else
@@ -391,7 +393,7 @@ setup_config() {
     done
     
     echo -e "\nSelected Productivity Applications:"
-    for app in "Obsidian" "Spark" "Grammarly" "MeetingBar" "1Password"; do
+    for app in "Obsidian" "Spark" "Grammarly" "MeetingBar"; do
         print_current_selection productivity_apps "$app"
     done
 
