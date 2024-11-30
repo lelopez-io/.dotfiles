@@ -38,24 +38,34 @@ print_env_vars() {
 }
 
 git_summary() {
-    local default_branch
+    local base_ref
 
-    # Determine the default branch (main or master)
-    if git show-ref --quiet refs/heads/main; then
-        default_branch="main"
-    elif git show-ref --quiet refs/heads/master; then
-        default_branch="master"
+    # If a commit hash is provided, use it as the base reference
+    if [[ -n "$1" ]]; then
+        if git rev-parse --verify "$1" >/dev/null 2>&1; then
+            base_ref="$1"
+        else
+            echo "Error: Invalid commit hash provided: $1"
+            return 1
+        fi
     else
-        echo "Error: Neither 'main' nor 'master' branch found."
-        return 1
+        # Determine the default branch (main or master) if no commit hash provided
+        if git show-ref --quiet refs/heads/main; then
+            base_ref="main"
+        elif git show-ref --quiet refs/heads/master; then
+            base_ref="master"
+        else
+            echo "Error: Neither 'main' nor 'master' branch found."
+            return 1
+        fi
     fi
 
     # Generate log file
-    git -P log --oneline ${default_branch}..HEAD > git-log.txt
+    git -P log --oneline ${base_ref}..HEAD > git-log.txt
     echo "Generated git-log.txt"
 
     # Generate diff file
-    git -P diff -U0 ${default_branch}..HEAD > git-diff.txt
+    git -P diff -U0 ${base_ref}..HEAD > git-diff.txt
     echo "Generated git-diff.txt"
 
     echo "Git summary completed. Files created: git-log.txt and git-diff.txt"
