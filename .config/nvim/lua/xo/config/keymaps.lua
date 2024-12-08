@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>jj", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>jj", vim.cmd.Ex, { desc = "Open file explorer (netrw)" })
 
 vim.keymap.set(
     "i",
