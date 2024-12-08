@@ -71,6 +71,28 @@ git_summary() {
     echo "Git summary completed. Files created: git-log.txt and git-diff.txt"
 }
 
+# Creates or updates .env.example by stripping values from source env file
+env_example() {
+    local source=${1:-.env.local}  # Default to .env.local if no source provided
+    local target=${2:-.env.example}  # Default to .env.example if no target provided
+    
+    if [[ ! -f $source ]]; then
+        echo "Error: Source file '$source' not found"
+        return 1
+    fi
+
+    # Create backup if target already exists
+    if [[ -f $target ]]; then
+        cp "$target" "$target.bak"
+    fi
+
+    # Strip values and create/update .env.example
+    sed 's/=.*$/=/' "$source" > "$target"
+    
+    echo "Created $target from $source"
+    echo "If you want to preview without values, use: sed 's/=.*$/=/' $source"
+}
+
 ask() {
     local ask_dir="$HOME/xo/ask"
     local current_dir=$(pwd)
