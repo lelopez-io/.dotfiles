@@ -1,20 +1,32 @@
+-- Leader key configuration
 vim.g.mapleader = " "
+
+-- File explorer
 vim.keymap.set("n", "<leader>jj", vim.cmd.Ex, { desc = "Open file explorer (netrw)" })
 
-vim.keymap.set(
-    "i",
-    "<S-Tab>",
-    "<C-d>",
-    { noremap = true, silent = true, desc = "Allow shift-tab to unindent in insert mode" }
-)
-vim.keymap.set(
-    "n",
-    "<S-Tab>",
-    "<<",
-    { noremap = true, silent = true, desc = "Allow shift-tab to unindent in normal mode" }
-)
-vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S" })
-vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", { noremap = true, silent = true, desc = "Save with Ctrl+S in insert mode" })
+-- Indentation controls
+vim.keymap.set("i", "<S-Tab>", "<C-d>", {
+    noremap = true,
+    silent = true,
+    desc = "Allow shift-tab to unindent in insert mode",
+})
+vim.keymap.set("n", "<S-Tab>", "<<", {
+    noremap = true,
+    silent = true,
+    desc = "Allow shift-tab to unindent in normal mode",
+})
+
+-- Quick save
+vim.keymap.set("n", "<C-s>", ":w<CR>", {
+    noremap = true,
+    silent = true,
+    desc = "Save with Ctrl+S",
+})
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", {
+    noremap = true,
+    silent = true,
+    desc = "Save with Ctrl+S in insert mode",
+})
 
 -- Move selected lines up/down in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
@@ -47,8 +59,16 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Next location lis
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Previous location list item" })
 
 -- Quick actions
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Search and replace word under cursor" })
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make current file executable" })
+vim.keymap.set(
+    "n",
+    "<leader>s",
+    [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+    { desc = "Search and replace word under cursor" }
+)
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", {
+    silent = true,
+    desc = "Make current file executable",
+})
 
 -- Go error handling snippet
 vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>", { desc = "Insert Go error handling" })
