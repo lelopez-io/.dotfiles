@@ -2,6 +2,48 @@ gitk() {
     /Applications/GitKraken.app/Contents/MacOS/GitKraken -p $(pwd)
 }
 
+# Creates a compressed backup of a folder
+backup_folder() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: backup_folder <folder_path>"
+        return 1
+    fi
+
+    if [[ ! -d "$1" ]]; then
+        echo "Error: Directory not found: $1"
+        return 1
+    fi
+
+    # Remove trailing slash if present
+    local folder=${1%/}
+    local timestamp=$(date +"%Y.%m.%d.%H%M%S")
+    local backup_name="${timestamp}--${folder}.bak.tar.gz"
+
+    echo "Starting backup process..."
+    echo "Source folder: $folder"
+    echo "Backup name:   $backup_name"
+    echo "Excluding:     */node_modules"
+
+    # Check for node_modules before backup
+    if find "$folder" -type d -name "node_modules" | grep -q .; then
+        echo "Found node_modules directories that will be excluded:"
+        find "$folder" -type d -name "node_modules" -print
+    fi
+
+    echo "Creating backup archive..."
+    tar --exclude='*/node_modules' -czvf "$backup_name" "$folder"
+
+    if [[ $? -eq 0 ]]; then
+        local size=$(du -h "$backup_name" | cut -f1)
+        echo "✓ Backup completed successfully"
+        echo "Location: $(pwd)/$backup_name"
+        echo "Size:     $size"
+    else
+        echo "✗ Error creating backup"
+        return 1
+    fi
+}
+
 ttd() {
     yt-dlp --verbose -o "[%(uploader)s-%(id)s] $2.%(ext)s" $1
 }
@@ -16,7 +58,7 @@ webm2mp4() {
 ytd() {
     output=$(yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose --get-filename "$1")
     yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose "$1"
-    
+
     if [[ "$output" == *.webm ]]; then
         webm2mp4 "$output"
         rm "$output"
@@ -75,7 +117,7 @@ git_summary() {
 env_example() {
     local source=${1:-.env.local}  # Default to .env.local if no source provided
     local target=${2:-.env.example}  # Default to .env.example if no target provided
-    
+
     if [[ ! -f $source ]]; then
         echo "Error: Source file '$source' not found"
         return 1
@@ -88,7 +130,7 @@ env_example() {
 
     # Strip values and create/update .env.example
     sed 's/=.*$/=/' "$source" > "$target"
-    
+
     echo "Created $target from $source"
     echo "If you want to preview without values, use: sed 's/=.*$/=/' $source"
 }
