@@ -151,3 +151,40 @@ ask() {
     # Return to previous directory
     cd "$current_dir"
 }
+
+# Uncheck all checkboxes in a markdown file
+uncheck_md() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: uncheck_md [-b] <markdown_file>"
+        echo "Options:"
+        echo "  -b    Create a backup before making changes"
+        return 1
+    fi
+
+    local backup=false
+    local file=""
+
+    # Parse arguments
+    while [[ "$#" -gt 0 ]]; do
+        case $1 in
+            -b) backup=true; shift ;;
+            *) file="$1"; shift ;;
+        esac
+    done
+
+    if [[ ! -f "$file" ]]; then
+        echo "Error: File not found: $file"
+        return 1
+    fi
+
+    # Create backup if requested
+    if [[ "$backup" = true ]]; then
+        cp "$file" "$file.bak"
+        echo "Created backup: $file.bak"
+    fi
+
+    # Replace both [x] and [X] with [ ]
+    sed -i'' -e 's/\[x\]/[ ]/g' -e 's/\[X\]/[ ]/g' "$file"
+
+    echo "✓ Unchecked all checkboxes in $file"
+}
