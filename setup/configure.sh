@@ -14,7 +14,7 @@ BREWFILE="$CONFIG_DIR/Brewfile"
 declare -a CASK_PACKAGES=(
     "visual-studio-code"
     "gitkraken"
-    "hyper"
+    "ghostty"
     "firefox"
     "google-chrome"
     "obsidian"
@@ -50,7 +50,7 @@ declare -a ESSENTIAL_TOOLS=(
 
 declare -a EDITORS=(
     "VSCode:Visual Studio Code - popular IDE:visual-studio-code:0"
-    "Hyper:Terminal Emulator:hyper:0"
+    "Ghostty:Terminal Emulator:ghostty:0"
     "GitKraken:Git GUI Client (Paid):gitkraken:0"
 )
 
@@ -139,7 +139,7 @@ backup_file() {
 prompt_category() {
     local array_name=$1  # Name of the array
     local category_name=$2  # Display name of the category
-    
+
     print_header "$category_name"
     echo "Available $category_name to install:"
     eval 'for item in "${'"$array_name"'[@]}"; do
@@ -148,7 +148,7 @@ prompt_category() {
         echo "  - $name ($desc)"
     done'
     echo ""
-    
+
     if confirm "Would you like to install any of these $category_name?"; then
         eval 'for i in "${!'"$array_name"'[@]}"; do
             local item="${'"$array_name"'[$i]}"
@@ -166,7 +166,7 @@ prompt_category() {
 generate_category() {
     local array_name=$1  # Name of the array
     local category_name=$2  # Category name for Brewfile comment
-    
+
     # Check if any items in this category are enabled
     local has_enabled=false
     eval 'for item in "${'"$array_name"'[@]}"; do
@@ -175,7 +175,7 @@ generate_category() {
             break
         fi
     done'
-    
+
     if $has_enabled; then
         echo "# $category_name" >> "$BREWFILE"
         eval 'for item in "${'"$array_name"'[@]}"; do
@@ -218,7 +218,7 @@ generate_config() {
 setup_config() {
     clear
     print_header "Development Environment Setup"
-    
+
     echo "The following essential tools will be installed automatically:"
     echo ""
     for tool in "${ESSENTIAL_TOOLS[@]}"; do
@@ -240,22 +240,22 @@ setup_config() {
 
     # Review Selections
     print_header "Configuration Review"
-    
+
     echo -e "\nSelected Editors:"
     for item in "${EDITORS[@]}"; do
         print_current_selection "$item"
     done
-    
+
     echo -e "\nSelected Browsers:"
     for item in "${BROWSERS[@]}"; do
         print_current_selection "$item"
     done
-    
+
     echo -e "\nSelected Development Tools:"
     for item in "${DEV_TOOLS[@]}"; do
         print_current_selection "$item"
     done
-    
+
     echo -e "\nSelected Productivity Applications:"
     for item in "${PRODUCTIVITY_APPS[@]}"; do
         print_current_selection "$item"
