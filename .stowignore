@@ -1,7 +1,0 @@
-\.git
-^/README.*
-^/setup
-^/\.stowignore
-^/\.env\..*
-^/\.aider\..*
-\.DS_Store
