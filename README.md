@@ -66,12 +66,18 @@ If you prefer to manage dotfiles manually without the automatic setup:
 # Install Stow package
 brew install stow
 
-# Create symlinks (this won't overwrite any existing files)
+# First time setup: create symlinks and adopt existing files
 stow . --adopt
 
-# Review changes in Git and commit any you want to adopt
-# Discard all "adopted" changes if you only want to use what is present in this repo
+# For subsequent updates, just use
+stow .
 ```
+
+Note: The `--adopt` flag will convert your existing dotfiles into symlinks and move the original files into this repo. Use with caution and review any changes with git before committing.
+
+### Working with Directories
+
+Linking entire directories, such as `nvim`, is recommended to avoid rerunning Stow when subdirectories or files are added.
 
 ## Additional Development Tools
 
