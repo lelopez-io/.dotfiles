@@ -71,11 +71,5 @@ return {
             },
         })
 
-        vim.keymap.set("n", "<leader>f", function()
-            local fc = require("conform").format({ timeout_ms = 500 })
-            if not fc then
-                vim.lsp.buf.format()
-            end
-        end)
     end,
 }
