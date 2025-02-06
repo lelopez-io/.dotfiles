@@ -105,7 +105,7 @@ vim.keymap.set("n", "Q", "<nop>", {
     desc = "Disable Ex mode",
 })
 
--- Quickfix navigation
+-- Quickfix navigation and window control
 vim.keymap.set("n", "<C-l>", "<cmd>cnext<CR>zz", {
     noremap = false,
     silent = false,
@@ -115,6 +115,25 @@ vim.keymap.set("n", "<C-h>", "<cmd>cprev<CR>zz", {
     noremap = false,
     silent = false,
     desc = "Previous quickfix item",
+})
+vim.keymap.set("n", "<leader>q", function()
+    local qf_exists = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win.quickfix == 1 then
+            qf_exists = true
+        end
+    end
+    if qf_exists == true then
+        vim.cmd "cclose"
+        return
+    end
+    if not vim.tbl_isempty(vim.fn.getqflist()) then
+        vim.cmd "copen"
+    end
+end, {
+    noremap = true,
+    silent = true,
+    desc = "Toggle quickfix window",
 })
 
 -- Page navigation
@@ -165,6 +184,23 @@ end, {
     noremap = false,
     silent = false,
     desc = "Format current buffer",
+})
+
+-- LSP actions
+vim.keymap.set('n', '<leader>ca', function()
+    vim.lsp.buf.code_action()
+end, { 
+    noremap = false,
+    silent = false,
+    desc = "Code actions" 
+})
+
+vim.keymap.set('n', '<leader>ci', function()
+    vim.lsp.buf.implementation()
+end, { 
+    noremap = false,
+    silent = false,
+    desc = "Go to implementation" 
 })
 
 -- Reload configurations

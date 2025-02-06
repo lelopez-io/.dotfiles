@@ -39,6 +39,21 @@ return {
                     })
                 end,
 
+                ["ts_ls"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.ts_ls.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            typescript = {
+                                inlayHints = true,
+                                suggest = {
+                                    autoImports = true,
+                                },
+                            },
+                        },
+                    })
+                end,
+
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup({
