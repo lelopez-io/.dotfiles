@@ -105,16 +105,22 @@ vim.keymap.set("n", "Q", "<nop>", {
     desc = "Disable Ex mode",
 })
 
--- Quickfix navigation and window control
-vim.keymap.set("n", "<C-l>", "<cmd>cnext<CR>zz", {
+-- Diagnostic navigation
+vim.keymap.set("n", "<C-l>", function()
+    vim.diagnostic.goto_next()
+    vim.cmd('normal! zz')
+end, {
     noremap = false,
     silent = false,
-    desc = "Next quickfix item",
+    desc = "Next diagnostic",
 })
-vim.keymap.set("n", "<C-h>", "<cmd>cprev<CR>zz", {
+vim.keymap.set("n", "<C-h>", function()
+    vim.diagnostic.goto_prev()
+    vim.cmd('normal! zz')
+end, {
     noremap = false,
     silent = false,
-    desc = "Previous quickfix item",
+    desc = "Previous diagnostic",
 })
 vim.keymap.set("n", "<leader>q", function()
     local qf_exists = false
@@ -127,13 +133,13 @@ vim.keymap.set("n", "<leader>q", function()
         vim.cmd "cclose"
         return
     end
-    if not vim.tbl_isempty(vim.fn.getqflist()) then
-        vim.cmd "copen"
-    end
+    -- Convert diagnostics to quickfix list
+    vim.diagnostic.setqflist()
+    vim.cmd "copen"
 end, {
     noremap = true,
     silent = true,
-    desc = "Toggle quickfix window",
+    desc = "Toggle diagnostics in quickfix",
 })
 
 -- Page navigation

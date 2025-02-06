@@ -22,13 +22,52 @@ return {
                 lua = { "stylua" },
                 -- Conform will run multiple formatters sequentially
                 python = { "isort", "black" },
-                -- Use a sub-list to run only the first available formatter
-                javascript = { { "prettierd", "prettier" } },
-
-                -- markdown = { "prettierd" },
-                -- Use the "_" filetype to run formatters on filetypes that don't
-                -- have other formatters configured.
-                ["_"] = { "prettierd" },
+                -- Use stop_after_first for these formatters
+                javascript = { "prettierd", "prettier", "eslint_d" },
+                typescript = { "prettierd", "prettier", "eslint_d" },
+                javascriptreact = { "prettierd", "prettier", "eslint_d" },
+                typescriptreact = { "prettierd", "prettier", "eslint_d" },
+                css = { "prettierd", "prettier" },
+                html = { "prettierd", "prettier" },
+                json = { "prettierd", "prettier" },
+                markdown = { "prettierd", "prettier" },
+            },
+            format_on_save = {
+                -- Enable format on save
+                lsp_fallback = true,
+                timeout_ms = 500,
+                -- Use stop_after_first for prettier-based formatting
+                stop_after_first = {
+                    "javascript",
+                    "typescript",
+                    "javascriptreact",
+                    "typescriptreact",
+                    "css",
+                    "html",
+                    "json",
+                    "markdown",
+                },
+            },
+            formatters = {
+                prettierd = {
+                    -- Enable project-level config files
+                    cwd = require("conform.util").root_file({
+                        -- Add all possible Prettier config files
+                        ".prettierrc",
+                        ".prettierrc.json",
+                        ".prettierrc.js",
+                        ".prettierrc.cjs",
+                        "prettier.config.js",
+                        "package.json",
+                    }),
+                    -- Include the Tailwind plugin and ensure filename is provided
+                    args = function(ctx)
+                        return {
+                            "--plugin=prettier-plugin-tailwindcss",
+                            ctx.filename,
+                        }
+                    end,
+                },
             },
         })
 
