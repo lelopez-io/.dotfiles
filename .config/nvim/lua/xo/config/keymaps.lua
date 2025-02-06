@@ -192,6 +192,12 @@ end, {
     desc = "Format current buffer",
 })
 
+vim.keymap.set("n", "<leader>el", function()
+    require("conform").format({ formatters = { "eslint_d" } })
+end, {
+    desc = "Fix ESLint issues",
+})
+
 -- LSP actions
 vim.keymap.set('n', '<leader>ca', function()
     vim.lsp.buf.code_action()

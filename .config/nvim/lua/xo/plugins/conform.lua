@@ -23,10 +23,10 @@ return {
                 -- Conform will run multiple formatters sequentially
                 python = { "isort", "black" },
                 -- Use stop_after_first for these formatters
-                javascript = { "prettierd", "prettier", "eslint_d" },
-                typescript = { "prettierd", "prettier", "eslint_d" },
-                javascriptreact = { "prettierd", "prettier", "eslint_d" },
-                typescriptreact = { "prettierd", "prettier", "eslint_d" },
+                javascript = { "eslint_d", "prettierd" },
+                typescript = { "eslint_d", "prettierd" },
+                javascriptreact = { "eslint_d", "prettierd" },
+                typescriptreact = { "eslint_d", "prettierd" },
                 css = { "prettierd", "prettier" },
                 html = { "prettierd", "prettier" },
                 json = { "prettierd", "prettier" },
