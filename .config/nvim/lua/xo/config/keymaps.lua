@@ -169,9 +169,13 @@ end, {
 
 -- Source current file
 vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
+    if vim.bo.filetype == "lua" then
+        vim.cmd("so")
+    else
+        vim.notify("Sourcing only works on Lua files", vim.log.levels.WARN)
+    end
 end, {
     noremap = false,
     silent = false,
-    desc = "Source current file",
+    desc = "Source current lua file",
 })
