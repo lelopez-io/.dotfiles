@@ -50,16 +50,6 @@ vim.keymap.set("n", "J", "mzJ`z", {
     silent = false,
     desc = "Join lines and keep cursor position",
 })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", {
-    noremap = false,
-    silent = false,
-    desc = "Scroll down and center cursor",
-})
-vim.keymap.set("n", "<C-u>", "<C-u>zz", {
-    noremap = false,
-    silent = false,
-    desc = "Scroll up and center cursor",
-})
 vim.keymap.set("n", "n", "nzzzv", {
     noremap = false,
     silent = false,
@@ -116,15 +106,27 @@ vim.keymap.set("n", "Q", "<nop>", {
 })
 
 -- Quickfix navigation
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", {
+vim.keymap.set("n", "<C-l>", "<cmd>cnext<CR>zz", {
     noremap = false,
     silent = false,
     desc = "Next quickfix item",
 })
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", {
+vim.keymap.set("n", "<C-h>", "<cmd>cprev<CR>zz", {
     noremap = false,
     silent = false,
     desc = "Previous quickfix item",
+})
+
+-- Page navigation
+vim.keymap.set("n", "<C-k>", "<C-u>zz", {
+    noremap = false,
+    silent = false,
+    desc = "Scroll up half page",
+})
+vim.keymap.set("n", "<C-j>", "<C-d>zz", {
+    noremap = false,
+    silent = false,
+    desc = "Scroll down half page",
 })
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", {
     noremap = false,
