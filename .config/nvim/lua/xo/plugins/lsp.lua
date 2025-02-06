@@ -59,6 +59,18 @@ return {
                     local lspconfig = require("lspconfig")
                     lspconfig.eslint.setup({
                         capabilities = capabilities,
+                        on_attach = function(client, bufnr)
+                            vim.api.nvim_create_autocmd("BufWritePre", {
+                                buffer = bufnr,
+                                callback = function()
+                                    vim.cmd("silent! EslintFixAll")
+                                end,
+                            })
+                        end,
+                        settings = {
+                            -- helps eslint find the eslintrc when it's placed in a subfolder
+                            workingDirectory = { mode = "auto" },
+                        },
                     })
                 end,
 
