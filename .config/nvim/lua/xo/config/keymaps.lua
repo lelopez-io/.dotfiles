@@ -82,9 +82,9 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], {
 
 -- Yank relative file path
 vim.keymap.set("n", "<leader><C-y>", function()
-    local relative_path = vim.fn.expand('%')
-    vim.fn.setreg('+', relative_path)
-    vim.notify('Copied: ' .. relative_path)
+    local relative_path = vim.fn.expand("%")
+    vim.fn.setreg("+", relative_path)
+    vim.notify("Copied: " .. relative_path)
 end, {
     noremap = true,
     silent = true,
@@ -167,10 +167,20 @@ end, {
     desc = "Format current buffer",
 })
 
--- Source current file
+-- Reload configurations
 vim.keymap.set("n", "<leader><leader>", function()
+    vim.cmd("source ~/.config/nvim/init.lua")
+    vim.notify("Reloaded neovim configuration", vim.log.levels.INFO)
+end, {
+    noremap = false,
+    silent = false,
+    desc = "Reload neovim configuration",
+})
+
+vim.keymap.set("n", "<leader><leader>.", function()
     if vim.bo.filetype == "lua" then
         vim.cmd("so")
+        vim.notify("Sourced current lua file", vim.log.levels.INFO)
     else
         vim.notify("Sourcing only works on Lua files", vim.log.levels.WARN)
     end
