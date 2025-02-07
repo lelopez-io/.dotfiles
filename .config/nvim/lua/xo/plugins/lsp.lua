@@ -32,6 +32,7 @@ return {
                 "gopls",
                 "ts_ls",
                 "eslint",
+                "marksman",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
