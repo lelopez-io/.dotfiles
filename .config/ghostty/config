@@ -2,3 +2,4 @@ window-padding-x = 8
 font-family = "AnonymicePro Nerd Font Mono"
 font-size = 16
 theme = "Relaxed"
+keybind = super+enter=ignore
