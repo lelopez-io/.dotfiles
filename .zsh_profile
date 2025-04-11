@@ -29,9 +29,6 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # concourse-ci
 export PATH="$HOME/.concourse/fly:$PATH"
 
-# flutter
-export PATH="$HOME/.flutter/bin:$PATH"
-
 # andriod sdk
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"

@@ -3,3 +3,5 @@ font-family = "AnonymicePro Nerd Font Mono"
 font-size = 16
 theme = "Relaxed"
 keybind = super+enter=ignore
+
+confirm-close-surface = false
