@@ -59,7 +59,7 @@ The automated script will guide you through an interactive setup process, allowi
         ```bash
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ```
-    - Add Homebrew to your PATH
+    - Add Homebrew to your PATH and other environment variables for the current session
         ```bash
         eval "$(/opt/homebrew/bin/brew shellenv)"
         ```
@@ -71,7 +71,7 @@ The automated script will guide you through an interactive setup process, allowi
         ```bash
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ```
-    - Add Homebrew to your PATH
+    - Add Homebrew to your PATH and other environment variables for the current session
         ```bash
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ```
