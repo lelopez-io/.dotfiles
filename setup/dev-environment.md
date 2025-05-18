@@ -356,9 +356,12 @@ Git is essential for version control. Let's configure it for use with GitHub:
 
 1. **Configure git user details** if not already set:
 
-    - Set your Git username and email
+    - Set your Git username (replace "Your Name" with your actual name)
         ```bash
         git config --global user.name "Your Name"
+        ```
+    - Set your Git email (replace with your actual email)
+        ```bash
         git config --global user.email "your.email@example.com"
         ```
 
@@ -395,14 +398,21 @@ Git is essential for version control. Let's configure it for use with GitHub:
         ```bash
         mkdir -p ~/.ssh
         ```
-    - Create the config file with GitHub settings
+    - Create a config file for GitHub SSH settings
         ```bash
-        cat > ~/.ssh/config << EOL
-Host github.com
-    AddKeysToAgent yes
-    UseKeychain yes
-    IdentityFile ~/.ssh/id_ed25519
-EOL
+        echo "Host github.com" > ~/.ssh/config
+        ```
+    - Configure the SSH key to be automatically added to the agent
+        ```bash
+        echo "    AddKeysToAgent yes" >> ~/.ssh/config
+        ```
+    - Enable keychain integration for macOS
+        ```bash
+        echo "    UseKeychain yes" >> ~/.ssh/config
+        ```
+    - Specify which SSH key to use for GitHub
+        ```bash
+        echo "    IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
         ```
 
 7. **Add key to keychain** (platform-specific):
@@ -463,9 +473,12 @@ Dotfiles help maintain consistent configurations across different machines:
 
     - **Option 2**: Discard changes and use repo versions:
 
-        - Restore repository configs and recreate symlinks with these _terminal_ commands
+        - Revert any local changes to use the repository versions
             ```bash
             git restore .
+            ```
+        - Recreate all symlinks from the repository files
+            ```bash
             stow . --restow
             ```
 
