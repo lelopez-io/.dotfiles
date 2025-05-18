@@ -16,13 +16,3 @@ if ! command -v brew &>/dev/null; then
     fi
 fi
 
-# Install essential dependencies for Ruby
-if [[ "$OSTYPE" != "darwin"* ]]; then
-    # Install OpenSSL via Homebrew for Ruby on Linux
-    echo "Installing OpenSSL for Ruby..."
-    brew install openssl@3.0
-fi
-
-# Install libyaml (needed for both macOS and Linux)
-echo "Installing libyaml for Ruby..."
-brew install libyaml
