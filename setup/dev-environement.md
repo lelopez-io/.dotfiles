@@ -341,9 +341,25 @@ We'll set up several tools to make your terminal more powerful and user-friendly
         ```
 
 6. **Setup tmux plugin manager** for extending your terminal multiplexer:
+
     - Install with the following _terminal_ command
         ```bash
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        ```
+
+7. **Install nerd fonts** for terminal glyphs (platform-specific):
+
+    - For macOS, install with the following _terminal_ command
+
+        ```bash
+        curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
+        ```
+
+    - For Linux, install with the following _terminal_ command
+        ```bash
+        mkdir -p "$HOME/.local/share/fonts"
+        curl -fLo "$HOME/.local/share/fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
+        fc-cache -f -v
         ```
 
 ## 6. Git Configuration
@@ -560,21 +576,6 @@ After installing all components, you need to complete a few final steps to get e
             nvim
             ```
     - The lazy.nvim plugin manager will automatically detect and install all configured plugins
-    - Wait for the installation to complete before using Neovim- Launch tmux in your terminal
-        ```bash
-        tmux
-        ```
-    - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
-    - You'll see a message at the bottom of the screen confirming the plugins are installed
-
-### Initialize Neovim Plugins
-
-1. **Launch Neovim to set up plugins:**
-    - Start Neovim from your terminal
-        ```bash
-        nvim
-        ```
-    - The lazy.nvim plugin manager will automatically detect and install all configured plugins
     - Wait for the installation to complete before using Neovim
 
 ---
@@ -582,5 +583,5 @@ After installing all components, you need to complete a few final steps to get e
 That's it! Your development environment should now be set up and ready to go. If you encounter any issues, please refer to the specific tool's documentation or check for errors in the console output.
 
 |          |                                                                                                                                                                                                                                                  |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. | - Launch tmux in your terminal |
