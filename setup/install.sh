@@ -33,7 +33,7 @@ echo "=== Starting Development Environment Setup ==="
 # Run configuration if needed
 if [ ! -f "$SETUP_DIR/Brewfile" ] || [ "$FORCE_CONFIG" = true ]; then
     echo "Initial configuration required..."
-    "$SETUP_DIR/configure.sh"
+    "$SCRIPTS_DIR/00-configure.sh"
 fi
 
 # Configure git if not already set

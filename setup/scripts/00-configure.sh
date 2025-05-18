@@ -7,8 +7,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Config directory
-CONFIG_DIR="$HOME/.dotfiles/setup"
-BREWFILE="$CONFIG_DIR/Brewfile"
+SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BREWFILE="$SETUP_DIR/Brewfile"
 
 # Define which packages should be casks
 declare -a CASK_PACKAGES=(
