@@ -25,7 +25,7 @@ for arg in "$@"; do
 done
 
 
-SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPTS_DIR="$SETUP_DIR/scripts"
 
 echo "=== Starting Development Environment Setup ==="
@@ -54,16 +54,16 @@ fi
 
 # Run installation scripts
 echo "Installing core dependencies..."
-source "$SCRIPTS_DIR/core.sh"
+source "$SCRIPTS_DIR/01-core.sh"
 
 echo "Installing applications..."
-source "$SCRIPTS_DIR/apps.sh"
+source "$SCRIPTS_DIR/02-apps.sh"
 
 echo "Setting up language environments..."
-source "$SCRIPTS_DIR/languages.sh"
+source "$SCRIPTS_DIR/03-languages.sh"
 
 echo "Setting up shell environment..."
-source "$SCRIPTS_DIR/shell.sh"
+source "$SCRIPTS_DIR/04-shell.sh"
 
 # Setup dotfiles with stow
 echo "Setting up dotfiles..."
