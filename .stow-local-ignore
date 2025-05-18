@@ -1,4 +1,4 @@
-^/setup
+^/\.setup
 ^/\.aider/.*
 ^/\.aider\..*
 !^/\.env\.aider

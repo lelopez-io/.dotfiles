@@ -1,0 +1,43 @@
+# Essential Tools
+brew "stow"
+brew "mise"
+brew "tree"
+brew "tmux"
+brew "neovim"
+brew "prettierd"
+brew "stylua"
+brew "yt-dlp"
+brew "ffmpeg"
+brew "libyaml"
+brew "the_silver_searcher"
+brew "ripgrep"
+brew "wget"
+brew "jq"
+brew "git-delta"
+
+# Editors
+cask "visual-studio-code"
+cask "ghostty"
+cask "gitkraken"
+
+# Browsers
+cask "firefox"
+cask "google-chrome"
+
+# Development Tools
+cask "rancher"
+brew "kubectx"
+brew "kube-ps1"
+
+# Productivity Applications
+cask "obsidian"
+cask "meetingbar"
+
+# Utility Applications
+cask "swish"
+cask "discord"
+cask "raycast"
+cask "anydesk"
+cask "hiddenbar"
+cask "1password"
+

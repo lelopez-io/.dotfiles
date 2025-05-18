@@ -40,7 +40,7 @@ cd ~/.dotfiles
 2. Run the setup script:
 
 ```bash
-./setup/scripts/install.sh
+./.setup/scripts/install.sh
 ```
 
 After running the install script, you should:
@@ -119,7 +119,7 @@ The setup is configurable through an interactive prompt that allows you to:
 To reconfigure at any time:
 
 ```bash
-./setup/configure.sh
+./.setup/configure.sh
 ```
 
 ### Additional Configurations
