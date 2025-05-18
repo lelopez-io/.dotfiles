@@ -309,9 +309,12 @@ We'll set up several tools to make your terminal more powerful and user-friendly
 
 5. **Install zsh plugins** for syntax highlighting and autosuggestions:
 
-    - Install with the following _terminal_ command
+    - Install zsh-syntax-highlighting
         ```bash
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        ```
+    - Install zsh-autosuggestions
+        ```bash
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
         ```
 
@@ -330,10 +333,16 @@ We'll set up several tools to make your terminal more powerful and user-friendly
         curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
         ```
 
-    - For Linux, install with the following _terminal_ command
+    - For Linux, install with the following _terminal_ commands
         ```bash
         mkdir -p "$HOME/.local/share/fonts"
+        ```
+    - Download the font file
+        ```bash
         curl -fLo "$HOME/.local/share/fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
+        ```
+    - Refresh the font cache
+        ```bash
         fc-cache -f -v
         ```
 
@@ -379,16 +388,20 @@ Git is essential for version control. Let's configure it for use with GitHub:
         eval "$(ssh-agent -s)"
         ```
 
-6. **Create SSH config**: - Install with the following _terminal_ command
-   `bash
+6. **Create SSH config**:
+    - Create the SSH directory if it doesn't exist
+        ```bash
         mkdir -p ~/.ssh
+        ```
+    - Create the config file with GitHub settings
+        ```bash
         cat > ~/.ssh/config << EOL
 Host github.com
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_ed25519
 EOL
-        `
+        ```
 
 7. **Add key to keychain** (platform-specific):
 
@@ -420,20 +433,20 @@ Dotfiles help maintain consistent configurations across different machines:
     - **Clone the repository** if you haven't already:
 
         - Install with the following _terminal_ command
-            ```zsh
+            ```bash
             git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
             ```
 
     - **Change to the dotfiles directory**:
 
         - Install with the following _terminal_ command
-            ```zsh
+            ```bash
             cd ~/.dotfiles
             ```
 
     - **Use stow to create symlinks**:
         - Install with the following _terminal_ command
-            ```zsh
+            ```bash
             stow . --adopt
             ```
 
@@ -442,22 +455,25 @@ Dotfiles help maintain consistent configurations across different machines:
     - **Option 1**: Keep changes from your existing configs:
 
         - Install with the following _terminal_ command
-            ```zsh
+            ```bash
             git add . && git commit -m 'feat: adopt existing configs'
             ```
 
     - **Option 2**: Discard changes and use repo versions:
 
         - Install with the following _terminal_ command
-            ```zsh
+            ```bash
             git restore .
             stow . --restow
             ```
 
     - **Set up additional symlinks**:
-        - Install with the following _terminal_ command
-            ```zsh
+        - Create symlink for global gitignore
+            ```bash
             ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
+            ```
+        - Create symlink for aider configuration
+            ```bash
             ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
             ```
 
