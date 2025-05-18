@@ -9,7 +9,7 @@ echo "=== Installing Applications ==="
 # Check if Brewfile exists
 if [ ! -f "$BREWFILE" ]; then
     echo "Error: Brewfile not found at $BREWFILE"
-    echo "Please run configure.sh first or run install.sh with the -f flag to force configuration."
+    echo "Please run the setup script first to create your Brewfile."
     exit 1
 fi
 
