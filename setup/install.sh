@@ -30,18 +30,16 @@ SCRIPTS_DIR="$SETUP_DIR/scripts"
 
 echo "=== Starting Development Environment Setup ==="
 
-# Run configuration if needed
+echo "Installing core dependencies..."
+source "$SCRIPTS_DIR/00-core.sh"
+
 if [ ! -f "$SETUP_DIR/Brewfile" ] || [ "$FORCE_CONFIG" = true ]; then
-    echo "Initial configuration required..."
-    "$SCRIPTS_DIR/00-configure.sh"
+    echo "Selecting tools to install..."
+    "$SCRIPTS_DIR/01-tool-select.sh"
 fi
 
-# Run installation scripts
-echo "Installing core dependencies..."
-source "$SCRIPTS_DIR/01-core.sh"
-
-echo "Installing applications..."
-source "$SCRIPTS_DIR/02-apps.sh"
+echo "Installing selected tools and applications..."
+source "$SCRIPTS_DIR/02-tool-install.sh"
 
 echo "Setting up language environments..."
 source "$SCRIPTS_DIR/03-languages.sh"
