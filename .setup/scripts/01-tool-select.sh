@@ -229,7 +229,7 @@ create_minimal_brewfile() {
     done
     
     echo -e "${GREEN}Minimal Brewfile created.${NC} All essential tools will be installed."
-    echo "You can run the setup again with --force to select more tools later."
+    echo "You can run the setup again to select more tools later."
 }
 
 setup_config() {
