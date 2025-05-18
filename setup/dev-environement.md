@@ -11,20 +11,9 @@ comments: true
 
 ## Automated Setup
 
-The easiest way to set up this development environment is to use the automated setup script:
+The easiest way to set up this development environment is to use the automated setup script. For detailed instructions, please refer to the [dotfiles repository README](https://github.com/lelopez-io/.dotfiles#readme).
 
-```bash
-# Clone the dotfiles repository
-git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
-
-# Navigate to the setup directory
-cd ~/.dotfiles/setup
-
-# Run the installation script
-./install.sh
-```
-
-The script will guide you through the setup process with interactive prompts and install all necessary components in the correct order. For those who prefer to understand what's happening or want to perform the setup manually, follow the detailed steps below. The manual setup follows the same sequence as the automated script.
+The automated script will guide you through an interactive setup process, allowing you to choose which tools to install. It handles all the steps described below in the correct order, making it the recommended approach for most users.
 
 ---
 
