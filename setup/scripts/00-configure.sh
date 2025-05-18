@@ -10,23 +10,15 @@ NC='\033[0m' # No Color
 SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BREWFILE="$SETUP_DIR/Brewfile"
 
-# Define which packages should be casks
-declare -a CASK_PACKAGES=(
-    "visual-studio-code"
-    "gitkraken"
-    "ghostty"
-    "firefox"
-    "google-chrome"
-    "obsidian"
-    "meetingbar"
-    "rancher"
-    "swish"
-    "discord"
-    "raycast"
-    "anydesk"
-    "hiddenbar"
-    "1password"
-)
+# Helper function to check if a package is a cask
+is_cask() {
+    local package=$1
+    if brew info --cask $package &>/dev/null; then
+        return 0  # True, it's a cask
+    else
+        return 1  # False, it's not a cask
+    fi
+}
 
 # Data structure format: "name:description:package_name:enabled"
 declare -a ESSENTIAL_TOOLS=(
@@ -179,7 +171,9 @@ generate_category() {
         eval 'for item in "${'"$array_name"'[@]}"; do
             if [ "$(get_field "$item" 4)" = "1" ]; then
                 local package=$(get_field "$item" 3)
-                if [[ " ${CASK_PACKAGES[@]} " =~ " ${package} " ]]; then
+                
+                # Auto-detect if this is a cask
+                if is_cask "$package"; then
                     echo "cask \"$package\"" >> "$BREWFILE"
                 else
                     echo "brew \"$package\"" >> "$BREWFILE"
