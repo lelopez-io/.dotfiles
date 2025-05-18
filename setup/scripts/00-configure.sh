@@ -196,7 +196,7 @@ generate_config() {
 
     # Create Brewfile based on selections
     echo "# Generated Brewfile - $(date)" > "$BREWFILE"
-    echo "tap \"homebrew/bundle\"" >> "$BREWFILE"
+    # No tap needed as homebrew/bundle is now integrated into Homebrew core
     echo "" >> "$BREWFILE"
 
     # Generate each category
