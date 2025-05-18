@@ -44,13 +44,17 @@ The script will guide you through the setup process with interactive prompts and
 ### Linux (Debian/Ubuntu)
 
 1. [**Build Essentials:**](https://packages.debian.org/sid/build-essential) A package of packages used for building software
+
     ```sh
     sudo apt-get install build-essential
     ```
+
 2. [**Git:**](https://packages.debian.org/sid/git) A version control system.
+
     ```sh
     sudo apt-get install git
     ```
+
 3. [**ZSH:**](https://zsh.sourceforge.io/) A shell we'll be extending to make our terminal more helpful
     ```sh
     sudo apt-get install zsh
@@ -64,18 +68,21 @@ The script will guide you through the setup process with interactive prompts and
 [**Homebrew**](https://brew.sh/) is a package manager for macOS and Linux that simplifies the installation of software:
 
 1. Install the Homebrew package manager:
+
     ```bash
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
 2. Add Homebrew to your PATH (choose the appropriate command for your platform):
-    
+
     For macOS:
+
     ```bash
     eval "$(/opt/homebrew/bin/brew shellenv)"
     ```
-    
+
     For Linux:
+
     ```bash
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     ```
@@ -108,11 +115,15 @@ These core command-line utilities form the foundation of your development enviro
 These are the programs where you'll spend most of your development time:
 
 1. [**Visual Studio Code:**](https://code.visualstudio.com/) A versatile code editor.
+
     - Press `Cmd+Shift+P`, search for "Shell Command", and select "Install 'code' command in PATH"
     - Sign in with Github to sync your settings
     - Check out [these settings](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json) for a good starting point
+
 2. [**GitKraken:**](https://www.gitkraken.com/) A powerful Git GUI client for version control
+
 3. [**Ghostty:**](https://ghostty.org/) A highly customizable terminal emulator
+
 4. [**Nerd Fonts:**](https://www.nerdfonts.com/) Fonts with glyphs for shell and editors
 
 ### Browsers
@@ -318,33 +329,33 @@ After installing all components, you need to complete a few final steps to get e
 ### Configure Visual Studio Code
 
 1. **Launch VS Code and configure settings:**
-   - Launch VS Code from the command line
-     ```bash
-     code
-     ```
-   - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
-   - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
-   - Paste these settings into your settings JSON file and save
+    - Launch VS Code from the command line
+        ```bash
+        code
+        ```
+    - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
+    - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
+    - Paste these settings into your settings JSON file and save
 
 ### Install Tmux Plugins
 
 1. **Start tmux and install plugins:**
-   - Launch tmux in your terminal
-     ```bash
-     tmux
-     ```
-   - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
-   - You'll see a message at the bottom of the screen confirming the plugins are installed
+    - Launch tmux in your terminal
+        ```bash
+        tmux
+        ```
+    - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
+    - You'll see a message at the bottom of the screen confirming the plugins are installed
 
 ### Initialize Neovim Plugins
 
 1. **Launch Neovim to set up plugins:**
-   - Start Neovim from your terminal
-     ```bash
-     nvim
-     ```
-   - The lazy.nvim plugin manager will automatically detect and install all configured plugins
-   - Wait for the installation to complete before using Neovim
+    - Start Neovim from your terminal
+        ```bash
+        nvim
+        ```
+    - The lazy.nvim plugin manager will automatically detect and install all configured plugins
+    - Wait for the installation to complete before using Neovim
 
 ---
 
