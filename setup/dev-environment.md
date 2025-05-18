@@ -45,10 +45,14 @@ The automated script will guide you through an interactive setup process, allowi
     ```
 
 3. [**ZSH:**](https://zsh.sourceforge.io/) A shell we'll be extending to make our terminal more helpful
-    ```sh
-    sudo apt-get install zsh
-    sudo chsh -s $(which zsh) $USER
-    ```
+    - Install ZSH
+        ```sh
+        sudo apt-get install zsh
+        ```
+    - Set ZSH as your default shell
+        ```sh
+        sudo chsh -s $(which zsh) $USER
+        ```
 
 ## Core Setup
 
