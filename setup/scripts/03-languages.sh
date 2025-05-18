@@ -21,10 +21,6 @@ if ! eval "$(mise activate bash)"; then
     exit 1
 fi
 
-# Trust existing mise config to avoid interactive prompts
-echo "Trusting mise configurations..."
-mise trust --all
-
 # Install and set up Node.js
 echo "Setting up Node.js..."
 mise use --yes --global node@22.15.1
