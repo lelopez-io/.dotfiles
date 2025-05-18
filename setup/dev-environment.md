@@ -299,17 +299,15 @@ We'll set up several tools to make your terminal more powerful and user-friendly
 
 4. **Install spaceship prompt** for an enhanced terminal experience:
 
-    - Install with the following _terminal_ command
-
+    - Clone the spaceship prompt repository
         ```bash
         git clone https://github.com/spaceship-prompt/spaceship-prompt.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt" --depth=1
         ```
 
-    - Link the theme file:
-        - Install with the following _terminal_ command
-            ```bash
-            ln -sf "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship.zsh-theme"
-            ```
+    - Link the theme file
+        ```bash
+        ln -sf "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship.zsh-theme"
+        ```
 
 5. **Install zsh plugins** for syntax highlighting and autosuggestions:
 
