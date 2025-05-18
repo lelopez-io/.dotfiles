@@ -25,12 +25,14 @@ fi
 echo "Trusting mise configurations..."
 mise trust --all
 
-# Install all tools defined in config.toml
-echo "Installing all configured languages from .config/mise/config.toml..."
-mise install --yes
+# Install and set up Node.js
+echo "Setting up Node.js..."
+mise use --yes --global node@22.15.1
 
-# Set global versions for common languages
-echo "Setting global language versions..."
-mise use --yes --global node@lts
+# Install and set up Python
+echo "Setting up Python..."
 mise use --yes --global python@3.12
-mise use --yes --global ruby@latest
+
+# Install and set up Ruby
+echo "Setting up Ruby..."
+mise use --yes --global ruby@3.4.4
