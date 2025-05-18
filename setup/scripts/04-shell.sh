@@ -87,6 +87,4 @@ if [ ! -f "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" ]; then
     echo "  Font name: AnonymiceProNerdFontMono-Regular"
 fi
 
-# SSH configuration for Git is now handled in 05-git.sh
-
 echo "Shell configuration complete!"

@@ -22,7 +22,7 @@ The automated script will guide you through an interactive setup process, allowi
 ### MacOS
 
 1. [**Xcode Command Line Tools:**](https://developer.apple.com/xcode/resources/) Enables UNIX-style development via your terminal.
-    ```zsh
+    ```bash
     xcode-select --install
     ```
 
