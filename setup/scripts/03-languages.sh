@@ -9,6 +9,10 @@ if ! eval "$(mise activate bash)"; then
     exit 1
 fi
 
+# Trust existing mise config to avoid interactive prompts
+echo "Trusting mise configurations..."
+mise trust --all
+
 # Set Ruby configuration options based on OS
 if [[ "$OSTYPE" != "darwin"* ]]; then
     # On Linux, use OpenSSL from Homebrew (installed in core.sh)
