@@ -36,22 +36,6 @@ if [ ! -f "$SETUP_DIR/Brewfile" ] || [ "$FORCE_CONFIG" = true ]; then
     "$SCRIPTS_DIR/00-configure.sh"
 fi
 
-# Configure git if not already set
-if [ -z "$(git config --global user.name)" ]; then
-    read -p "Enter your Git name: " git_name
-    git config --global user.name "$git_name"
-fi
-
-if [ -z "$(git config --global user.email)" ]; then
-    read -p "Enter your Git email: " git_email
-    git config --global user.email "$git_email"
-fi
-
-# Set default branch to main if not set
-if [ -z "$(git config --global init.defaultBranch)" ]; then
-    git config --global init.defaultBranch main
-fi
-
 # Run installation scripts
 echo "Installing core dependencies..."
 source "$SCRIPTS_DIR/01-core.sh"
@@ -64,6 +48,9 @@ source "$SCRIPTS_DIR/03-languages.sh"
 
 echo "Setting up shell environment..."
 source "$SCRIPTS_DIR/04-shell.sh"
+
+echo "Setting up Git configuration..."
+source "$SCRIPTS_DIR/05-git.sh"
 
 # Setup dotfiles with stow
 echo "Setting up dotfiles..."
@@ -96,9 +83,6 @@ fi
 echo "Setting up additional symlinks..."
 ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
 ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
-
-# Configure git to use global gitignore
-git config --global core.excludesfile ~/.gitignore
 
 echo "=== Setup Complete! ==="
 echo "NOTE: You may need to restart your terminal for all changes to take effect."
