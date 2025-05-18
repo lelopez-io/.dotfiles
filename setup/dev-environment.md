@@ -59,7 +59,7 @@ The automated script will guide you through an interactive setup process, allowi
 ### MacOS
 
 1. [**Homebrew:**](https://brew.sh/) A package manager for macOS that simplifies the installation of software.
-    - Install with the following _terminal_ command
+    - Install Homebrew by running this script in your _terminal_
         ```bash
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ```
@@ -71,7 +71,7 @@ The automated script will guide you through an interactive setup process, allowi
 ### Linux (Debian/Ubuntu)
 
 1. [**Homebrew:**](https://brew.sh/) A package manager for Linux that simplifies the installation of software.
-    - Install with the following _terminal_ command
+    - Install Homebrew by running this script in your _terminal_
         ```bash
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ```
@@ -105,7 +105,7 @@ These core command-line utilities form the foundation of your development enviro
 
 If installing manually, you can install essential tools with Homebrew:
 
--   Install with the following _terminal_ command
+-   Install all essential tools at once with Homebrew
     ```bash
     brew install stow tmux neovim prettierd stylua yt-dlp ffmpeg libyaml the_silver_searcher ripgrep wget jq git-delta mise
     ```
@@ -116,21 +116,21 @@ These are the programs where you'll spend most of your development time:
 
 1. [**Visual Studio Code:**](https://code.visualstudio.com/) A versatile code editor.
 
-    - Install with the following _terminal_ command
+    - Install VS Code using Homebrew
         ```bash
         brew install --cask visual-studio-code
         ```
 
 2. [**GitKraken:**](https://www.gitkraken.com/) A powerful Git GUI client for version control.
 
-    - Install with the following _terminal_ command
+    - Install GitKraken using Homebrew
         ```bash
         brew install --cask gitkraken
         ```
 
 3. [**Ghostty:**](https://ghostty.org/) A highly customizable terminal emulator.
 
-    - Install with the following _terminal_ command
+    - Install Ghostty using Homebrew
         ```bash
         brew install --cask ghostty
         ```
@@ -142,13 +142,13 @@ Essential browsers for development and testing:
 
 1. [**Firefox:**](https://www.mozilla.org/en-US/firefox/new/) The main browser for research with ad-blockers and extensions.
 
-    - Install with the following _terminal_ command
+    - Install Firefox using Homebrew
         ```bash
         brew install --cask firefox
         ```
 
 2. [**Chrome:**](https://www.google.com/chrome/) A clean testing environment with minimal extensions.
-    - Install with the following _terminal_ command
+    - Install Chrome using Homebrew
         ```bash
         brew install --cask google-chrome
         ```
@@ -159,20 +159,20 @@ Specialized tools for container and cloud development:
 
 1. [**Rancher Desktop:**](https://rancherdesktop.io/) Container management platform.
 
-    - Install with the following _terminal_ command
+    - Install Rancher Desktop using Homebrew
         ```bash
         brew install --cask rancher
         ```
 
 2. [**Kubectx:**](https://github.com/ahmetb/kubectx) Tool for switching Kubernetes contexts.
 
-    - Install with the following _terminal_ command
+    - Install kubectx using Homebrew
         ```bash
         brew install kubectx
         ```
 
 3. [**Kube-ps1:**](https://github.com/jonmosco/kube-ps1) Kubernetes prompt for bash and zsh.
-    - Install with the following _terminal_ command
+    - Install kube-ps1 using Homebrew
         ```bash
         brew install kube-ps1
         ```
@@ -183,13 +183,13 @@ Tools to help organize your work:
 
 1. [**Obsidian:**](https://obsidian.md/) A powerful note-taking app for thoughts, ideas, and code snippets.
 
-    - Install with the following _terminal_ command
+    - Install Obsidian using Homebrew
         ```bash
         brew install --cask obsidian
         ```
 
 2. [**MeetingBar:**](https://meetingbar.app/) A handy tool for tracking meetings in your menu bar.
-    - Install with the following _terminal_ command
+    - Install MeetingBar using Homebrew
         ```bash
         brew install --cask meetingbar
         ```
@@ -200,41 +200,41 @@ Additional utilities to enhance your workflow:
 
 1. [**Swish:**](https://highlyopinionated.co/swish/) Window management through gestures.
 
-    - Install with the following _terminal_ command
+    - Install Swish using Homebrew
         ```bash
         brew install --cask swish
         ```
 
 2. [**Discord:**](https://discord.com/) Communication platform for communities.
 
-    - Install with the following _terminal_ command
+    - Install Discord using Homebrew
         ```bash
         brew install --cask discord
         ```
 
 3. [**Raycast:**](https://www.raycast.com/) Productivity launcher and replacement for Spotlight.
 
-    - Install with the following _terminal_ command
+    - Install Raycast using Homebrew
         ```bash
         brew install --cask raycast
         ```
 
 4. [**AnyDesk:**](https://anydesk.com/) Remote desktop software.
 
-    - Install with the following _terminal_ command
+    - Install AnyDesk using Homebrew
         ```bash
         brew install --cask anydesk
         ```
 
 5. [**HiddenBar:**](https://github.com/dwarvesf/hidden/) Cleanup your menu bar icons.
 
-    - Install with the following _terminal_ command
+    - Install HiddenBar using Homebrew
         ```bash
         brew install --cask hiddenbar
         ```
 
 6. [**1Password:**](https://1password.com/) Password manager and secure information storage.
-    - Install with the following _terminal_ command
+    - Install 1Password using Homebrew
         ```bash
         brew install --cask 1password
         ```
@@ -245,27 +245,27 @@ With [mise](https://mise.jdx.dev/) (the modern runtime version manager), you can
 
 1. **Activate mise:**
 
-    - Install with the following _terminal_ command
+    - Activate mise in your current shell
         ```bash
         eval "$(mise activate bash)"
         ```
 
 2. **Set up Node.js:**
 
-    - Install with the following _terminal_ command
+    - Install the latest LTS version of Node.js
         ```bash
         mise use --global node@lts
         ```
 
 3. **Set up Python:**
 
-    - Install with the following _terminal_ command
+    - Install Python 3.12
         ```bash
         mise use --global python@3.12
         ```
 
 4. **Set up Ruby:**
-    - Install with the following _terminal_ command
+    - Install the latest Ruby version with YAML support
         ```bash
         RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
         ```
@@ -278,21 +278,21 @@ We'll set up several tools to make your terminal more powerful and user-friendly
 
 1. **Install colorls** for enhanced directory listings:
 
-    - Install with the following _terminal_ command
+    - Install colorls using Ruby's gem package manager
         ```bash
         mise exec ruby -- gem install colorls
         ```
 
 2. **Install aider** for AI-assisted coding:
 
-    - Install with the following _terminal_ command
+    - Install aider using Python's pip package manager
         ```bash
         mise exec python -- python -m pip install -U aider-chat
         ```
 
 3. **Install oh-my-zsh** framework for managing zsh configuration:
 
-    - Install with the following _terminal_ command
+    - Install Oh My Zsh framework for managing ZSH configuration
         ```bash
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         ```
@@ -322,20 +322,20 @@ We'll set up several tools to make your terminal more powerful and user-friendly
 
 6. **Setup tmux plugin manager** for extending your terminal multiplexer:
 
-    - Install with the following _terminal_ command
+    - Install Tmux Plugin Manager
         ```bash
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
         ```
 
 7. [**Nerd Fonts:**](https://www.nerdfonts.com/) Fonts with glyphs for shell and editors.
 
-    - For macOS, install with the following _terminal_ command
+    - For macOS, download and install the Nerd Font with this _terminal_ command
 
         ```bash
         curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
         ```
 
-    - For Linux, install with the following _terminal_ commands
+    - For Linux, create the fonts directory with this _terminal_ command
         ```bash
         mkdir -p "$HOME/.local/share/fonts"
         ```
@@ -356,7 +356,7 @@ Git is essential for version control. Let's configure it for use with GitHub:
 
 1. **Configure git user details** if not already set:
 
-    - Install with the following _terminal_ command
+    - Set your Git username and email
         ```bash
         git config --global user.name "Your Name"
         git config --global user.email "your.email@example.com"
@@ -364,28 +364,28 @@ Git is essential for version control. Let's configure it for use with GitHub:
 
 2. **Set default branch to main**:
 
-    - Install with the following _terminal_ command
+    - Configure Git to use 'main' as the default branch name
         ```bash
         git config --global init.defaultBranch main
         ```
 
 3. **Configure git to use global gitignore**:
 
-    - Install with the following _terminal_ command
+    - Set up a global gitignore file
         ```bash
         git config --global core.excludesfile ~/.gitignore
         ```
 
 4. **Generate SSH key** for GitHub:
 
-    - Install with the following _terminal_ command
+    - Generate a new SSH key for GitHub authentication
         ```bash
         ssh-keygen -t ed25519 -C "your.email@example.com"
         ```
 
 5. **Start SSH agent**:
 
-    - Install with the following _terminal_ command
+    - Start the SSH agent in the background
         ```bash
         eval "$(ssh-agent -s)"
         ```
@@ -407,19 +407,19 @@ EOL
 
 7. **Add key to keychain** (platform-specific):
 
-    - For macOS, install with the following _terminal_ command
+    - For macOS, add SSH key to the keychain with this _terminal_ command
 
         ```bash
         ssh-add --apple-use-keychain ~/.ssh/id_ed25519
         ```
 
-    - For Linux, install with the following _terminal_ command
+    - For Linux, add SSH key to the agent with this _terminal_ command
         ```bash
         ssh-add ~/.ssh/id_ed25519
         ```
 
 8. **Display the public key** (add to GitHub):
-    - Install with the following _terminal_ command
+    - Display your public SSH key to copy to GitHub
         ```bash
         cat ~/.ssh/id_ed25519.pub
         ```
@@ -434,20 +434,20 @@ Dotfiles help maintain consistent configurations across different machines:
 
     - **Clone the repository** if you haven't already:
 
-        - Install with the following _terminal_ command
+        - Clone the dotfiles repository with this _terminal_ command
             ```bash
             git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
             ```
 
     - **Change to the dotfiles directory**:
 
-        - Install with the following _terminal_ command
+        - Navigate to the dotfiles directory with this _terminal_ command
             ```bash
             cd ~/.dotfiles
             ```
 
     - **Use stow to create symlinks**:
-        - Install with the following _terminal_ command
+        - Create symlinks while preserving existing files with this _terminal_ command
             ```bash
             stow . --adopt
             ```
@@ -456,14 +456,14 @@ Dotfiles help maintain consistent configurations across different machines:
 
     - **Option 1**: Keep changes from your existing configs:
 
-        - Install with the following _terminal_ command
+        - Commit your existing configuration files with this _terminal_ command
             ```bash
             git add . && git commit -m 'feat: adopt existing configs'
             ```
 
     - **Option 2**: Discard changes and use repo versions:
 
-        - Install with the following _terminal_ command
+        - Restore repository configs and recreate symlinks with these _terminal_ commands
             ```bash
             git restore .
             stow . --restow
@@ -528,28 +528,28 @@ For more specialized development needs, you can extend your setup with language-
 
 1. **For Go development**:
 
-    - Install with the following _terminal_ command
+    - Install Go with this _terminal_ command
         ```bash
         mise use --global go@latest
         ```
 
 2. **For Rust development**:
 
-    - Install with the following _terminal_ command
+    - Install Rust with this _terminal_ command
         ```bash
         mise use --global rust@stable
         ```
 
 3. **For Java development**:
 
-    - Install with the following _terminal_ command
+    - Install Java with this _terminal_ command
         ```bash
         mise use --global java@temurin-17
         ```
 
 4. **For PHP development**:
 
-    - Install with the following _terminal_ command
+    - Install PHP with this _terminal_ command
         ```bash
         mise use --global php@8.1
         ```
@@ -558,20 +558,20 @@ For more specialized development needs, you can extend your setup with language-
 
     - **AWS CLI**:
 
-        - Install with the following _terminal_ command
+        - Install AWS CLI with this _terminal_ command
             ```bash
             brew install awscli
             ```
 
     - **Azure CLI**:
 
-        - Install with the following _terminal_ command
+        - Install Azure CLI with this _terminal_ command
             ```bash
             brew install azure-cli
             ```
 
     - **Google Cloud SDK**:
-        - Install with the following _terminal_ command
+        - Install Google Cloud SDK with this _terminal_ command
             ```bash
             brew install --cask google-cloud-sdk
             ```
