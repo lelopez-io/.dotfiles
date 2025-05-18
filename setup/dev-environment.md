@@ -524,54 +524,60 @@ That's it! Your development environment should now be set up and ready to go. If
 
 ## Additional Specialized Tools
 
-For more specialized development needs, you can extend your setup with language-specific and cloud development tools. Here are some examples:
+For more specialized development needs, you can extend your setup with additional tools and languages. Here are some examples:
 
-1. **For Go development**:
+### Additional Programming Languages
+
+Extend your development capabilities with these programming languages:
+
+1. **Go**:
 
     - Install Go with this _terminal_ command
         ```bash
         mise use --global go@latest
         ```
 
-2. **For Rust development**:
+2. **Rust**:
 
     - Install Rust with this _terminal_ command
         ```bash
         mise use --global rust@stable
         ```
 
-3. **For Java development**:
+3. **Java**:
 
     - Install Java with this _terminal_ command
         ```bash
         mise use --global java@temurin-17
         ```
 
-4. **For PHP development**:
+4. **PHP**:
 
     - Install PHP with this _terminal_ command
         ```bash
         mise use --global php@8.1
         ```
 
-5. **Cloud provider tools**:
+### Cloud Development Tools
 
-    - **AWS CLI**:
+Essential tools for working with cloud providers:
 
-        - Install AWS CLI with this _terminal_ command
-            ```bash
-            brew install awscli
-            ```
+1. **AWS CLI**:
 
-    - **Azure CLI**:
+    - Install AWS CLI with this _terminal_ command
+        ```bash
+        brew install awscli
+        ```
 
-        - Install Azure CLI with this _terminal_ command
-            ```bash
-            brew install azure-cli
-            ```
+2. **Azure CLI**:
 
-    - **Google Cloud SDK**:
-        - Install Google Cloud SDK with this _terminal_ command
-            ```bash
-            brew install --cask google-cloud-sdk
-            ```
+    - Install Azure CLI with this _terminal_ command
+        ```bash
+        brew install azure-cli
+        ```
+
+3. **Google Cloud SDK**:
+    - Install Google Cloud SDK with this _terminal_ command
+        ```bash
+        brew install --cask google-cloud-sdk
+        ```
