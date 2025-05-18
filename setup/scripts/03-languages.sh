@@ -3,17 +3,7 @@ set -e
 
 echo "=== Setting up Language Environments ==="
 
-# Ensure mise is in PATH
-if ! eval "$(mise activate bash)"; then
-    echo "Error: Failed to activate mise"
-    exit 1
-fi
-
-# Trust existing mise config to avoid interactive prompts
-echo "Trusting mise configurations..."
-mise trust --all
-
-# Set Ruby configuration options based on OS
+# Set Ruby configuration options based on OS first (needs to be set before mise installs Ruby)
 if [[ "$OSTYPE" != "darwin"* ]]; then
     # On Linux, use OpenSSL from Homebrew (installed in core.sh)
     echo "Setting up Ruby configuration for Linux..."
@@ -24,20 +14,23 @@ else
     export RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)"
 fi
 
-# Install and set up Node.js
-echo "Setting up Node.js..."
-mise use --global node@lts
+# Ensure mise is in PATH
+echo "Activating mise..."
+if ! eval "$(mise activate bash)"; then
+    echo "Error: Failed to activate mise"
+    exit 1
+fi
 
-# Install and set up Python
-echo "Setting up Python..."
-mise use --global python@3.12
+# Trust existing mise config to avoid interactive prompts
+echo "Trusting mise configurations..."
+mise trust --all
 
-# Install and set up Ruby
-echo "Setting up Ruby..."
-mise use --global ruby@latest
+# Install all tools defined in config.toml
+echo "Installing all configured languages from .config/mise/config.toml..."
+mise install --yes
 
-# Verify installations
-echo "Verifying language installations..."
-echo "Node.js: $(mise exec node -- node --version)"
-echo "Python: $(mise exec python -- python --version)"
-echo "Ruby: $(mise exec ruby -- ruby --version)"
+# Set global versions for common languages
+echo "Setting global language versions..."
+mise use --yes --global node@lts
+mise use --yes --global python@3.12
+mise use --yes --global ruby@latest
