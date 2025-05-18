@@ -14,11 +14,17 @@ comments: true
 The easiest way to set up this development environment is to use the automated setup script:
 
 ```bash
+# Clone the dotfiles repository
+git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
+
+# Navigate to the setup directory
 cd ~/.dotfiles/setup
+
+# Run the installation script
 ./install.sh
 ```
 
-For those who prefer to understand what's happening or want to perform the setup manually, follow the detailed steps below. The manual setup follows the same sequence as the automated script.
+The script will guide you through the setup process with interactive prompts and install all necessary components in the correct order. For those who prefer to understand what's happening or want to perform the setup manually, follow the detailed steps below. The manual setup follows the same sequence as the automated script.
 
 ---
 
@@ -57,16 +63,22 @@ For those who prefer to understand what's happening or want to perform the setup
 
 [**Homebrew**](https://brew.sh/) is a package manager for macOS and Linux that simplifies the installation of software:
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+1. Install the Homebrew package manager:
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
 
-# Add Homebrew to PATH for the current session
-if [[ "$OSTYPE" == "darwin"* ]]; then
+2. Add Homebrew to your PATH (choose the appropriate command for your platform):
+    
+    For macOS:
+    ```bash
     eval "$(/opt/homebrew/bin/brew shellenv)"
-else
+    ```
+    
+    For Linux:
+    ```bash
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-```
+    ```
 
 ## 3. Configure Your Tools
 
@@ -301,48 +313,38 @@ brew install --cask google-cloud-sdk # Google Cloud SDK
 
 ## Final Configuration Steps
 
-After installing all components, you need to complete a few final steps:
+After installing all components, you need to complete a few final steps to get everything working properly:
 
 ### Configure Visual Studio Code
 
-Set up VS Code with recommended settings:
-
-```bash
-# Launch VS Code
-code
-
-# Press Cmd+Shift+P (or Ctrl+Shift+P on Linux) to open the command palette
-# Type "Preferences: Open Settings (JSON)" and select it
-
-# Copy the contents from the repository's settings file:
-# https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json
-
-# Paste these settings into your settings.json file and save
-```
+1. **Launch VS Code and configure settings:**
+   - Launch VS Code from the command line
+     ```bash
+     code
+     ```
+   - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
+   - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
+   - Paste these settings into your settings JSON file and save
 
 ### Install Tmux Plugins
 
-Open tmux and install the plugins:
-
-```bash
-# Start tmux
-tmux
-
-# Inside tmux, press Ctrl+A and then Shift+I to install plugins
-# You should see a message confirming the plugins are installed
-```
+1. **Start tmux and install plugins:**
+   - Launch tmux in your terminal
+     ```bash
+     tmux
+     ```
+   - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
+   - You'll see a message at the bottom of the screen confirming the plugins are installed
 
 ### Initialize Neovim Plugins
 
-Launch Neovim to automatically install all configured plugins:
-
-```bash
-# Start Neovim
-nvim
-
-# Lazy.nvim will automatically install all configured plugins
-# Wait for the installation to complete
-```
+1. **Launch Neovim to set up plugins:**
+   - Start Neovim from your terminal
+     ```bash
+     nvim
+     ```
+   - The lazy.nvim plugin manager will automatically detect and install all configured plugins
+   - Wait for the installation to complete before using Neovim
 
 ---
 
