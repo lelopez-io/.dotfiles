@@ -17,7 +17,7 @@ The automated script will guide you through an interactive setup process, allowi
 
 ---
 
-## 1. Foundational Dependencies
+## Foundational Dependencies
 
 ### MacOS
 
@@ -50,7 +50,7 @@ The automated script will guide you through an interactive setup process, allowi
     sudo chsh -s $(which zsh) $USER
     ```
 
-## 2. Core Setup
+## Core Setup
 
 ### Installing Homebrew
 
@@ -76,7 +76,7 @@ The automated script will guide you through an interactive setup process, allowi
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     ```
 
-## 3. Configure Your Tools
+## Configure Your Tools
 
 Before installing software, you need to decide which tools you'd like to use. The following categories of tools are available:
 
@@ -246,7 +246,7 @@ Additional utilities to enhance your workflow:
         brew install --cask 1password
         ```
 
-## 4. Setting Up Language Environments
+## Setting Up Language Environments
 
 With [mise](https://mise.jdx.dev/) (the modern runtime version manager), you can easily manage multiple programming language versions:
 
@@ -277,7 +277,7 @@ With [mise](https://mise.jdx.dev/) (the modern runtime version manager), you can
         RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
         ```
 
-## 5. Shell Configuration
+## Shell Configuration
 
 ### Terminal Enhancements
 
@@ -348,7 +348,7 @@ We'll set up several tools to make your terminal more powerful and user-friendly
         fc-cache -f -v
         ```
 
-## 6. Git Configuration
+## Git Configuration
 
 ### Setting up Git
 
@@ -420,7 +420,7 @@ EOL
         cat ~/.ssh/id_ed25519.pub
         ```
 
-## 7. Dotfiles Setup
+## Dotfiles Setup
 
 ### Managing Configuration Files
 
