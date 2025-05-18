@@ -186,95 +186,156 @@ brew install --cask swish discord raycast anydesk hiddenbar 1password
 
 With [mise](https://mise.jdx.dev/) (the modern runtime version manager), you can easily manage multiple programming language versions:
 
-```bash
-# Make sure mise is activated
-eval "$(mise activate bash)"
+1. **Activate mise**:
 
-# Set up Node.js
-mise use --global node@lts
+    ```bash
+    eval "$(mise activate bash)"
+    ```
 
-# Set up Python
-mise use --global python@3.12
+2. **Set up Node.js**:
 
-# Set up Ruby
-RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
-```
+    ```bash
+    mise use --global node@lts
+    ```
+
+3. **Set up Python**:
+
+    ```bash
+    mise use --global python@3.12
+    ```
+
+4. **Set up Ruby**:
+    ```bash
+    RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix libyaml)" mise use --global ruby@latest
+    ```
 
 ## 5. Shell Configuration
 
 ### Terminal Enhancements
 
-```bash
-# Install colorls for enhanced directory listings
-mise exec ruby -- gem install colorls
+1. **Install colorls** for enhanced directory listings:
 
-# Install aider for AI-assisted coding
-mise exec python -- python -m pip install -U aider-chat
+    ```bash
+    mise exec ruby -- gem install colorls
+    ```
 
-# Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+2. **Install aider** for AI-assisted coding:
 
-# Install spaceship prompt
-git clone https://github.com/spaceship-prompt/spaceship-prompt.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt" --depth=1
-ln -sf "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship.zsh-theme"
+    ```bash
+    mise exec python -- python -m pip install -U aider-chat
+    ```
 
-# Install zsh plugins
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+3. **Install oh-my-zsh** framework for managing zsh configuration:
 
-# Setup tmux plugin manager
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    ```bash
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    ```
 
-# Install nerd fonts
-if [[ "$OSTYPE" == "darwin"* ]]; then
+4. **Install spaceship prompt** for an enhanced terminal experience:
+
+    ```bash
+    git clone https://github.com/spaceship-prompt/spaceship-prompt.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt" --depth=1
+    ```
+
+    Link the theme file:
+
+    ```bash
+    ln -sf "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship.zsh-theme"
+    ```
+
+5. **Install zsh plugins** for syntax highlighting and autosuggestions:
+
+    ```bash
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    ```
+
+6. **Setup tmux plugin manager** for extending your terminal multiplexer:
+
+    ```bash
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    ```
+
+7. **Install nerd fonts** for terminal glyphs (platform-specific):
+
+    For macOS:
+
+    ```bash
     curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
-else
+    ```
+
+    For Linux:
+
+    ```bash
     mkdir -p "$HOME/.local/share/fonts"
     curl -fLo "$HOME/.local/share/fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
     fc-cache -f -v
-fi
-```
+    ```
 
 ## 6. Git Configuration
 
 ### Setting up Git
 
-```bash
-# Configure git user details if not already set
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
+1. **Configure git user details** if not already set:
 
-# Set default branch to main
-git config --global init.defaultBranch main
+    ```bash
+    git config --global user.name "Your Name"
+    git config --global user.email "your.email@example.com"
+    ```
 
-# Configure git to use global gitignore
-git config --global core.excludesfile ~/.gitignore
+2. **Set default branch to main**:
 
-# Generate SSH key for GitHub
-ssh-keygen -t ed25519 -C "your.email@example.com"
+    ```bash
+    git config --global init.defaultBranch main
+    ```
 
-# Start SSH agent
-eval "$(ssh-agent -s)"
+3. **Configure git to use global gitignore**:
 
-# Create SSH config
-mkdir -p ~/.ssh
-cat > ~/.ssh/config << EOL
+    ```bash
+    git config --global core.excludesfile ~/.gitignore
+    ```
+
+4. **Generate SSH key** for GitHub:
+
+    ```bash
+    ssh-keygen -t ed25519 -C "your.email@example.com"
+    ```
+
+5. **Start SSH agent**:
+
+    ```bash
+    eval "$(ssh-agent -s)"
+    ```
+
+6. **Create SSH config**:
+   `bash
+    mkdir -p ~/.ssh
+    cat > ~/.ssh/config << EOL
 Host github.com
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_ed25519
 EOL
+    `
 
-# Add key to keychain (macOS only)
-if [[ "$OSTYPE" == "darwin"* ]]; then
+7. **Add key to keychain** (platform-specific):
+
+    For macOS:
+
+    ```bash
     ssh-add --apple-use-keychain ~/.ssh/id_ed25519
-else
-    ssh-add ~/.ssh/id_ed25519
-fi
+    ```
 
-# Display the public key (add to GitHub)
-cat ~/.ssh/id_ed25519.pub
-```
+    For Linux:
+
+    ```bash
+    ssh-add ~/.ssh/id_ed25519
+    ```
+
+8. **Display the public key** (add to GitHub):
+    ```bash
+    cat ~/.ssh/id_ed25519.pub
+    ```
 
 ## 7. Dotfiles Setup
 
@@ -282,25 +343,42 @@ cat ~/.ssh/id_ed25519.pub
 
 1. [**Dotfiles:**](https://github.com/lelopez-io/.dotfiles/tree/main) My preferred starting point for configuration files.
 
+    **Clone the repository** if you haven't already:
+
     ```zsh
-    # Clone the repository if you haven't already
     git clone https://github.com/lelopez-io/.dotfiles.git ~/.dotfiles
+    ```
 
-    # Change to the dotfiles directory
+    **Change to the dotfiles directory**:
+
+    ```zsh
     cd ~/.dotfiles
+    ```
 
-    # Use stow to create symlinks
+    **Use stow to create symlinks**:
+
+    ```zsh
     stow . --adopt
+    ```
 
-    # At this point, you can either:
-    # 1. Keep changes from your existing configs:
-    #    git add . && git commit -m 'feat: adopt existing configs'
-    #
-    # 2. Discard changes and use repo versions:
-    #    git restore .
-    #    stow . --restow
+    At this point, you can either:
 
-    # Set up additional symlinks
+    **Option 1**: Keep changes from your existing configs:
+
+    ```zsh
+    git add . && git commit -m 'feat: adopt existing configs'
+    ```
+
+    **Option 2**: Discard changes and use repo versions:
+
+    ```zsh
+    git restore .
+    stow . --restow
+    ```
+
+    **Set up additional symlinks**:
+
+    ```zsh
     ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
     ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
     ```
@@ -309,18 +387,34 @@ cat ~/.ssh/id_ed25519.pub
 
 For more specialized development needs, you can extend your setup with language-specific and cloud development tools. These are already covered by the mise tool for language management:
 
-```bash
-# Additional language environments with mise
-mise use --global go@latest        # Go development
-mise use --global rust@stable      # Rust development
-mise use --global java@temurin-17  # Java development
-mise use --global php@8.1          # PHP development
+1. **Additional language environments with mise**:
 
-# Cloud provider tools
-brew install awscli                # AWS CLI
-brew install azure-cli             # Azure CLI
-brew install --cask google-cloud-sdk # Google Cloud SDK
-```
+    ```bash
+    # Go development
+    mise use --global go@latest
+
+    # Rust development
+    mise use --global rust@stable
+
+    # Java development
+    mise use --global java@temurin-17
+
+    # PHP development
+    mise use --global php@8.1
+    ```
+
+2. **Cloud provider tools**:
+
+    ```bash
+    # AWS CLI
+    brew install awscli
+
+    # Azure CLI
+    brew install azure-cli
+
+    # Google Cloud SDK
+    brew install --cask google-cloud-sdk
+    ```
 
 ## Final Configuration Steps
 
