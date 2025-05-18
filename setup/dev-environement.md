@@ -52,29 +52,29 @@ The automated script will guide you through an interactive setup process, allowi
 
 ## Core Setup
 
-### Installing Homebrew
+### MacOS
 
-[**Homebrew**](https://brew.sh/) is a package manager for macOS and Linux that simplifies the installation of software:
+1. [**Homebrew:**](https://brew.sh/) A package manager for macOS that simplifies the installation of software.
+    - Install with the following _terminal_ command
+        ```bash
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ```
+    - Add Homebrew to your PATH
+        ```bash
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+        ```
 
-1. Install the Homebrew package manager:
+### Linux (Debian/Ubuntu)
 
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ```
-
-2. Add Homebrew to your PATH (choose the appropriate command for your platform):
-
-    For macOS:
-
-    ```bash
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-    ```
-
-    For Linux:
-
-    ```bash
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    ```
+1. [**Homebrew:**](https://brew.sh/) A package manager for Linux that simplifies the installation of software.
+    - Install with the following _terminal_ command
+        ```bash
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ```
+    - Add Homebrew to your PATH
+        ```bash
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        ```
 
 ## Configure Your Tools
 
