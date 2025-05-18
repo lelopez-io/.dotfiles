@@ -472,9 +472,52 @@ Dotfiles help maintain consistent configurations across different machines:
             ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
             ```
 
+## Final Configuration Steps
+
+After installing all components, you need to complete a few final steps to get everything working properly:
+
+### Configure Visual Studio Code
+
+1. **Launch VS Code and configure settings**:
+    - Launch VS Code from the command line
+        ```bash
+        code
+        ```
+    - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
+    - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
+    - Paste these settings into your settings JSON file and save
+
+### Install Tmux Plugins
+
+1. **Start tmux and install plugins**:
+    - Launch tmux in your terminal
+        ```bash
+        tmux
+        ```
+    - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
+    - You'll see a message at the bottom of the screen confirming the plugins are installed
+
+### Initialize Neovim Plugins
+
+1. **Launch Neovim to set up plugins**:
+    - Start Neovim from your terminal
+        ```bash
+        nvim
+        ```
+    - The lazy.nvim plugin manager will automatically detect and install all configured plugins
+    - Wait for the installation to complete before using Neovim
+
+---
+
+That's it! Your development environment should now be set up and ready to go. If you encounter any issues, please refer to the specific tool's documentation or check for errors in the console output.
+
+|          |                                                                                                                                                                                                                                                  |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. |
+
 ## Additional Specialized Tools
 
-For more specialized development needs, you can extend your setup with language-specific and cloud development tools:
+For more specialized development needs, you can extend your setup with language-specific and cloud development tools. Here are some examples:
 
 1. **For Go development**:
 
@@ -525,46 +568,3 @@ For more specialized development needs, you can extend your setup with language-
             ```bash
             brew install --cask google-cloud-sdk
             ```
-
-## Final Configuration Steps
-
-After installing all components, you need to complete a few final steps to get everything working properly:
-
-### Configure Visual Studio Code
-
-1. **Launch VS Code and configure settings**:
-    - Launch VS Code from the command line
-        ```bash
-        code
-        ```
-    - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
-    - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
-    - Paste these settings into your settings JSON file and save
-
-### Install Tmux Plugins
-
-1. **Start tmux and install plugins**:
-    - Launch tmux in your terminal
-        ```bash
-        tmux
-        ```
-    - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
-    - You'll see a message at the bottom of the screen confirming the plugins are installed
-
-### Initialize Neovim Plugins
-
-1. **Launch Neovim to set up plugins**:
-    - Start Neovim from your terminal
-        ```bash
-        nvim
-        ```
-    - The lazy.nvim plugin manager will automatically detect and install all configured plugins
-    - Wait for the installation to complete before using Neovim
-
----
-
-That's it! Your development environment should now be set up and ready to go. If you encounter any issues, please refer to the specific tool's documentation or check for errors in the console output.
-
-|          |                                                                                                                                                                                                                                                  |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. |
