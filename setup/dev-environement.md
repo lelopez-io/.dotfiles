@@ -299,6 +299,34 @@ brew install azure-cli             # Azure CLI
 brew install --cask google-cloud-sdk # Google Cloud SDK
 ```
 
+## Final Configuration Steps
+
+After installing all components, you need to complete a few final steps:
+
+### Install Tmux Plugins
+
+Open tmux and install the plugins:
+
+```bash
+# Start tmux
+tmux
+
+# Inside tmux, press Ctrl+A and then Shift+I to install plugins
+# You should see a message confirming the plugins are installed
+```
+
+### Initialize Neovim Plugins
+
+Launch Neovim to automatically install all configured plugins:
+
+```bash
+# Start Neovim
+nvim
+
+# Lazy.nvim will automatically install all configured plugins
+# Wait for the installation to complete
+```
+
 ---
 
 That's it! Your development environment should now be set up and ready to go. If you encounter any issues, please refer to the specific tool's documentation or check for errors in the console output.
