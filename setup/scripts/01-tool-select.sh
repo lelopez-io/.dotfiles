@@ -207,10 +207,61 @@ generate_config() {
     echo -e "\nBackups of previous configurations (if any) were created"
 }
 
+create_minimal_brewfile() {
+    echo "Creating minimal default Brewfile for essential tools only..."
+    echo "# Default minimal Brewfile - $(date)" > "$BREWFILE"
+    echo "" >> "$BREWFILE"
+    echo "# Essential Tools" >> "$BREWFILE"
+    echo "brew \"stow\"" >> "$BREWFILE"
+    echo "brew \"mise\"" >> "$BREWFILE"
+    
+    echo -e "${GREEN}Minimal Brewfile created.${NC} Only stow and mise will be installed."
+    echo "You can run the setup again with --force to select more tools later."
+}
+
 setup_config() {
     clear
     print_header "Development Environment Setup"
-
+    
+    # Check if Brewfile already exists
+    if [ -f "$BREWFILE" ]; then
+        echo "A Brewfile already exists at: $BREWFILE"
+        echo ""
+        echo "Options:"
+        echo "  1. Keep using existing Brewfile (no changes)"
+        echo "  2. Select new tools (overwrites existing Brewfile)"
+        echo "  3. Create minimal Brewfile (only essential tools)"
+        echo ""
+        read -p "Choose an option (1-3): " option
+        
+        case $option in
+            1)
+                echo "Using existing Brewfile. No changes made."
+                exit 0
+                ;;
+            2)
+                echo "Proceeding with tool selection..."
+                # Continue to the selection process
+                ;;
+            3)
+                create_minimal_brewfile
+                exit 0
+                ;;
+            *)
+                echo "Invalid option. Using existing Brewfile."
+                exit 0
+                ;;
+        esac
+    else # No Brewfile exists
+        echo "No Brewfile found. Let's create one."
+        echo ""
+        if ! confirm "Would you like to select which tools to install?"; then
+            create_minimal_brewfile
+            exit 0
+        fi
+    fi
+    
+    # Proceed with normal tool selection
     echo "The following essential tools will be installed automatically:"
     echo ""
     for tool in "${ESSENTIAL_TOOLS[@]}"; do
@@ -263,7 +314,21 @@ setup_config() {
         generate_config
     else
         echo "Configuration cancelled."
-        exit 1
+        
+        # Create a minimal default Brewfile with only essential tools
+        if [ ! -f "$BREWFILE" ]; then
+            echo "Creating minimal default Brewfile for essential tools only..."
+            echo "# Default minimal Brewfile - $(date)" > "$BREWFILE"
+            echo "" >> "$BREWFILE"
+            echo "# Essential Tools" >> "$BREWFILE"
+            echo "brew \"stow\"" >> "$BREWFILE"
+            echo "brew \"mise\"" >> "$BREWFILE"
+            
+            echo "Minimal Brewfile created. Only stow and mise will be installed."
+            echo "You can run the setup again with --force to select more tools later."
+        else
+            echo "Using existing Brewfile. No changes made."
+        fi
     fi
 }
 

@@ -1,30 +1,6 @@
 #!/bin/bash
 set -e
 
-# Helper function for yes/no prompts
-confirm() {
-    while true; do
-        read -p "$1 (y/n) " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer yes (y) or no (n).";;
-        esac
-    done
-}
-
-# Parse command line arguments
-FORCE_CONFIG=false
-for arg in "$@"; do
-    case $arg in
-        -f|--force)
-            FORCE_CONFIG=true
-            shift # Remove --force from processing
-            ;;
-    esac
-done
-
-
 SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPTS_DIR="$SETUP_DIR/scripts"
 
@@ -33,10 +9,9 @@ echo "=== Starting Development Environment Setup ==="
 echo "Installing core dependencies..."
 source "$SCRIPTS_DIR/00-core.sh"
 
-if [ ! -f "$SETUP_DIR/Brewfile" ] || [ "$FORCE_CONFIG" = true ]; then
-    echo "Selecting tools to install..."
-    "$SCRIPTS_DIR/01-tool-select.sh"
-fi
+# Always run tool selection, it will handle existing Brewfiles appropriately
+echo "Setting up tool selection..."
+"$SCRIPTS_DIR/01-tool-select.sh"
 
 echo "Installing selected tools and applications..."
 source "$SCRIPTS_DIR/02-tool-install.sh"
