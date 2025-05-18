@@ -212,10 +212,23 @@ create_minimal_brewfile() {
     echo "# Default minimal Brewfile - $(date)" > "$BREWFILE"
     echo "" >> "$BREWFILE"
     echo "# Essential Tools" >> "$BREWFILE"
-    echo "brew \"stow\"" >> "$BREWFILE"
-    echo "brew \"mise\"" >> "$BREWFILE"
     
-    echo -e "${GREEN}Minimal Brewfile created.${NC} Only stow and mise will be installed."
+    # Add all essential tools to minimal Brewfile
+    for item in "${ESSENTIAL_TOOLS[@]}"; do
+        local package=$(get_field "$item" 3)
+        local enabled=$(get_field "$item" 4)
+        
+        if [ "$enabled" = "1" ]; then
+            # Auto-detect if this is a cask
+            if is_cask "$package"; then
+                echo "cask \"$package\"" >> "$BREWFILE"
+            else
+                echo "brew \"$package\"" >> "$BREWFILE"
+            fi
+        fi
+    done
+    
+    echo -e "${GREEN}Minimal Brewfile created.${NC} All essential tools will be installed."
     echo "You can run the setup again with --force to select more tools later."
 }
 
@@ -310,26 +323,7 @@ setup_config() {
     done
 
     # Generate Configuration
-    if confirm "Would you like to save this configuration?"; then
-        generate_config
-    else
-        echo "Configuration cancelled."
-        
-        # Create a minimal default Brewfile with only essential tools
-        if [ ! -f "$BREWFILE" ]; then
-            echo "Creating minimal default Brewfile for essential tools only..."
-            echo "# Default minimal Brewfile - $(date)" > "$BREWFILE"
-            echo "" >> "$BREWFILE"
-            echo "# Essential Tools" >> "$BREWFILE"
-            echo "brew \"stow\"" >> "$BREWFILE"
-            echo "brew \"mise\"" >> "$BREWFILE"
-            
-            echo "Minimal Brewfile created. Only stow and mise will be installed."
-            echo "You can run the setup again with --force to select more tools later."
-        else
-            echo "Using existing Brewfile. No changes made."
-        fi
-    fi
+    generate_config
 }
 
 # Run the setup
