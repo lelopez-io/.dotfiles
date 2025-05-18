@@ -16,8 +16,3 @@ if ! command -v brew &>/dev/null; then
     fi
 fi
 
-# Ensure necessary taps are added
-echo "Ensuring Homebrew cask tap is available..."
-brew tap homebrew/cask
-brew update
-

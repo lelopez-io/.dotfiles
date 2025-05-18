@@ -67,10 +67,6 @@ The automated script will guide you through an interactive setup process, allowi
         ```bash
         eval "$(/opt/homebrew/bin/brew shellenv)"
         ```
-    - Add the Homebrew cask tap for GUI applications
-        ```bash
-        brew tap homebrew/cask
-        ```
 
 ### Linux (Debian/Ubuntu)
 
@@ -82,10 +78,6 @@ The automated script will guide you through an interactive setup process, allowi
     - Add Homebrew to your PATH and other environment variables for the current session
         ```bash
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        ```
-    - Add the Homebrew cask tap for GUI applications
-        ```bash
-        brew tap homebrew/cask
         ```
 
 ## Configure Your Tools
