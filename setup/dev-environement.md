@@ -161,24 +161,40 @@ Additional utilities to enhance your workflow:
 
 If installing manually, you can install these with Homebrew:
 
+**For essential tools**:
+
 ```bash
-# Essential Tools
 brew install stow tmux neovim prettierd stylua yt-dlp ffmpeg libyaml the_silver_searcher ripgrep wget jq git-delta mise
+```
 
-# Development Editors & Tools
+**For development editors and tools**:
+
+```bash
 brew install --cask visual-studio-code gitkraken ghostty
+```
 
-# Browsers
+**For browsers**:
+
+```bash
 brew install --cask firefox google-chrome
+```
 
-# Development Tools
+**For container development tools**:
+
+```bash
 brew install --cask rancher
 brew install kubectx kube-ps1
+```
 
-# Productivity Applications
+**For productivity applications**:
+
+```bash
 brew install --cask obsidian meetingbar
+```
 
-# Utility Applications
+**For utility applications**:
+
+```bash
 brew install --cask swish discord raycast anydesk hiddenbar 1password
 ```
 
@@ -387,32 +403,47 @@ EOL
 
 For more specialized development needs, you can extend your setup with language-specific and cloud development tools. These are already covered by the mise tool for language management:
 
-1. **Additional language environments with mise**:
+1. **For Go development**:
 
     ```bash
-    # Go development
     mise use --global go@latest
+    ```
 
-    # Rust development
+2. **For Rust development**:
+
+    ```bash
     mise use --global rust@stable
+    ```
 
-    # Java development
+3. **For Java development**:
+
+    ```bash
     mise use --global java@temurin-17
+    ```
 
-    # PHP development
+4. **For PHP development**:
+
+    ```bash
     mise use --global php@8.1
     ```
 
-2. **Cloud provider tools**:
+5. **Cloud provider tools**:
+
+    AWS CLI:
 
     ```bash
-    # AWS CLI
     brew install awscli
+    ```
 
-    # Azure CLI
+    Azure CLI:
+
+    ```bash
     brew install azure-cli
+    ```
 
-    # Google Cloud SDK
+    Google Cloud SDK:
+
+    ```bash
     brew install --cask google-cloud-sdk
     ```
 
