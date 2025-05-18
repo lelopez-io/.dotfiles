@@ -131,17 +131,6 @@ These are the programs where you'll spend most of your development time:
         brew install --cask ghostty
         ```
 
-4. [**Nerd Fonts:**](https://www.nerdfonts.com/) Fonts with glyphs for shell and editors.
-    - For macOS, install with the following _terminal_ command
-        ```bash
-        curl -fLo "$HOME/Library/Fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
-        ```
-    - For Linux, install with the following _terminal_ commands
-        ```bash
-        mkdir -p "$HOME/.local/share/fonts"
-        curl -fLo "$HOME/.local/share/fonts/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
-        fc-cache -f -v
-        ```
 
 ### Browsers
 
@@ -333,7 +322,7 @@ We'll set up several tools to make your terminal more powerful and user-friendly
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
         ```
 
-7. **Install nerd fonts** for terminal glyphs (platform-specific):
+7. [**Nerd Fonts:**](https://www.nerdfonts.com/) Fonts with glyphs for shell and editors.
 
     - For macOS, install with the following _terminal_ command
 
