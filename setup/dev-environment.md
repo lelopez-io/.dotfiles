@@ -106,8 +106,53 @@ These core command-line utilities form the foundation of your development enviro
 If installing manually, you can install essential tools with Homebrew:
 
 -   Install all essential tools at once with Homebrew
+
     ```bash
     brew install stow tmux neovim prettierd stylua yt-dlp ffmpeg libyaml the_silver_searcher ripgrep wget jq git-delta mise
+    ```
+
+    Or install them individually:
+
+    -   Install Stow for managing symlinks
+
+    ```bash
+    brew install stow
+    ```
+
+    -   Install Tmux for terminal multiplexing
+
+    ```bash
+    brew install tmux
+    ```
+
+    -   Install Neovim text editor
+
+    ```bash
+    brew install neovim
+    ```
+
+    -   Install code formatters (Prettierd, Stylua)
+
+    ```bash
+    brew install prettierd stylua
+    ```
+
+    -   Install media tools (yt-dlp, ffmpeg)
+
+    ```bash
+    brew install yt-dlp ffmpeg
+    ```
+
+    -   Install search and utility tools
+
+    ```bash
+    brew install libyaml the_silver_searcher ripgrep wget jq git-delta
+    ```
+
+    -   Install Mise runtime version manager
+
+    ```bash
+    brew install mise
     ```
 
 ### Development Editors & Environments
@@ -134,7 +179,6 @@ These are the programs where you'll spend most of your development time:
         ```bash
         brew install --cask ghostty
         ```
-
 
 ### Browsers
 
@@ -300,6 +344,7 @@ We'll set up several tools to make your terminal more powerful and user-friendly
 4. **Install spaceship prompt** for an enhanced terminal experience:
 
     - Clone the spaceship prompt repository
+
         ```bash
         git clone https://github.com/spaceship-prompt/spaceship-prompt.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt" --depth=1
         ```
@@ -394,6 +439,7 @@ Git is essential for version control. Let's configure it for use with GitHub:
         ```
 
 6. **Create SSH config**:
+
     - Create the SSH directory if it doesn't exist
         ```bash
         mkdir -p ~/.ssh
