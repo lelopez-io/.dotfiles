@@ -303,6 +303,23 @@ brew install --cask google-cloud-sdk # Google Cloud SDK
 
 After installing all components, you need to complete a few final steps:
 
+### Configure Visual Studio Code
+
+Set up VS Code with recommended settings:
+
+```bash
+# Launch VS Code
+code
+
+# Press Cmd+Shift+P (or Ctrl+Shift+P on Linux) to open the command palette
+# Type "Preferences: Open Settings (JSON)" and select it
+
+# Copy the contents from the repository's settings file:
+# https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json
+
+# Paste these settings into your settings.json file and save
+```
+
 ### Install Tmux Plugins
 
 Open tmux and install the plugins:
