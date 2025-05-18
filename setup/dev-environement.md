@@ -123,9 +123,6 @@ These are the programs where you'll spend most of your development time:
 
 1. [**Visual Studio Code:**](https://code.visualstudio.com/) A versatile code editor.
 
-    - Press `Cmd+Shift+P`, search for "Shell Command", and select "Install 'code' command in PATH"
-    - Sign in with Github to sync your settings
-    - Check out [these settings](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json) for a good starting point
     - Install with the following _terminal_ command
         ```bash
         brew install --cask visual-studio-code
@@ -548,10 +545,9 @@ After installing all components, you need to complete a few final steps to get e
 
 1. **Launch VS Code and configure settings**:
     - Launch VS Code from the command line
-        - Install with the following _terminal_ command
-            ```bash
-            code
-            ```
+        ```bash
+        code
+        ```
     - Open the settings JSON by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux), typing "Preferences: Open Settings (JSON)", and selecting it
     - Copy the contents from the [repository's settings file](https://github.com/lelopez-io/.dotfiles/blob/main/.vscode/settings.json)
     - Paste these settings into your settings JSON file and save
@@ -560,10 +556,9 @@ After installing all components, you need to complete a few final steps to get e
 
 1. **Start tmux and install plugins**:
     - Launch tmux in your terminal
-        - Install with the following _terminal_ command
-            ```bash
-            tmux
-            ```
+        ```bash
+        tmux
+        ```
     - Install the plugins by pressing `Ctrl+A` and then `Shift+I`
     - You'll see a message at the bottom of the screen confirming the plugins are installed
 
@@ -571,10 +566,9 @@ After installing all components, you need to complete a few final steps to get e
 
 1. **Launch Neovim to set up plugins**:
     - Start Neovim from your terminal
-        - Install with the following _terminal_ command
-            ```bash
-            nvim
-            ```
+        ```bash
+        nvim
+        ```
     - The lazy.nvim plugin manager will automatically detect and install all configured plugins
     - Wait for the installation to complete before using Neovim
 
@@ -583,5 +577,5 @@ After installing all components, you need to complete a few final steps to get e
 That's it! Your development environment should now be set up and ready to go. If you encounter any issues, please refer to the specific tool's documentation or check for errors in the console output.
 
 |          |                                                                                                                                                                                                                                                  |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
-| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. | - Launch tmux in your terminal |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Tip:** | If you're using the automated script (`./install.sh`), it handles all of these steps for you in the correct order. If you prefer to understand what's happening or want more control, following this manual guide gives you the same end result. |
