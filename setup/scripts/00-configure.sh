@@ -18,7 +18,6 @@ declare -a CASK_PACKAGES=(
     "firefox"
     "google-chrome"
     "obsidian"
-    "spark"
     "meetingbar"
     "rancher"
     "swish"
@@ -67,7 +66,6 @@ declare -a DEV_TOOLS=(
 
 declare -a PRODUCTIVITY_APPS=(
     "Obsidian:Note Taking:obsidian:0"
-    "Spark:Email Client:spark:0"
     "MeetingBar:Calendar in Menu Bar:meetingbar:0"
 )
 
