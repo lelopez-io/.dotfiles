@@ -40,7 +40,7 @@ cd ~/.dotfiles
 2. Run the setup script:
 
 ```bash
-./.setup/scripts/install.sh
+./.setup/install.sh
 ```
 
 After running the install script, you should:
