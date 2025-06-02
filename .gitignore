@@ -14,6 +14,9 @@
 # aider
 .aider*
 
+# claude
+.claude/
+
 # Setup generated configurations
 setup/Brewfile
 setup/Brewfile.lock.json
