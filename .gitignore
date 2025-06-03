@@ -18,10 +18,10 @@
 .claude/
 
 # Setup generated configurations
-setup/Brewfile
-setup/Brewfile.lock.json
-setup/git-config.sh
-setup/*.bak
+.setup/Brewfile
+.setup/Brewfile.lock.json
+.setup/git-config.sh
+.setup/*.bak
 
 # Keep nvim plugin versions in git
 !.config/nvim/lazy-lock.json
