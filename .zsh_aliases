@@ -1,8 +1,12 @@
 # sops
 alias encrypt-secrets='sops --encrypt --age $(op read "$SOPS_AGE_KEY_FILE" | grep "public key:" | cut -d: -f2 | tr -d " ")'
+
 # git
 alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
 alias gsc='git stash clear'
+
+# aider
+alias adr='aider --env-file ~/.env.aider'
 
 # neovim
 alias vim='nvim'
