@@ -1,4 +1,4 @@
-# Essential Tools
+## Essential Tools
 brew "stow"
 brew "mise"
 brew "tree"
@@ -15,29 +15,34 @@ brew "wget"
 brew "jq"
 brew "git-delta"
 
-# Editors
-cask "visual-studio-code"
+## Editors
 cask "ghostty"
 cask "gitkraken"
+# cask "visual-studio-code"
 
-# Browsers
-cask "firefox"
-cask "google-chrome"
+## Browsers
+cask "mullvad-vpn"
+cask "mullvad-browser"
+cask "eloston-chromium"
+# cask "firefox"
+# cask "google-chrome"
 
-# Development Tools
+## Development Tools
 cask "rancher"
 brew "kubectx"
 brew "kube-ps1"
 
-# Productivity Applications
+## Productivity Applications
 cask "obsidian"
 cask "meetingbar"
 
-# Utility Applications
+## Utility Applications
 cask "swish"
-cask "discord"
 cask "raycast"
-cask "anydesk"
 cask "hiddenbar"
 cask "1password"
+# cask "discord"
+# cask "anydesk"
+
+
 
