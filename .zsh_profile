@@ -4,11 +4,11 @@ export EDITOR="nvim"
 # zsh-no-matches-found
 unsetopt nomatch
 
-# colorls - use mise exec to ensure ruby/gems are available
-source $(dirname $(mise exec ruby -- gem which colorls))/tab_complete.sh
-
 # mise - interactive shell support
 eval "$(mise activate zsh)"
+
+# colorls - use mise exec to ensure ruby/gems are available
+source $(dirname $(mise exec ruby -- gem which colorls))/tab_complete.sh
 
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
