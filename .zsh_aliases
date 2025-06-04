@@ -6,7 +6,9 @@ alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
 alias gsc='git stash clear'
 
 # aider
-alias adr='aider --env-file ~/.env.aider'
+alias adr='mise x python@3.12.10 -- aider --env-file ~/.env.aider'
+alias cld='mise x node@22.15.1 -- claude'
+
 
 # neovim
 alias vim='nvim'
