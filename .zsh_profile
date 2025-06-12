@@ -16,6 +16,9 @@ source $(dirname $(mise exec ruby -- gem which colorls))/tab_complete.sh
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
 
+# tools
+export PATH="$HOME/.local/bin:$PATH"
+
 # rancher-desktop
 export PATH="$HOME/.rd/bin:$PATH"
 
