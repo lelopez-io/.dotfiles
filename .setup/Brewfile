@@ -14,6 +14,8 @@ brew "ripgrep"
 brew "wget"
 brew "jq"
 brew "git-delta"
+brew "sops"
+brew "1password-cli"
 
 ## Editors
 cask "ghostty"

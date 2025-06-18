@@ -37,6 +37,8 @@ declare -a ESSENTIAL_TOOLS=(
     "Wget:File download utility:wget:1"
     "JQ:JSON processing:jq:1"
     "Delta:Git diff viewer:git-delta:1"
+    "SOPS:Secrets management:sops:1"
+    "1Password CLI:Command line 1Password access:1password-cli:1"
 )
 
 declare -a EDITORS=(
