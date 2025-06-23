@@ -15,7 +15,7 @@ brew "wget"
 brew "jq"
 brew "git-delta"
 brew "sops"
-brew "1password-cli"
+cask "1password-cli"
 
 ## Editors
 cask "ghostty"
@@ -33,6 +33,7 @@ cask "eloston-chromium"
 cask "rancher"
 brew "kubectx"
 brew "kube-ps1"
+cask "google-cloud-sdk"
 
 ## Productivity Applications
 cask "obsidian"
