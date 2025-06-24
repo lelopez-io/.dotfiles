@@ -9,9 +9,12 @@ unsetopt nomatch
 
 # mise - interactive shell support
 eval "$(mise activate zsh)"
+export PATH="$(mise where ruby@3.4.4)/bin:$PATH"
 
 # colorls - use mise exec to ensure ruby/gems are available
-source $(dirname $(mise exec ruby -- gem which colorls))/tab_complete.sh
+if command -v mise >/dev/null 2>&1; then
+    source $(mise exec ruby@3.4.4 -- gem which colorls | xargs dirname)/../lib/tab_complete.sh 2>/dev/null || true
+fi
 
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
