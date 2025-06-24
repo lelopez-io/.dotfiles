@@ -30,6 +30,9 @@ alias kn='kubens'
 alias ko='kc -u && kubeoff'
 alias ki='kubeon'
 
+# docker
+alias dps='docker ps --format "table {{.Names}}\t{{.Status}}" | sed -e "s/k8s_[^_]*_//g" -e "s/_kube-system[^[:space:]]*//" | column -t'
+
 # yt-dlp
 alias ytf='yt-dlp -F --extractor-args youtube:player_client=default,ios --verbose'
 alias ttf='yt-dlp -F --verbose'
