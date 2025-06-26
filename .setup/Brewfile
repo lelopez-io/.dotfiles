@@ -14,8 +14,12 @@ brew "ripgrep"
 brew "wget"
 brew "jq"
 brew "git-delta"
+
+## Secrets Management
 brew "sops"
 cask "1password-cli"
+cask "1password"
+cask "google-cloud-sdk"
 
 ## Editors
 cask "ghostty"
@@ -29,12 +33,13 @@ cask "eloston-chromium"
 # cask "firefox"
 # cask "google-chrome"
 
-## Development Tools
+## Kubernetes Development
 cask "rancher"
 brew "kubectx"
 brew "kube-ps1"
-cask "google-cloud-sdk"
-cask "android-platform-tools"
+
+## Mobile Development
+cask "android-studio"
 
 ## Productivity Applications
 cask "obsidian"
@@ -44,7 +49,6 @@ cask "meetingbar"
 cask "swish"
 cask "raycast"
 cask "hiddenbar"
-cask "1password"
 # cask "discord"
 # cask "anydesk"
 
