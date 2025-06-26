@@ -56,13 +56,8 @@ return {
                         "prettierrc.json",
                         "package.json",
                     }),
-                    -- Include the Tailwind plugin and ensure filename is provided
-                    args = function(ctx)
-                        return {
-                            "--plugin=prettier-plugin-tailwindcss",
-                            ctx.filename,
-                        }
-                    end,
+                    -- Include the Tailwind plugin
+                    args = { "--stdin-filepath", "$FILENAME", "--plugin=prettier-plugin-tailwindcss" },
                 },
             },
         })
