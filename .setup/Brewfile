@@ -34,6 +34,7 @@ cask "rancher"
 brew "kubectx"
 brew "kube-ps1"
 cask "google-cloud-sdk"
+cask "android-platform-tools"
 
 ## Productivity Applications
 cask "obsidian"
