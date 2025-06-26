@@ -4,6 +4,8 @@ alias encrypt-secrets='sops --encrypt --age $(op read "$SOPS_AGE_KEY_FILE" | gre
 # git
 alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
 alias gsc='git stash clear'
+alias gnb='git checkout -b'    # git nb rio-001/add-user-auth
+alias grb='git checkout -t origin'  # git rb ENG-234/fix-login-bug
 
 # aider
 alias adr='mise x python@3.12.10 -- aider --env-file ~/.env.aider'
