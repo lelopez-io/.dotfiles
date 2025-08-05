@@ -5,3 +5,4 @@ theme = "Relaxed"
 keybind = super+enter=ignore
 
 confirm-close-surface = false
+keybind = shift+enter=text:\n
