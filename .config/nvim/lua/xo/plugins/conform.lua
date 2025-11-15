@@ -56,8 +56,8 @@ return {
                         "prettierrc.json",
                         "package.json",
                     }),
-                    -- Include the Tailwind plugin
-                    args = { "--stdin-filepath", "$FILENAME", "--plugin=prettier-plugin-tailwindcss" },
+                    -- Prepend additional args (conform handles --stdin-filepath automatically)
+                    prepend_args = { "--plugin=prettier-plugin-tailwindcss" },
                 },
             },
         })
