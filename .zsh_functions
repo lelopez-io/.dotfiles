@@ -238,6 +238,9 @@ uncheck_md() {
         esac
     done
 
+    # Expand tilde and resolve path
+    file="${file/#\~/$HOME}"
+
     if [[ ! -f "$file" ]]; then
         echo "Error: File not found: $file"
         return 1
@@ -250,7 +253,7 @@ uncheck_md() {
     fi
 
     # Replace both [x] and [X] with [ ]
-    sed -i'' -e 's/\[x\]/[ ]/g' -e 's/\[X\]/[ ]/g' "$file"
+    sed -i '' 's/\[x\]/[ ]/g;s/\[X\]/[ ]/g' "$file"
 
     echo "✓ Unchecked all checkboxes in $file"
 }
