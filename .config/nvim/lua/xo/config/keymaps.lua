@@ -122,7 +122,14 @@ end, {
     silent = false,
     desc = "Previous diagnostic",
 })
-vim.keymap.set("n", "<leader>q", function()
+vim.keymap.set("n", "<leader>ge", function()
+    vim.diagnostic.open_float()
+end, {
+    noremap = true,
+    silent = true,
+    desc = "Show diagnostic for current line",
+})
+vim.keymap.set("n", "<leader>gE", function()
     local qf_exists = false
     for _, win in pairs(vim.fn.getwininfo()) do
         if win.quickfix == 1 then
@@ -140,6 +147,35 @@ end, {
     noremap = true,
     silent = true,
     desc = "Toggle diagnostics in quickfix",
+})
+vim.keymap.set("n", "<leader>ye", function()
+    local original_win = vim.api.nvim_get_current_win()
+
+    -- Find the currently open floating diagnostic window
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local config = vim.api.nvim_win_get_config(win)
+        if config.relative ~= "" then  -- It's a floating window
+            local buf = vim.api.nvim_win_get_buf(win)
+
+            -- Get all text from the float buffer
+            local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+            local text = table.concat(lines, "\n")
+
+            -- Yank to system clipboard
+            vim.fn.setreg("+", text)
+
+            -- Return focus to original window
+            vim.api.nvim_set_current_win(original_win)
+
+            vim.notify("Yanked diagnostic message")
+            return
+        end
+    end
+    vim.notify("No diagnostic float open", vim.log.levels.WARN)
+end, {
+    noremap = true,
+    silent = true,
+    desc = "Yank diagnostic from open float",
 })
 
 -- Page navigation
