@@ -206,6 +206,27 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
     silent = false,
     desc = "Search and replace word under cursor",
 })
+vim.keymap.set("v", "<leader>s", function()
+    -- Get the visually selected text
+    vim.cmd('noau normal! "vy"')
+    local selected = vim.fn.getreg('v')
+
+    -- Escape special regex characters for search pattern
+    local search = vim.fn.escape(selected, '/\\[]().*^$')
+    -- Escape special characters for replacement text (including brackets)
+    local replace = vim.fn.escape(selected, '/\\&~[]')
+
+    -- Start the substitute command with the selected text
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(':%s/' .. search .. '/' .. replace .. '/gI<Left><Left><Left>', true, false, true),
+        'n',
+        false
+    )
+end, {
+    noremap = true,
+    silent = false,
+    desc = "Search and replace visual selection",
+})
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", {
     noremap = false,
     silent = true,
