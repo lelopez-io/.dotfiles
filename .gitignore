@@ -15,7 +15,8 @@
 .aider*
 
 # claude
-.claude/
+.claude/*
+!.claude/settings.json
 
 # Setup generated configurations
 .setup/Brewfile

@@ -1,0 +1,75 @@
+{
+    "includeCoAuthoredBy": false,
+    "model": "opus",
+    "hooks": {
+        "Stop": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "osascript -e 'beep 3'"
+                    }
+                ]
+            }
+        ],
+        "Notification": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "osascript -e 'beep 3'"
+                    }
+                ]
+            }
+        ]
+    },
+    "permissions": {
+        "allow": [
+            "Edit",
+            "Write",
+            "Bash(cat:*)",
+            "Bash(cp:*)",
+            "Bash(diff:*)",
+            "Bash(find:*)",
+            "Bash(ls:*)",
+            "Bash(mkdir:*)",
+            "Bash(mv:*)",
+            "Bash(tree:*)",
+            "Bash(xargs cat:*)",
+            "Bash(flutter:*)",
+            "Bash(mise trust:*)",
+            "Bash(gh pr diff:*)",
+            "Bash(gh pr view:*)",
+            "Bash(gh run view:*)",
+            "Bash(git add:*)",
+            "Bash(git branch:*)",
+            "Bash(git checkout:*)",
+            "Bash(git diff:*)",
+            "Bash(git fetch:*)",
+            "Bash(git log:*)",
+            "Bash(git mv:*)",
+            "Bash(git rm:*)",
+            "Bash(git status:*)",
+            "Bash(git worktree:*)",
+            "Bash(go fmt:*)",
+            "Bash(go test:*)",
+            "Bash(go tool cover:*)",
+            "Bash(grep:*)",
+            "Bash(rg:*)",
+            "Bash(rio help:*)",
+            "Bash(yarn eslint:*)",
+            "Bash(yarn jest:*)",
+            "Bash(yarn lint:*)",
+            "Bash(yarn start:*)",
+            "Bash(yarn test:*)",
+            "Bash(yarn typecheck)",
+            "WebFetch(domain:github.com)",
+            "Bash(gt checkout:*)",
+
+            "Bash(rg:*)"
+        ],
+        "deny": []
+    }
+}
