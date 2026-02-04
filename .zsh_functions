@@ -201,6 +201,47 @@ env_example() {
     echo "If you want to preview without values, use: sed 's/=.*$/=/' $source"
 }
 
+# Launch Claude Code with optional API key profile via 1Password
+# Each 1Password item (<profile> | cld) needs two fields:
+#   credential - the API key or OAuth token
+#   env_var    - ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN
+cld() {
+    local profile="$1"
+
+    case "$profile" in
+        -h|--help)
+            echo "Usage: cld [profile] [claude args...]"
+            echo ""
+            echo "Profile resolves to a 1Password item named '<profile> | cld'."
+            echo "Each item must have 'credential' and 'env_var' fields."
+            echo ""
+            echo "Without a profile, launches claude with default config."
+            return 0
+            ;;
+        -*)
+            # flags like --resume, pass through to claude
+            ;;
+        ?*)
+            shift
+            ;;
+    esac
+
+    if [[ -n "$profile" && "$profile" != -* ]]; then
+        local op_item="$profile | cld"
+        local key key_var
+
+        key=$(op item get "$op_item" --fields credential --reveal) || { echo "Error: Failed to read credential from 1Password"; return 1; }
+        key_var=$(op item get "$op_item" --fields env_var --reveal) || { echo "Error: Failed to read env_var from 1Password"; return 1; }
+
+        echo "Starting Claude Code [$profile]"
+        export "$key_var=$key"
+        command claude "$@"
+        unset "$key_var"
+    else
+        command claude "$@"
+    fi
+}
+
 ask() {
     local ask_dir="$HOME/xo/ask"
     local current_dir=$(pwd)
