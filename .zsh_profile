@@ -58,3 +58,6 @@ export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
 
 # gnu-sed
 PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+
+# antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
