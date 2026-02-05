@@ -70,6 +70,6 @@
 
             "Bash(rg:*)"
         ],
-        "deny": []
+        "deny": ["Bash(git -C:*)"]
     }
 }
