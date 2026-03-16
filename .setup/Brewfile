@@ -16,12 +16,14 @@ brew "jq"
 brew "git-delta"
 
 ## Secrets Management
+brew "age"
 brew "sops"
 cask "1password-cli"
 cask "1password"
 cask "google-cloud-sdk"
 
 ## Editors
+cask "claude-code"
 cask "ghostty"
 cask "gitkraken"
 # cask "visual-studio-code"
@@ -50,7 +52,7 @@ cask "swish"
 cask "raycast"
 cask "hiddenbar"
 # cask "discord"
-# cask "anydesk"
+cask "anydesk"
 
 
 
