@@ -33,6 +33,7 @@ return {
                 "ts_ls",
                 "eslint",
                 "marksman",
+                "astro",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
