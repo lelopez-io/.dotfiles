@@ -80,15 +80,15 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], {
     desc = "Yank line to system clipboard",
 })
 
--- Yank relative file path
+-- Yank full file path
 vim.keymap.set("n", "<leader><C-y>", function()
-    local relative_path = vim.fn.expand("%")
-    vim.fn.setreg("+", relative_path)
-    vim.notify("Copied: " .. relative_path)
+    local full_path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", full_path)
+    vim.notify("Copied: " .. full_path)
 end, {
     noremap = true,
     silent = true,
-    desc = "Yank relative file path to clipboard",
+    desc = "Yank full file path to clipboard",
 })
 
 -- Delete without yanking
