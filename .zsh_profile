@@ -62,6 +62,3 @@ PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 # antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
-# bun
-export PATH="$HOME/.bun/bin:$PATH"
-
