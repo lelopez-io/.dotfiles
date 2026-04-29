@@ -11,8 +11,9 @@ alias dot='cd $HOME/.dotfiles/. && nvim . && cd -'
 
 # directory/navigation
 alias ls='eza --group-directories-first --icons'
-alias l='eza --group-directories-first --icons --almost-all'
+alias lh='eza --group-directories-first --icons --almost-all'
 alias ll='eza --group-directories-first --icons --long'
+alias la='eza --group-directories-first --icons --long --almost-all'
 alias lt='tree -LFC 2 --dirsfirst'
 
 # kubernetes
