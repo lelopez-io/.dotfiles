@@ -11,5 +11,3 @@ eval "$(mise activate zsh)"
 complete -F __start_kubectl k
 fpath=(~/.zsh/completions $fpath)
 
-# gcloud
-[ -s "$HOME/.gcloud/completion.zsh.inc" ] && \. "$HOME/.gcloud/completion.zsh.inc"
