@@ -4,6 +4,7 @@ brew "mise"
 brew "tree"
 brew "tmux"
 brew "neovim"
+brew "eza"
 brew "prettierd"
 brew "stylua"
 brew "yt-dlp"
@@ -14,6 +15,11 @@ brew "ripgrep"
 brew "wget"
 brew "jq"
 brew "git-delta"
+
+## Shell
+brew "starship"
+brew "zsh-syntax-highlighting"
+brew "zsh-autosuggestions"
 
 ## Secrets Management
 brew "age"
@@ -38,7 +44,6 @@ cask "eloston-chromium"
 ## Kubernetes Development
 cask "rancher"
 brew "kubectx"
-brew "kube-ps1"
 
 ## Mobile Development
 cask "android-studio"
