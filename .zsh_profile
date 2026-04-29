@@ -28,7 +28,6 @@ export PATH="$HOME/.rd/bin:$PATH"
 # kubectl
 complete -F __start_kubectl k
 fpath=(~/.zsh/completions $fpath)
-autoload -U compinit && compinit
 
 # gcloud
 [ -s "$HOME/.gcloud/path.zsh.inc" ] && \. "$HOME/.gcloud/path.zsh.inc"

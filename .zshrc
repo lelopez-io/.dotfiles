@@ -6,11 +6,9 @@ ZSH_THEME="spaceship"
 
 # plugins
 plugins=(
-    brew
     git
     history
     kubectl
-    kube-ps1
     zsh-syntax-highlighting
     zsh-autosuggestions
 )
