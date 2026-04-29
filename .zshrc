@@ -1,21 +1,27 @@
-# oh-my-zsh
-export ZSH="$HOME/.oh-my-zsh"
+# history
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt share_history
+
+# completions
+fpath=(~/.zsh/completions $fpath)
+autoload -Uz compinit && compinit
 
 # theme
-ZSH_THEME="spaceship"
+source $HOME/.zprompt
+source /opt/homebrew/opt/spaceship/spaceship.zsh
 
 # plugins
-plugins=(
-    git
-    history
-    kubectl
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-)
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # config-files
-source $ZSH/oh-my-zsh.sh
-source $HOME/.zprompt
 source $HOME/.ztools
 source $HOME/.zaliases
 source $HOME/.zfunctions

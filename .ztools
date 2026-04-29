@@ -7,7 +7,6 @@ eval "$(mise activate zsh)"
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
 
-# kubectl
-complete -F __start_kubectl k
-fpath=(~/.zsh/completions $fpath)
+# kubectl - bind k alias to kubectl completions
+compdef k=kubectl
 

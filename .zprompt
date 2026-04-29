@@ -1,3 +1,26 @@
+# prompt order - only include installed sections
+SPACESHIP_PROMPT_ORDER=(
+  time
+  user
+  dir
+  host
+  git
+  node
+  ruby
+  python
+  swift
+  golang
+  kubectl
+  exec_time
+  async
+  line_sep
+  battery
+  jobs
+  exit_code
+  sudo
+  char
+)
+
 # time
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_TIME_FORMAT='∴'
@@ -19,4 +42,3 @@ SPACESHIP_KUBECTL_VERSION_SHOW=false
 SPACESHIP_KUBECTL_CONTEXT_SHOW=true
 SPACESHIP_KUBECTL_CONTEXT_SHOW_NAMESPACE=true
 SPACESHIP_KUBECTL_CONTEXT_COLOR='red'
-
