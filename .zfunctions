@@ -133,10 +133,10 @@ git_summary() {
         # Print to terminal
         echo "=== Git Log Summary (${base_ref}..HEAD) ==="
         git -P log --date=format:"%Y-%m-%d %H:%M:%S" --pretty=format:"$log_format" ${base_ref}..HEAD
-        
+
         echo -e "\n=== Git Diff Summary (${base_ref}..HEAD) ==="
         git -P diff -U0 ${base_ref}..HEAD
-        
+
         echo -e "\nGit summary completed (printed to terminal)"
     else
         # Generate log file with dates and full commit messages
@@ -240,23 +240,6 @@ cld() {
     else
         command claude "$@"
     fi
-}
-
-ask() {
-    local ask_dir="$HOME/xo/ask"
-    local current_dir=$(pwd)
-
-    # Create directories if they don't exist
-    mkdir -p "$ask_dir"
-
-    # Change to the ask directory
-    cd "$ask_dir"
-
-    # Start aider session with full options
-    aider --env-file ~/.env.aider --dry-run --chat-mode ask
-
-    # Return to previous directory
-    cd "$current_dir"
 }
 
 # Uncheck all checkboxes in a markdown file
