@@ -13,9 +13,8 @@ setopt share_history
 fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit && compinit
 
-# theme
-source $HOME/.zprompt
-source /opt/homebrew/opt/spaceship/spaceship.zsh
+# prompt
+eval "$(starship init zsh)"
 
 # plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh

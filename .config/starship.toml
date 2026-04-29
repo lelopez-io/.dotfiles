@@ -1,0 +1,47 @@
+# prompt
+format = """
+$time$directory$git_branch$git_status$kubernetes$cmd_duration
+$character"""
+
+# time
+[time]
+disabled = false
+format = "[∴]($style) "
+style = "green"
+
+# directory
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+
+# git
+[git_branch]
+format = "[$symbol$branch]($style) "
+
+[git_status]
+format = "([$all_status$ahead_behind]($style) )"
+
+# kubernetes
+[kubernetes]
+disabled = false
+format = "at [$symbol$context( \\($namespace\\))]($style) "
+style = "red"
+
+[kubernetes.context_aliases]
+
+# execution time
+[cmd_duration]
+min_time = 2000
+format = "took [$duration]($style) "
+
+# character
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+# disabled sections
+[docker_context]
+disabled = true
+
+[gcloud]
+disabled = true
