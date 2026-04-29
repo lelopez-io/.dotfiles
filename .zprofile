@@ -14,23 +14,9 @@ export PATH="$HOME/.rd/bin:$PATH"
 [ -s "$HOME/.gcloud/path.zsh.inc" ] && \. "$HOME/.gcloud/path.zsh.inc"
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
-# concourse-ci
-export PATH="$HOME/.concourse/fly:$PATH"
-
 # andriod sdk
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
-
-# go
-export GOPATH=$HOME/.go
-
-# rust
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# gif-for-cli
-if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
-    PATH="$HOME/Library/Python/3.6/bin/:$PATH"
-fi
 
 # prettierd
 export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
@@ -38,5 +24,3 @@ export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
 # gnu-sed
 PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
-# antigravity
-export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
