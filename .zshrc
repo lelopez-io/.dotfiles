@@ -15,7 +15,7 @@ plugins=(
 
 # config-files
 source $ZSH/oh-my-zsh.sh
-source $HOME/.zsh_prompt
-source $HOME/.zsh_profile
-source $HOME/.zsh_aliases
-source $HOME/.zsh_functions
+source $HOME/.zprompt
+source $HOME/.ztools
+source $HOME/.zaliases
+source $HOME/.zfunctions

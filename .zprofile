@@ -4,29 +4,14 @@ export EDITOR="nvim"
 # 256 color support
 export TERM=xterm-256color
 
-# zsh-no-matches-found
-unsetopt nomatch
-
-# mise - interactive shell support
-eval "$(mise activate zsh)"
-
-
-# tmux/venv
-[ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
-
 # tools
 export PATH="$HOME/.local/bin:$PATH"
 
 # rancher-desktop
 export PATH="$HOME/.rd/bin:$PATH"
 
-# kubectl
-complete -F __start_kubectl k
-fpath=(~/.zsh/completions $fpath)
-
 # gcloud
 [ -s "$HOME/.gcloud/path.zsh.inc" ] && \. "$HOME/.gcloud/path.zsh.inc"
-[ -s "$HOME/.gcloud/completion.zsh.inc" ] && \. "$HOME/.gcloud/completion.zsh.inc"
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 # concourse-ci
@@ -55,4 +40,3 @@ PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
 # antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-

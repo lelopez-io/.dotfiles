@@ -1,0 +1,15 @@
+# zsh-no-matches-found
+unsetopt nomatch
+
+# mise - interactive shell support
+eval "$(mise activate zsh)"
+
+# tmux/venv
+[ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
+
+# kubectl
+complete -F __start_kubectl k
+fpath=(~/.zsh/completions $fpath)
+
+# gcloud
+[ -s "$HOME/.gcloud/completion.zsh.inc" ] && \. "$HOME/.gcloud/completion.zsh.inc"
