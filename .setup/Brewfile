@@ -14,54 +14,52 @@ brew "zsh-autosuggestions"
 ## CLI Tools
 brew "gh"
 brew "tree"
-brew "wget"
 brew "jq"
-brew "yt-dlp"
-brew "ffmpeg"
-brew "libyaml"
 brew "the_silver_searcher"
-brew "yamllint"
-brew "watch"
-brew "telnet"
 
-## Secrets Management
+## CLI Tools (ad hoc)
+# brew "ffmpeg"
+# brew "libyaml"
+# brew "telnet"
+# brew "watch"
+# brew "wget"
+# brew "yamllint"
+# brew "yt-dlp"
+
+## Secrets & Auth
+cask "1password"
+cask "1password-cli"
 brew "age"
 brew "sops"
 brew "gnupg"
-cask "1password-cli"
-cask "1password"
 cask "gcloud-cli"
 
-## Editors
-cask "claude-code"
-cask "ghostty"
+## Editors & Terminal
 cask "gitkraken"
+cask "ghostty"
+cask "claude-code"
+cask "zed"
 # cask "visual-studio-code"
 
-## Browsers
-cask "mullvad-vpn"
-cask "mullvad-browser"
-cask "eloston-chromium"
-# cask "firefox"
-# cask "google-chrome"
-
-## Kubernetes Development
+## Kubernetes
 cask "rancher"
 brew "kubectx"
 
 ## Mobile Development
 cask "android-studio"
 
-## Productivity Applications
+## Browsers & Privacy
+cask "mullvad-vpn"
+cask "mullvad-browser"
+cask "eloston-chromium"
+# cask "google-chrome"
+
+## Productivity
 cask "obsidian"
-cask "meetingbar"
-
-## Utility Applications
-cask "swish"
 cask "raycast"
+cask "meetingbar"
+cask "swish"
 cask "hiddenbar"
-# cask "discord"
 cask "anydesk"
-
-
+# cask "discord"
 
