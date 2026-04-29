@@ -9,7 +9,6 @@ unsetopt nomatch
 
 # mise - interactive shell support
 eval "$(mise activate zsh)"
-export PATH="$(mise where ruby@3.4.4)/bin:$PATH"
 
 
 # tmux/venv
