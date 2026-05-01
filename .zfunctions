@@ -2,6 +2,14 @@ gitk() {
     /Applications/GitKraken.app/Contents/MacOS/GitKraken -p $(pwd)
 }
 
+# Launch workday apps (idempotent — open -a activates if already running)
+mira() {
+    open -ga "Obsidian"
+    open -ga "GitKraken"
+    open -ga "Google Chrome"
+    open -ga "Slack"
+}
+
 # Creates a compressed backup of a folder
 backup_folder() {
     if [[ -z "$1" ]]; then
