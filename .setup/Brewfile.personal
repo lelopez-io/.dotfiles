@@ -1,5 +1,6 @@
 ## Media
 cask "iina"
+cask "plexamp"
 cask "calibre"
 cask "anybox"
 cask "audacity"
