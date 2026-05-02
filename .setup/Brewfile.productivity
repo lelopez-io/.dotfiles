@@ -1,5 +1,6 @@
 ## Notes & Docs
 cask "obsidian"
+# cask "typora"
 
 ## Communication
 # cask "slack"

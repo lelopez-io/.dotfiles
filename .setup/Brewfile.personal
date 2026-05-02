@@ -2,12 +2,15 @@
 cask "iina"
 cask "plexamp"
 cask "calibre"
-cask "anybox"
 cask "audacity"
-cask "giphy-capture"
 
 ## Utilities
 cask "the-unarchiver"
 cask "balenaetcher"
 cask "daisydisk"
 cask "veracrypt"
+cask "macfuse"
+cask "vorta"
+cask "utm"
+cask "basictex"
+cask "deskpad"

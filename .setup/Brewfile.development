@@ -55,12 +55,13 @@ brew "kubectx"
 ## Mobile Development
 cask "android-studio"
 
+
 ## Networking & Privacy
 cask "mullvad-vpn"
 cask "mullvad-browser"
-cask "tailscale"
+cask "tailscale-app"
 cask "little-snitch"
-cask "eloston-chromium"
+cask "ungoogled-chromium"
 # cask "firefox"
 # cask "google-chrome"
 
