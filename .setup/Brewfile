@@ -54,15 +54,31 @@ brew "kubectx"
 ## Mobile Development
 cask "android-studio"
 
-## Browsers & Privacy
+## Networking & Privacy
 cask "mullvad-vpn"
 cask "mullvad-browser"
+cask "tailscale"
+cask "little-snitch"
 cask "eloston-chromium"
 # cask "google-chrome"
+
+## Media
+cask "iina"
+cask "calibre"
+
+## Audio
+cask "soundsource"
+cask "loopback"
+
+## Utilities
+cask "the-unarchiver"
+cask "balenaetcher"
+cask "cleanshot"
 
 ## Productivity
 cask "obsidian"
 cask "raycast"
+cask "slack"
 cask "meetingbar"
 cask "swish"
 cask "hiddenbar"
