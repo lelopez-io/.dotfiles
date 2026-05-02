@@ -1,5 +1,5 @@
 gitk() {
-    /Applications/GitKraken.app/Contents/MacOS/GitKraken -p $(pwd)
+    open -a GitKraken --args -p "$(pwd)"
 }
 
 # Launch workday apps (idempotent — open -a activates if already running)
