@@ -24,7 +24,14 @@ brew "the_silver_searcher"
 # brew "watch"
 # brew "wget"
 # brew "yamllint"
+# brew "yq"
 # brew "yt-dlp"
+
+## Cloud & Infrastructure
+brew "awscli"
+brew "ansible"
+brew "hashicorp/tap/terraform"
+cask "gcloud-cli"
 
 ## Secrets & Auth
 cask "1password"
@@ -32,7 +39,6 @@ cask "1password-cli"
 brew "age"
 brew "sops"
 brew "gnupg"
-cask "gcloud-cli"
 
 ## Editors & Terminal
 cask "gitkraken"
