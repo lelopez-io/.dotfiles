@@ -22,6 +22,7 @@ cask "grammarly-desktop"
 
 ## Screenshots
 cask "cleanshot"
+cask "pixelsnap"
 
 ## Remote Access
 cask "anydesk"
