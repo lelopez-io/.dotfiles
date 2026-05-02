@@ -1,0 +1,26 @@
+## Notes & Docs
+cask "obsidian"
+
+## Communication
+# cask "slack"
+# cask "discord"
+
+## Window & Menubar
+cask "raycast"
+cask "swish"
+cask "hiddenbar"
+cask "steermouse"
+
+## Meetings & Audio
+cask "meetingbar"
+cask "soundsource"
+cask "loopback"
+
+## Writing
+cask "grammarly-desktop"
+
+## Screenshots
+cask "cleanshot"
+
+## Remote Access
+cask "anydesk"

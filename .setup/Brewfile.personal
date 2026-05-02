@@ -1,0 +1,12 @@
+## Media
+cask "iina"
+cask "calibre"
+cask "anybox"
+cask "audacity"
+cask "giphy-capture"
+
+## Utilities
+cask "the-unarchiver"
+cask "balenaetcher"
+cask "daisydisk"
+cask "veracrypt"
