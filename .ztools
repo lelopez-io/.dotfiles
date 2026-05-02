@@ -1,6 +1,12 @@
 # zsh-no-matches-found
 unsetopt nomatch
 
+# line navigation (previously provided by oh-my-zsh)
+bindkey "^A"  beginning-of-line     # Cmd+Left
+bindkey "^E"  end-of-line           # Cmd+Right
+bindkey "^[b" backward-word         # Option+Left
+bindkey "^[f" forward-word          # Option+Right
+
 # mise - interactive shell support
 eval "$(mise activate zsh)"
 
