@@ -2,10 +2,12 @@
 unsetopt nomatch
 
 # line navigation (previously provided by oh-my-zsh)
-bindkey "^A"  beginning-of-line     # Cmd+Left
-bindkey "^E"  end-of-line           # Cmd+Right
-bindkey "^[b" backward-word         # Option+Left
-bindkey "^[f" forward-word          # Option+Right
+bindkey "^A"    beginning-of-line                # Cmd+Left
+bindkey "^E"    end-of-line                      # Cmd+Right
+bindkey "^[b"   backward-word                    # Option+Left
+bindkey "^[f"   forward-word                     # Option+Right
+bindkey "^[[A"  history-beginning-search-backward # Up (prefix search)
+bindkey "^[[B"  history-beginning-search-forward  # Down (prefix search)
 
 # mise - interactive shell support
 eval "$(mise activate zsh)"
