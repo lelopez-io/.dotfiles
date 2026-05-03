@@ -6,15 +6,15 @@ $character"""
 # username - only shown over SSH
 [username]
 detect_env_vars = ["SSH_CONNECTION"]
-format = "[$user]($style)@"
-style_user = "bold yellow"
-style_root = "bold red"
+format = "[$user]($style)[@]($style)"
+style_user = "yellow"
+style_root = "red"
 
 # hostname - only shown over SSH
 [hostname]
 ssh_only = true
 format = "[$hostname]($style) in "
-style = "bold yellow"
+style = "yellow"
 
 # time
 [time]
