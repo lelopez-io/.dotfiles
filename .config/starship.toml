@@ -6,7 +6,6 @@ $character"""
 # username - only shown over SSH
 [username]
 detect_env_vars = ["SSH_CONNECTION"]
-show_always = true
 format = "[$user]($style)@"
 style_user = "bold yellow"
 style_root = "bold red"
