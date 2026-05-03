@@ -1,7 +1,15 @@
 # prompt
 format = """
-$time$hostname$directory$git_branch$git_status$kubernetes$cmd_duration
+$time$username$hostname$directory$git_branch$git_status$kubernetes$cmd_duration
 $character"""
+
+# username - only shown over SSH
+[username]
+detect_env_vars = ["SSH_CONNECTION"]
+show_always = true
+format = "[$user]($style)@"
+style_user = "bold yellow"
+style_root = "bold red"
 
 # hostname - only shown over SSH
 [hostname]
