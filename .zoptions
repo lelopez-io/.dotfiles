@@ -15,6 +15,11 @@ eval "$(mise activate zsh)"
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
 
-# kubectl - bind k alias to kubectl completions
-(( $+commands[kubectl] )) && compdef k=kubectl || echo "warning: kubectl not found"
+# kubectl - load completions and bind k alias
+if (( $+commands[kubectl] )); then
+  source <(kubectl completion zsh)
+  compdef k=kubectl
+else
+  echo "warning: kubectl not found"
+fi
 
