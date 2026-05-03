@@ -1,7 +1,13 @@
 # prompt
 format = """
-$time$directory$git_branch$git_status$kubernetes$cmd_duration
+$time$hostname$directory$git_branch$git_status$kubernetes$cmd_duration
 $character"""
+
+# hostname - only shown over SSH
+[hostname]
+ssh_only = true
+format = "[$hostname]($style) in "
+style = "bold yellow"
 
 # time
 [time]

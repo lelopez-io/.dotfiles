@@ -16,5 +16,5 @@ eval "$(mise activate zsh)"
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
 
 # kubectl - bind k alias to kubectl completions
-compdef k=kubectl
+(( $+commands[kubectl] )) && compdef k=kubectl || echo "warning: kubectl not found"
 
