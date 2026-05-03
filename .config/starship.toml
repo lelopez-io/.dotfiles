@@ -38,7 +38,7 @@ format = "([$all_status$ahead_behind]($style) )"
 [kubernetes]
 disabled = false
 format = "at [$symbol$context( \\($namespace\\))]($style) "
-style = "red"
+style = "blue"
 
 [kubernetes.context_aliases]
 
