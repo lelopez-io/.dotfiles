@@ -17,7 +17,10 @@ eval "$(mise activate zsh)"
 
 # kubectl - load completions and bind k alias
 if (( $+commands[kubectl] )); then
-  source <(kubectl completion zsh)
+  local _kubectl_comp="${HOME}/.zsh/completions/_kubectl"
+  if [[ ! -f "$_kubectl_comp" || "$_kubectl_comp" -ot "$(command -v kubectl)" ]]; then
+    kubectl completion zsh > "$_kubectl_comp"
+  fi
   compdef k=kubectl
 else
   echo "warning: kubectl not found"
