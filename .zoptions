@@ -1,6 +1,8 @@
 # zsh-no-matches-found
 unsetopt nomatch
 
+# emacs keybindings (EDITOR=nvim triggers vi mode, restore emacs line editing)
+bindkey -e
 # line navigation (previously provided by oh-my-zsh)
 bindkey "^A"    beginning-of-line                # Cmd+Left
 bindkey "^E"    end-of-line                      # Cmd+Right
