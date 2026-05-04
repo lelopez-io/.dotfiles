@@ -62,7 +62,6 @@ brew "borgbackup"
 ## Mobile Development
 cask "android-studio"
 
-
 ## Networking & Privacy
 cask "mullvad-vpn"
 cask "mullvad-browser"
@@ -71,5 +70,3 @@ cask "little-snitch"
 # cask "ungoogled-chromium"
 # cask "firefox"
 # cask "google-chrome"
-
-
