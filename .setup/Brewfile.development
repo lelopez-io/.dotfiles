@@ -18,11 +18,13 @@ brew "jq"
 brew "the_silver_searcher"
 
 ## CLI Tools (ad hoc)
+# brew "ddrescue"
 # brew "ffmpeg"
 # brew "libyaml"
 # brew "telnet"
 # brew "watch"
 # brew "wget"
+# brew "whisper-cpp"
 # brew "yamllint"
 # brew "yq"
 # brew "yt-dlp"
@@ -52,6 +54,11 @@ cask "zed"
 cask "rancher"
 brew "kubectx"
 
+## Homelab
+brew "fluxcd/tap/flux"
+brew "talhelper"
+brew "borgbackup"
+
 ## Mobile Development
 cask "android-studio"
 
@@ -61,7 +68,7 @@ cask "mullvad-vpn"
 cask "mullvad-browser"
 cask "tailscale-app"
 cask "little-snitch"
-cask "ungoogled-chromium"
+# cask "ungoogled-chromium"
 # cask "firefox"
 # cask "google-chrome"
 

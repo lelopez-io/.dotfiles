@@ -10,12 +10,12 @@ cask "obsidian"
 cask "raycast"
 cask "swish"
 cask "hiddenbar"
-cask "steermouse"
+# cask "steermouse"
 
 ## Meetings & Audio
 cask "meetingbar"
-cask "soundsource"
-cask "loopback"
+# cask "soundsource"
+# cask "loopback"
 
 ## Writing
 cask "grammarly-desktop"
