@@ -1,72 +1,66 @@
 ## Essential - required for dotfiles setup
-brew "stow"
-brew "mise"
-brew "tmux"
-brew "neovim"
 brew "eza"
-brew "ripgrep"
+brew "mise"
+brew "neovim"
 brew "prettierd"
-brew "stylua"
+brew "ripgrep"
 brew "starship"
-brew "zsh-syntax-highlighting"
+brew "stow"
+brew "stylua"
+brew "tmux"
 brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
 ## CLI Tools
 brew "gh"
-brew "tree"
 brew "jq"
 brew "the_silver_searcher"
-
-## CLI Tools (ad hoc)
-# brew "ddrescue"
-# brew "ffmpeg"
+brew "tree"
 # brew "libyaml"
 # brew "telnet"
 # brew "watch"
 # brew "wget"
-# brew "whisper-cpp"
 # brew "yamllint"
 # brew "yq"
-# brew "yt-dlp"
+
+## Editors & IDEs
+cask "claude-code"
+cask "ghostty"
+cask "gitkraken"
+cask "zed"
+# cask "android-studio"
+# cask "postman"
+# cask "visual-studio-code"
 
 ## Cloud & Infrastructure
-brew "awscli"
 brew "ansible"
+brew "awscli"
 brew "hashicorp/tap/terraform"
 cask "gcloud-cli"
 
 ## Secrets & Auth
+brew "age"
+brew "gnupg"
+brew "sops"
 cask "1password"
 cask "1password-cli"
-brew "age"
-brew "sops"
-brew "gnupg"
-
-## Editors & Terminal
-cask "gitkraken"
-cask "ghostty"
-cask "claude-code"
-cask "zed"
-# cask "visual-studio-code"
-# cask "postman"
 
 ## Kubernetes
-cask "rancher"
 brew "kubectx"
+cask "rancher"
 
 ## Homelab
+brew "borgbackup"
 brew "fluxcd/tap/flux"
 brew "talhelper"
-brew "borgbackup"
-
-## Mobile Development
-cask "android-studio"
 
 ## Networking & Privacy
-cask "mullvad-vpn"
-cask "mullvad-browser"
-cask "tailscale-app"
 cask "little-snitch"
-# cask "ungoogled-chromium"
+cask "mullvad-vpn"
+cask "tailscale-app"
+
+## Browsers
+cask "mullvad-browser"
 # cask "firefox"
 # cask "google-chrome"
+# cask "ungoogled-chromium"
