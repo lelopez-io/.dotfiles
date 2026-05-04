@@ -1,4 +1,5 @@
-## Notes & Docs
+## Notes & Writing
+cask "grammarly-desktop"
 cask "obsidian"
 # cask "typora"
 
@@ -7,18 +8,15 @@ cask "obsidian"
 # cask "discord"
 
 ## Window & Menubar
+cask "hiddenbar"
 cask "raycast"
 cask "swish"
-cask "hiddenbar"
 # cask "steermouse"
 
 ## Meetings & Audio
 cask "meetingbar"
-# cask "soundsource"
 # cask "loopback"
-
-## Writing
-cask "grammarly-desktop"
+# cask "soundsource"
 
 ## Screenshots
 cask "cleanshot"
