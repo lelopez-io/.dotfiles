@@ -21,7 +21,7 @@ eval "$(mise activate zsh)"
 if (( $+commands[kubectl] )); then
   local _kubectl_comp="${HOME}/.zsh/completions/_kubectl"
   if [[ ! -f "$_kubectl_comp" || "$_kubectl_comp" -ot "$(command -v kubectl)" ]]; then
-    kubectl completion zsh > "$_kubectl_comp"
+    mkdir -p "${_kubectl_comp:h}" && kubectl completion zsh > "$_kubectl_comp"
   fi
   compdef k=kubectl
 else
