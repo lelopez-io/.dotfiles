@@ -14,14 +14,10 @@ cask "basictex"
 cask "daisydisk"
 cask "macfuse"
 cask "the-unarchiver"
+cask "vorta"
+# brew "ddrescue"
 # cask "balenaetcher"
 # cask "veracrypt"
-
-## Data Recovery
-# brew "ddrescue"
-
-## Backup
-cask "vorta"
 
 ## Virtualization
 # cask "deskpad"

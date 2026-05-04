@@ -10,6 +10,7 @@ brew "stylua"
 brew "tmux"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
+cask "ghostty"
 
 ## CLI Tools
 brew "gh"
@@ -24,13 +25,14 @@ brew "tree"
 # brew "yq"
 
 ## Editors & IDEs
-cask "claude-code"
-cask "ghostty"
 cask "gitkraken"
 cask "zed"
 # cask "android-studio"
 # cask "postman"
 # cask "visual-studio-code"
+
+## AI Tools
+cask "claude-code"
 
 ## Cloud & Infrastructure
 brew "ansible"
