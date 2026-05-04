@@ -1,16 +1,28 @@
 ## Media
 cask "iina"
 cask "plexamp"
-# cask "calibre"
+# brew "ffmpeg"
+# brew "whisper-cpp"
+# brew "yt-dlp"
 # cask "audacity"
+# cask "calibre"
 
-## Utilities
-cask "the-unarchiver"
+## Documents
+cask "basictex"
+
+## Disk & Storage
 cask "daisydisk"
 cask "macfuse"
-cask "vorta"
-cask "basictex"
+cask "the-unarchiver"
 # cask "balenaetcher"
 # cask "veracrypt"
-# cask "utm"
+
+## Data Recovery
+# brew "ddrescue"
+
+## Backup
+cask "vorta"
+
+## Virtualization
 # cask "deskpad"
+# cask "utm"
