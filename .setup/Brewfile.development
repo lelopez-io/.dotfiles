@@ -5,6 +5,7 @@ brew "neovim"
 brew "tree-sitter-cli"  # nvim-treesitter parser compilation
 brew "imagemagick"   # nvim image.nvim dependency
 brew "mermaid-cli"   # nvim mermaid diagram rendering
+brew "whisper-cpp"   # nvim whisper.nvim local speech-to-text
 brew "prettierd"
 brew "ripgrep"
 brew "starship"
