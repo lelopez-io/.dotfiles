@@ -289,3 +289,14 @@ uncheck_md() {
 
     echo "✓ Unchecked all checkboxes in $file"
 }
+
+# Clear/redraw mermaid images in all nvim instances
+# Called by tmux before session browser to prevent Kitty graphics persistence
+# Usage: mermaid_clear [clear|redraw|debug]
+mermaid_clear() {
+    local func="${1:-clear}"
+    local tmpdir="${TMPDIR:-$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || echo /tmp)}"
+    for sock in "$tmpdir"/nvim.*/*/nvim.*.0; do
+        [[ -S "$sock" ]] && nvim --server "$sock" --remote-expr "v:lua.mermaid_${func}()" &>/dev/null
+    done
+}
