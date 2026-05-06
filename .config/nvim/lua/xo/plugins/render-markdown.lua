@@ -21,6 +21,9 @@
 
 local DEBOUNCE_MS = 300
 local CACHE_DIR = "/tmp"
+local MMDC_PATH = "/opt/homebrew/bin/mmdc"
+-- Update after `brew upgrade ungoogled-chromium`: ls /opt/homebrew/Caskroom/ungoogled-chromium/
+local CHROMIUM_PATH = "/opt/homebrew/Caskroom/ungoogled-chromium/147.0.7727.116-1.1/Chromium.app/Contents/MacOS/Chromium"
 
 local preview_enabled = false
 local preview_focused = true
@@ -141,28 +144,39 @@ local function render_mermaid_async(content, hash, callback)
 
     pending_renders[hash] = true
 
+    local log_path = string.format("%s/mermaid_%s.log", CACHE_DIR, hash)
+
     vim.fn.jobstart({
-        "mmdc", "-i", mmd_path, "-o", png_path, "-b", "transparent", "-t", "dark", "-s", "2"
+        MMDC_PATH, "-i", mmd_path, "-o", png_path, "-b", "transparent", "-t", "dark", "-s", "2"
     }, {
+        env = { PUPPETEER_EXECUTABLE_PATH = CHROMIUM_PATH },
+        stdout_buffered = true,
+        stderr_buffered = true,
+        on_stdout = function(_, data)
+            if data and #data > 0 then
+                local f = io.open(log_path, "a")
+                if f then f:write(table.concat(data, "\n")); f:close() end
+            end
+        end,
+        on_stderr = function(_, data)
+            if data and #data > 0 then
+                local f = io.open(log_path, "a")
+                if f then f:write(table.concat(data, "\n")); f:close() end
+            end
+        end,
         on_exit = function(_, exit_code)
             pending_renders[hash] = nil
-            os.remove(mmd_path)
 
             if exit_code == 0 and vim.fn.filereadable(png_path) == 1 then
+                os.remove(mmd_path)
+                os.remove(log_path)
                 vim.schedule(function()
                     callback(png_path)
                 end)
             else
                 vim.schedule(function()
-                    vim.notify("Mermaid render failed for " .. hash, vim.log.levels.WARN)
+                    vim.notify("Mermaid render failed for " .. hash .. " (see " .. log_path .. ")", vim.log.levels.WARN)
                     callback(nil)
-                end)
-            end
-        end,
-        on_stderr = function(_, data)
-            if data and data[1] and data[1] ~= "" then
-                vim.schedule(function()
-                    vim.notify("mmdc: " .. table.concat(data, "\n"), vim.log.levels.DEBUG)
                 end)
             end
         end,
@@ -298,7 +312,7 @@ local function enable_preview()
     vim.cmd("RenderMarkdown enable")
     vim.defer_fn(remove_heading_bold, 200)
     start_file_watcher()
-    display_mermaid_images()
+    display_mermaid_debounced()
 
     vim.api.nvim_create_autocmd("BufWritePost", {
         group = preview_augroup,
@@ -471,5 +485,25 @@ return {
                 end
             end,
         })
+
+        -- Handle buffer switches (e.g., harpoon navigation)
+        vim.api.nvim_create_autocmd("BufEnter", {
+            pattern = "*.md",
+            callback = function()
+                if vim.bo.filetype == "markdown" then
+                    if not preview_enabled then
+                        enable_preview()
+                    else
+                        -- Already enabled, just refresh images for new buffer (debounced)
+                        display_mermaid_debounced()
+                    end
+                end
+            end,
+        })
+
+        -- Enable immediately if current buffer is already markdown (lazy load case)
+        if vim.bo.filetype == "markdown" then
+            enable_preview()
+        end
     end,
 }
