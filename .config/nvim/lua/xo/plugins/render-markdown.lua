@@ -1,4 +1,23 @@
 -- Markdown preview mode: render-markdown + mermaid diagrams, auto-refresh on external changes
+--
+-- Mermaid Image Lifecycle:
+--   1. Images render inline below ```mermaid blocks using image.nvim + Kitty protocol
+--   2. External clear (tmux session browser, etc):
+--      - tmux calls `mermaid_clear` zsh function before showing overlays (prefix + w)
+--      - Function finds all nvim sockets and calls mermaid_clear() via --remote-expr
+--      - mermaid_clear() clears images and sets render_blocked=true
+--   3. Redraw on activity:
+--      - When user returns to nvim, any activity triggers redraw:
+--        FocusGained, WinScrolled, CursorMoved, CursorMovedI, InsertEnter
+--      - If render_blocked=true, full redraw from cache (fast)
+--   4. Session switch handling:
+--      - FocusGained checks if tmux session changed
+--      - If different session, clears stale images and redraws fresh
+--
+-- External API (for tmux/scripts via nvim --remote-expr):
+--   mermaid_clear()  - Clear images and block re-rendering
+--   mermaid_redraw() - Unblock and redraw images
+--   mermaid_debug()  - Print state for debugging
 
 local DEBOUNCE_MS = 300
 local CACHE_DIR = "/tmp"
@@ -10,6 +29,17 @@ local mermaid_images = {}
 local debounce_timer = nil
 local pending_renders = {}
 local needs_redraw = false
+local last_tmux_session = nil
+local render_blocked = false
+
+local function get_tmux_session()
+    if not vim.env.TMUX then return nil end
+    local handle = io.popen("tmux display-message -p '#{session_id}'")
+    if not handle then return nil end
+    local session = handle:read("*l")
+    handle:close()
+    return session
+end
 
 -- Heading icons have numbers that blur when bold
 local function remove_heading_bold()
@@ -139,14 +169,46 @@ local function render_mermaid_async(content, hash, callback)
     })
 end
 
+-- Send Kitty graphics delete command to terminal
+local function clear_kitty_graphics()
+    local kitty_delete = "\x1b_Ga=d,d=A\x1b\\"
+    if vim.env.TMUX then
+        kitty_delete = "\x1bPtmux;" .. kitty_delete:gsub("\x1b", "\x1b\x1b") .. "\x1b\\"
+    end
+    io.stdout:write(kitty_delete)
+    io.stdout:flush()
+end
+
+-- Full clear: remove from image.nvim tracking and clear Kitty graphics
 local function clear_mermaid_images()
-    local ok, _ = pcall(require, "image")
+    local ok, image_api = pcall(require, "image")
     if not ok then return end
 
     for _, img in ipairs(mermaid_images) do
-        pcall(function() img:clear() end)
+        pcall(function() img:clear(true) end)
     end
     mermaid_images = {}
+
+    pcall(function() image_api.clear() end)
+    clear_kitty_graphics()
+end
+
+-- Global functions for tmux to call via nvim --remote-expr
+_G.mermaid_clear = function()
+    render_blocked = true
+    clear_mermaid_images()
+end
+
+_G.mermaid_redraw = function()
+    render_blocked = false
+    if preview_enabled then
+        display_mermaid_images()
+    end
+end
+
+_G.mermaid_debug = function()
+    vim.notify(string.format("preview_enabled=%s render_blocked=%s images=%d",
+        tostring(preview_enabled), tostring(render_blocked), #mermaid_images), vim.log.levels.INFO)
 end
 
 local function display_single_image(png_path, end_line, bufnr, winid)
@@ -169,7 +231,7 @@ local function display_single_image(png_path, end_line, bufnr, winid)
 end
 
 local function display_mermaid_images()
-    if not preview_enabled then return end
+    if not preview_enabled or render_blocked then return end
 
     local ok, _ = pcall(require, "image")
     if not ok then return end
@@ -232,6 +294,7 @@ local preview_augroup = vim.api.nvim_create_augroup("MarkdownPreview", { clear =
 
 local function enable_preview()
     preview_enabled = true
+    last_tmux_session = get_tmux_session()
     vim.cmd("RenderMarkdown enable")
     vim.defer_fn(remove_heading_bold, 200)
     start_file_watcher()
@@ -257,7 +320,34 @@ local function enable_preview()
         end,
     })
 
-    vim.api.nvim_create_autocmd({ "FocusGained", "WinEnter", "BufEnter" }, {
+    vim.api.nvim_create_autocmd("FocusGained", {
+        group = preview_augroup,
+        pattern = "*.md",
+        callback = function()
+            preview_focused = true
+            if not preview_enabled then return end
+
+            -- Handle return from tmux session browser (render_blocked)
+            if render_blocked then
+                render_blocked = false
+                display_mermaid_images()
+                return
+            end
+
+            -- Handle session switch (different tmux session)
+            local current_session = get_tmux_session()
+            if current_session and last_tmux_session and current_session ~= last_tmux_session then
+                last_tmux_session = current_session
+                clear_mermaid_images()
+                display_mermaid_debounced()
+            elseif needs_redraw then
+                needs_redraw = false
+                display_mermaid_debounced()
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
         group = preview_augroup,
         pattern = "*.md",
         callback = function()
@@ -265,6 +355,18 @@ local function enable_preview()
             if preview_enabled and needs_redraw then
                 needs_redraw = false
                 display_mermaid_debounced()
+            end
+        end,
+    })
+
+    -- Backup redraw triggers if FocusGained doesn't fire
+    vim.api.nvim_create_autocmd({ "WinScrolled", "CursorMoved", "CursorMovedI", "InsertEnter" }, {
+        group = preview_augroup,
+        pattern = "*.md",
+        callback = function()
+            if preview_enabled and render_blocked then
+                render_blocked = false
+                display_mermaid_images()
             end
         end,
     })
