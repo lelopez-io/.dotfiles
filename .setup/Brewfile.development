@@ -2,6 +2,9 @@
 brew "eza"
 brew "mise"
 brew "neovim"
+brew "tree-sitter-cli"  # nvim-treesitter parser compilation
+brew "imagemagick"   # nvim image.nvim dependency
+brew "mermaid-cli"   # nvim mermaid diagram rendering
 brew "prettierd"
 brew "ripgrep"
 brew "starship"

@@ -16,6 +16,9 @@ export PATH="$HOME/.rd/bin:$PATH"
 # prettierd
 export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
 
+# mermaid-cli (uses ungoogled-chromium via brew)
+export PUPPETEER_EXECUTABLE_PATH="$(echo "$(brew --prefix)"/Caskroom/ungoogled-chromium/*/Chromium.app/Contents/MacOS/Chromium)"
+
 # gnu-sed
 PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
