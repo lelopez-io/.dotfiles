@@ -1,18 +1,14 @@
--- Markdown preview mode: render-markdown + mermaid diagrams, auto-refresh on external changes
+-- Markdown preview mode: render-markdown.nvim + mermaid diagrams via image.nvim
 --
 -- Mermaid Image Lifecycle:
 --   1. Images render inline below ```mermaid blocks using image.nvim + Kitty protocol
---   2. External clear (tmux session browser, etc):
---      - tmux calls `mermaid_clear` zsh function before showing overlays (prefix + w)
---      - Function finds all nvim sockets and calls mermaid_clear() via --remote-expr
+--   2. Cached in /tmp as mermaid_{hash}.png (re-renders only when content changes)
+--   3. External clear (tmux session browser, etc):
+--      - tmux calls `mermaid_clear` zsh function before showing overlays
 --      - mermaid_clear() clears images and sets render_blocked=true
---   3. Redraw on activity:
---      - When user returns to nvim, any activity triggers redraw:
---        FocusGained, WinScrolled, CursorMoved, CursorMovedI, InsertEnter
---      - If render_blocked=true, full redraw from cache (fast)
---   4. Session switch handling:
---      - FocusGained checks if tmux session changed
---      - If different session, clears stale images and redraws fresh
+--   4. Redraw triggers: FocusGained, WinScrolled, CursorMoved, BufEnter
+--   5. VimResized (tmux splits): clears images, re-renders on next scroll/interaction
+--   6. Harpoon navigation: triggers BufWinEnter for render-markdown.nvim refresh
 --
 -- External API (for tmux/scripts via nvim --remote-expr):
 --   mermaid_clear()  - Clear images and block re-rendering
@@ -229,6 +225,14 @@ local function display_single_image(png_path, end_line, bufnr, winid)
     local ok, image_api = pcall(require, "image")
     if not ok then return end
 
+    -- Calculate max height to prevent overflow into other panes
+    local win_height = vim.api.nvim_win_get_height(winid)
+    local win_info = vim.fn.getwininfo(winid)[1]
+    local topline = win_info and win_info.topline or 1
+    local lines_from_top = end_line - topline + 1
+    local available_lines = win_height - lines_from_top
+    local max_height = math.max(5, available_lines - 1)  -- Leave 1 line buffer, min 5 lines
+
     local ok_img, img = pcall(image_api.from_file, png_path, {
         buffer = bufnr,
         window = winid,
@@ -236,6 +240,7 @@ local function display_single_image(png_path, end_line, bufnr, winid)
         inline = true,
         x = 0,
         y = end_line,
+        max_height = max_height,
     })
 
     if ok_img and img then
@@ -379,9 +384,21 @@ local function enable_preview()
         group = preview_augroup,
         pattern = "*.md",
         callback = function()
-            if preview_enabled and render_blocked then
+            if preview_enabled and (render_blocked or needs_redraw) then
                 render_blocked = false
+                needs_redraw = false
                 display_mermaid_images()
+            end
+        end,
+    })
+
+    -- Clear images on terminal resize (tmux splits) - re-render on scroll
+    vim.api.nvim_create_autocmd("VimResized", {
+        group = preview_augroup,
+        callback = function()
+            if preview_enabled then
+                clear_mermaid_images()
+                needs_redraw = true
             end
         end,
     })
