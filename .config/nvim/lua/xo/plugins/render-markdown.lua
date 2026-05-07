@@ -147,7 +147,7 @@ local function render_mermaid_async(content, hash, callback)
     local log_path = string.format("%s/mermaid_%s.log", CACHE_DIR, hash)
 
     vim.fn.jobstart({
-        MMDC_PATH, "-i", mmd_path, "-o", png_path, "-b", "transparent", "-t", "dark", "-s", "2"
+        MMDC_PATH, "-i", mmd_path, "-o", png_path, "-b", "transparent", "-t", "dark", "-s", "3", "-w", "800", "-H", "3000"
     }, {
         env = { PUPPETEER_EXECUTABLE_PATH = CHROMIUM_PATH },
         stdout_buffered = true,
@@ -259,9 +259,10 @@ local function display_mermaid_images()
     local winid = vim.api.nvim_get_current_win()
 
     for _, block in ipairs(blocks) do
+        local end_line = block.end_line - 1  -- Convert to 0-indexed for image.nvim
         render_mermaid_async(block.content, block.hash, function(png_path)
             if png_path and preview_enabled then
-                display_single_image(png_path, block.end_line, bufnr, winid)
+                display_single_image(png_path, end_line, bufnr, winid)
             end
         end)
     end
@@ -494,9 +495,12 @@ return {
                     if not preview_enabled then
                         enable_preview()
                     else
-                        -- Already enabled, just refresh images for new buffer (debounced)
                         display_mermaid_debounced()
                     end
+                    -- Trigger BufWinEnter for render-markdown (harpoon uses nvim_set_current_buf which may not fire it)
+                    vim.schedule(function()
+                        vim.cmd("doautocmd BufWinEnter")
+                    end)
                 end
             end,
         })
