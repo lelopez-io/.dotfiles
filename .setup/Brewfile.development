@@ -52,21 +52,12 @@ cask "1password"
 cask "1password-cli"
 
 ## Kubernetes
+brew "fluxcd/tap/flux"
 brew "kubectx"
+brew "talhelper"
 cask "rancher"
 
-## Homelab
-brew "borgbackup"
-brew "fluxcd/tap/flux"
-brew "talhelper"
-
-## Networking & Privacy
-cask "little-snitch"
-cask "mullvad-vpn"
-cask "tailscale-app"
-
 ## Browsers
-cask "mullvad-browser"
+cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 # cask "firefox"
 # cask "google-chrome"
-# cask "ungoogled-chromium"
