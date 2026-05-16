@@ -1,20 +1,22 @@
 ## Essential - required for dotfiles setup
 brew "eza"
 brew "mise"
-brew "neovim"
-brew "tree-sitter-cli"  # nvim-treesitter parser compilation
-brew "imagemagick"   # nvim image.nvim dependency
-brew "mermaid-cli"   # nvim mermaid diagram rendering
-brew "whisper-cpp"   # nvim whisper.nvim local speech-to-text
-brew "prettierd"
-brew "ripgrep"
 brew "starship"
 brew "stow"
-brew "stylua"
 brew "tmux"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 cask "ghostty"
+
+## Neovim
+brew "neovim"
+brew "tree-sitter-cli" # nvim-treesitter parser compilation
+brew "imagemagick"     # image.nvim
+brew "mermaid-cli"     # mermaid diagram rendering
+brew "prettierd"       # conform.nvim formatter
+brew "ripgrep"         # telescope.nvim live_grep
+brew "stylua"          # conform.nvim formatter
+brew "whisper-cpp"     # whisper.nvim local speech-to-text
 
 ## CLI Tools
 brew "gh"
