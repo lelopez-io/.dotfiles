@@ -479,7 +479,12 @@ return {
                 unchecked = { icon = "󰄱 " },
                 checked = { icon = "󰄵 " },
             },
-            quote = { enabled = true },
+            quote = { enabled = true, repeat_linebreak = true },
+            win_options = {
+                showbreak = { default = vim.o.showbreak, rendered = "  " },
+                breakindent = { default = vim.o.breakindent, rendered = true },
+                breakindentopt = { default = vim.o.breakindentopt, rendered = "" },
+            },
             pipe_table = { enabled = true },
             callout = {
                 note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "RenderMarkdownInfo" },
