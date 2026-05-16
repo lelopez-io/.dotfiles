@@ -487,6 +487,17 @@ return {
                 important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "RenderMarkdownHint" },
                 warning = { raw = "[!WARNING]", rendered = "󰀪 Warning", highlight = "RenderMarkdownWarn" },
                 caution = { raw = "[!CAUTION]", rendered = "󰳦 Caution", highlight = "RenderMarkdownError" },
+                abstract = { raw = "[!ABSTRACT]", rendered = "󰭛 Abstract", highlight = "RenderMarkdownInfo" },
+                info = { raw = "[!INFO]", rendered = "󰋼 Info", highlight = "RenderMarkdownInfo" },
+                todo = { raw = "[!TODO]", rendered = "󰗡 Todo", highlight = "RenderMarkdownInfo" },
+                hint = { raw = "[!HINT]", rendered = "󰌶 Hint", highlight = "RenderMarkdownSuccess" },
+                success = { raw = "[!SUCCESS]", rendered = "󰄬 Success", highlight = "RenderMarkdownSuccess" },
+                question = { raw = "[!QUESTION]", rendered = "󰘥 Question", highlight = "RenderMarkdownHint" },
+                failure = { raw = "[!FAILURE]", rendered = "󰅖 Failure", highlight = "RenderMarkdownError" },
+                danger = { raw = "[!DANGER]", rendered = "󱐋 Danger", highlight = "RenderMarkdownError" },
+                bug = { raw = "[!BUG]", rendered = "󰨰 Bug", highlight = "RenderMarkdownError" },
+                example = { raw = "[!EXAMPLE]", rendered = "󰉹 Example", highlight = "RenderMarkdownHint" },
+                quote = { raw = "[!QUOTE]", rendered = "󱆨 Quote", highlight = "RenderMarkdownInfo" },
             },
         })
 
