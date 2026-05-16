@@ -418,6 +418,16 @@ local function enable_preview()
         end,
     })
 
+    -- Clear inline images on exit so they don't persist in the terminal buffer
+    vim.api.nvim_create_autocmd("VimLeavePre", {
+        group = preview_augroup,
+        callback = function()
+            if preview_enabled then
+                clear_mermaid_images()
+            end
+        end,
+    })
+
     vim.notify("Markdown preview ON", vim.log.levels.INFO)
 end
 
