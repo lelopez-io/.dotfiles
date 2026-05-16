@@ -18,8 +18,23 @@
 local DEBOUNCE_MS = 300
 local CACHE_DIR = "/tmp"
 local MMDC_PATH = "/opt/homebrew/bin/mmdc"
--- Update after `brew upgrade ungoogled-chromium`: ls /opt/homebrew/Caskroom/ungoogled-chromium/
-local CHROMIUM_PATH = "/opt/homebrew/Caskroom/ungoogled-chromium/147.0.7727.116-1.1/Chromium.app/Contents/MacOS/Chromium"
+
+-- Resolve Chromium dynamically so brew upgrades don't break rendering.
+-- Mirrors the .zprofile pattern that sets PUPPETEER_EXECUTABLE_PATH from a
+-- versioned glob; falls back to globbing directly when launched outside a
+-- shell that sourced .zprofile (e.g., from a GUI launcher).
+local function find_chromium()
+    local env_path = vim.env.PUPPETEER_EXECUTABLE_PATH
+    if env_path and env_path ~= "" and vim.fn.executable(env_path) == 1 then
+        return env_path
+    end
+    local matches = vim.fn.glob(
+        "/opt/homebrew/Caskroom/ungoogled-chromium/*/Chromium.app/Contents/MacOS/Chromium",
+        true, true
+    )
+    return matches[1]
+end
+local CHROMIUM_PATH = find_chromium()
 
 local preview_enabled = false
 local preview_focused = true
