@@ -275,11 +275,12 @@ end, {
 -- Reload configurations
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("source ~/.config/nvim/init.lua")
-    vim.notify("Reloaded neovim configuration", vim.log.levels.INFO)
+    vim.cmd("edit")
+    vim.notify("Reloaded config + current file", vim.log.levels.INFO)
 end, {
     noremap = false,
     silent = false,
-    desc = "Reload neovim configuration",
+    desc = "Reload neovim config and current file",
 })
 
 vim.keymap.set("n", "<leader><leader>.", function()
