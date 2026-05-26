@@ -1,6 +1,9 @@
 # zsh-no-matches-found
 unsetopt nomatch
 
+# inline # comments in interactive shells
+setopt interactive_comments
+
 # emacs keybindings (EDITOR=nvim triggers vi mode, restore emacs line editing)
 bindkey -e
 # line navigation (previously provided by oh-my-zsh)
