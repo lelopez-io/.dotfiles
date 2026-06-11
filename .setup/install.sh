@@ -12,6 +12,9 @@ source "$SCRIPTS_DIR/00-core.sh"
 echo "Installing selected tools and applications..."
 source "$SCRIPTS_DIR/01-tool-install.sh"
 
+echo "Setting up dotfiles..."
+source "$SCRIPTS_DIR/02-dotfiles.sh"
+
 echo "Setting up language environments..."
 source "$SCRIPTS_DIR/03-languages.sh"
 
@@ -20,9 +23,6 @@ source "$SCRIPTS_DIR/04-shell.sh"
 
 echo "Setting up Git configuration..."
 source "$SCRIPTS_DIR/05-git.sh"
-
-echo "Setting up dotfiles..."
-source "$SCRIPTS_DIR/06-dotfiles.sh"
 
 echo "=== Setup Complete! ==="
 echo "NOTE: You may need to restart your terminal for all changes to take effect."
