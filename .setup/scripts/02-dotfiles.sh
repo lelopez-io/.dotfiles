@@ -34,7 +34,11 @@ else
     git diff --stat
 
     echo -e "\nDetailed changes (side by side):"
-    git -c core.pager='' diff --color=always | delta --side-by-side
+    if command -v delta &> /dev/null; then
+        git -c core.pager='' diff --color=always | delta --side-by-side
+    else
+        git -c core.pager='' diff
+    fi
 
     echo -e "\nNOTE: Review the changes above and decide what to keep:"
     echo "1. Keep adopted changes: git add . && git commit -m 'feat: adopt existing configs'"

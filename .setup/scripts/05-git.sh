@@ -29,12 +29,16 @@ if [ -z "$(git config --global core.excludesfile)" ]; then
     git config --global core.excludesfile ~/.gitignore
 fi
 
-# Configure delta as git pager if not already set
-if [ -z "$(git config --global core.pager)" ]; then
-    echo "Setting up delta as git pager..."
-    git config --global core.pager delta
-    git config --global interactive.diffFilter "delta --color-only"
-    git config --global delta.navigate true
+# Configure delta as git pager if installed and not already set
+if command -v delta &> /dev/null; then
+    if [ -z "$(git config --global core.pager)" ]; then
+        echo "Setting up delta as git pager..."
+        git config --global core.pager delta
+        git config --global interactive.diffFilter "delta --color-only"
+        git config --global delta.navigate true
+    fi
+else
+    echo "Skipping delta pager config (delta not installed)"
 fi
 
 # Install gh CLI extensions (not supported by brew bundle)
