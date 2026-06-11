@@ -1,3 +1,10 @@
+# Fuzzy-switch to any branch, local or remote
+gco() {
+    git fetch -q origin 2>/dev/null
+    local branch=$(git branch -a --format='%(refname:short)' | sed 's|^origin/||' | sort -u | fzf --query="$1")
+    [[ -n "$branch" ]] && git switch "$branch"
+}
+
 gitk() {
     script -q /dev/null /Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(pwd)" </dev/null >/dev/null 2>&1 &!
 }

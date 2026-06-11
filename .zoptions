@@ -31,3 +31,6 @@ else
   echo "warning: kubectl not found"
 fi
 
+# gco - disable file completion, arg is an fzf query
+compdef _nothing gco
+
