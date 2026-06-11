@@ -13,12 +13,12 @@ cask "ghostty"
 
 ## [OPTIONAL] Neovim
 brew "neovim"
-brew "tree-sitter-cli" # nvim-treesitter parser compilation
 brew "imagemagick"     # image.nvim
 brew "mermaid-cli"     # mermaid diagram rendering
 brew "prettierd"       # conform.nvim formatter
 brew "ripgrep"         # telescope.nvim live_grep
 brew "stylua"          # conform.nvim formatter
+brew "tree-sitter-cli" # nvim-treesitter parser compilation
 brew "whisper-cpp"     # whisper.nvim local speech-to-text
 
 ## [OPTIONAL] Git & GitHub
