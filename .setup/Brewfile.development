@@ -18,11 +18,17 @@ brew "ripgrep"         # telescope.nvim live_grep
 brew "stylua"          # conform.nvim formatter
 brew "whisper-cpp"     # whisper.nvim local speech-to-text
 
+## Git & GitHub
+brew "gh"        # extensions managed in 05-git.sh
+brew "git-delta" # diff pager, configured in 05-git.sh
+cask "gitkraken"
+
 ## CLI Tools
-brew "gh"
+brew "fzf"                 # fuzzy finder, gco + keybindings in dotfiles
 brew "jq"
 brew "the_silver_searcher"
 brew "tree"
+# brew "atuin"             # shell history w/ sync, evaluate
 # brew "libyaml"
 # brew "telnet"
 # brew "watch"
@@ -31,7 +37,6 @@ brew "tree"
 # brew "yq"
 
 ## Editors & IDEs
-cask "gitkraken"
 cask "zed"
 # cask "android-studio"
 # cask "postman"
