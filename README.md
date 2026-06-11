@@ -51,7 +51,7 @@ After running the install script, you should:
 This will:
 
 -   Install Homebrew, then prompt per Brewfile section for which tools to
-    install (sections marked "required" install automatically)
+    install (`[REQUIRED]` sections install automatically)
 -   Link dotfiles using GNU Stow
 -   Install language runtimes declared in `.config/mise/config.toml`
 -   Configure shell extras (tmux plugins, nerd font, completions)
@@ -110,9 +110,10 @@ stow . --adopt
 
 Tool selection is driven by the curated Brewfiles in `.setup/` — one per
 machine profile (`development`, `productivity`, `personal`). The installer
-parses their `## Section` headers and prompts per section, so you can adopt
-only the parts of this tooling you want. To add or change tools, edit the
-Brewfiles — they are the single source of truth.
+parses their `## [REQUIRED]` / `## [OPTIONAL]` section headers and prompts
+per optional section, so you can adopt only the parts of this tooling you
+want. To add or change tools, edit the Brewfiles — they are the single
+source of truth.
 
 To re-run tool installation at any time:
 
