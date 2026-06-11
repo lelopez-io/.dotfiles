@@ -1,26 +1,26 @@
-## Notes & Writing
+## [OPTIONAL] Notes & Writing
 cask "grammarly-desktop"
 cask "obsidian"
 # cask "typora"
 
-## Communication
+## [OPTIONAL] Communication
 # cask "slack"
 # cask "discord"
 
-## Window & Menubar
+## [OPTIONAL] Window & Menubar
 cask "hiddenbar"
 cask "raycast"
 cask "swish"
 # cask "steermouse"
 
-## Meetings & Audio
+## [OPTIONAL] Meetings & Audio
 cask "meetingbar"
 # cask "loopback"
 # cask "soundsource"
 
-## Screenshots
+## [OPTIONAL] Screenshots
 cask "cleanshot"
 cask "pixelsnap"
 
-## Remote Access
+## [OPTIONAL] Remote Access
 cask "anydesk"

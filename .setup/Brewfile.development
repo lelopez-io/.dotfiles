@@ -1,5 +1,8 @@
-## Essential - required for dotfiles setup
+## [REQUIRED] Essential
 brew "eza"
+brew "fzf"                     # fuzzy finder, gco + keybindings in dotfiles
+brew "git-delta"               # diff pager, used by 02-dotfiles.sh and 05-git.sh
+brew "libyaml"                 # ruby build dependency (mise)
 brew "mise"
 brew "starship"
 brew "stow"
@@ -8,7 +11,7 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 cask "ghostty"
 
-## Neovim
+## [OPTIONAL] Neovim
 brew "neovim"
 brew "tree-sitter-cli" # nvim-treesitter parser compilation
 brew "imagemagick"     # image.nvim
@@ -18,53 +21,50 @@ brew "ripgrep"         # telescope.nvim live_grep
 brew "stylua"          # conform.nvim formatter
 brew "whisper-cpp"     # whisper.nvim local speech-to-text
 
-## Git & GitHub
+## [OPTIONAL] Git & GitHub
 brew "gh"        # extensions managed in 05-git.sh
-brew "git-delta" # diff pager, configured in 05-git.sh
 cask "gitkraken"
 
-## CLI Tools
-brew "fzf"                 # fuzzy finder, gco + keybindings in dotfiles
+## [OPTIONAL] CLI Tools
 brew "jq"
 brew "the_silver_searcher"
 brew "tree"
 # brew "atuin"             # shell history w/ sync, evaluate
-# brew "libyaml"
 # brew "telnet"
 # brew "watch"
 # brew "wget"
 # brew "yamllint"
 # brew "yq"
 
-## Editors & IDEs
+## [OPTIONAL] Editors & IDEs
 cask "zed"
 # cask "android-studio"
 # cask "postman"
 # cask "visual-studio-code"
 
-## AI Tools
+## [OPTIONAL] AI Tools
 cask "claude-code"
 
-## Cloud & Infrastructure
+## [OPTIONAL] Cloud & Infrastructure
 brew "ansible"
 brew "awscli"
 brew "hashicorp/tap/terraform"
 cask "gcloud-cli"
 
-## Secrets & Auth
+## [OPTIONAL] Secrets & Auth
 brew "age"
 brew "gnupg"
 brew "sops"
 cask "1password"
 cask "1password-cli"
 
-## Kubernetes
+## [OPTIONAL] Kubernetes
 brew "fluxcd/tap/flux"
 brew "kubectx"
 brew "talhelper"
 cask "rancher"
 
-## Browsers
+## [OPTIONAL] Browsers
 cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 # cask "firefox"
 # cask "google-chrome"

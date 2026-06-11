@@ -1,4 +1,4 @@
-## Media
+## [OPTIONAL] Media
 cask "iina"
 cask "plexamp"
 # brew "ffmpeg"
@@ -7,10 +7,10 @@ cask "plexamp"
 # cask "audacity"
 # cask "calibre"
 
-## Documents
+## [OPTIONAL] Documents
 cask "basictex"
 
-## Disk & Storage
+## [OPTIONAL] Disk & Storage
 brew "borgbackup-fuse"
 cask "daisydisk"
 cask "macfuse"
@@ -20,12 +20,12 @@ cask "vorta"
 # cask "balenaetcher"
 # cask "veracrypt"
 
-## Networking & Privacy
+## [OPTIONAL] Networking & Privacy
 cask "little-snitch"
 cask "mullvad-browser"
 cask "mullvad-vpn"
 cask "tailscale-app"
 
-## Virtualization
+## [OPTIONAL] Virtualization
 # cask "deskpad"
 # cask "utm"

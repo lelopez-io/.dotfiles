@@ -16,8 +16,8 @@ confirm() {
     done
 }
 
-# Sections (## headers) are parsed from each Brewfile; sections whose header
-# contains "required" install without prompting, everything else is opt-in.
+# Sections (## headers) are parsed from each Brewfile; [REQUIRED] sections
+# install without prompting, [OPTIONAL] sections are opt-in.
 install_brewfile() {
     local brewfile=$1 category=$2
     local -a names=() bodies=()
@@ -36,22 +36,23 @@ install_brewfile() {
     names+=("$name")
     bodies+=("$body")
 
-    local selection entries i
+    local selection entries display i
     selection="$(mktemp)"
 
     for i in "${!names[@]}"; do
         entries=$(printf '%s' "${bodies[$i]}" | grep -cE '^(tap|brew|cask|mas) ' || true)
         [[ "$entries" -eq 0 ]] && continue
 
-        if [[ "${names[$i]}" =~ [Rr]equired ]]; then
-            echo "Including \"${names[$i]}\" ($entries packages)"
+        if [[ "${names[$i]}" == "[REQUIRED]"* ]]; then
+            echo "Including \"${names[$i]#\[REQUIRED\] }\" ($entries packages)"
             printf '%s' "${bodies[$i]}" >> "$selection"
             continue
         fi
 
+        display="${names[$i]#\[OPTIONAL\] }"
         echo ""
         printf '%s' "${bodies[$i]}" | grep -v '^$' | sed 's/^/  /'
-        if confirm "Include \"${names[$i]:-$category}\"?"; then
+        if confirm "Include \"${display:-$category}\"?"; then
             printf '%s' "${bodies[$i]}" >> "$selection"
         fi
     done
@@ -73,7 +74,5 @@ for brewfile in "$SETUP_DIR"/Brewfile.*; do
     category="${brewfile##*/Brewfile.}"
     echo ""
     echo "--- $category ---"
-    if confirm "Set up $category tools?"; then
-        install_brewfile "$brewfile" "$category"
-    fi
+    install_brewfile "$brewfile" "$category"
 done
