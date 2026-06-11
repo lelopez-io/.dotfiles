@@ -50,13 +50,12 @@ After running the install script, you should:
 
 This will:
 
--   Configure your preferences (applications, git settings)
-    - Git name and email
-    - Global gitignore file
-    - Default branch name (main)
--   Install core tools via Homebrew
--   Setup language environments (Node.js, Python, Ruby)
+-   Install Homebrew, then prompt per Brewfile section for which tools to
+    install (sections marked "required" install automatically)
 -   Link dotfiles using GNU Stow
+-   Install language runtimes declared in `.config/mise/config.toml`
+-   Configure shell extras (tmux plugins, nerd font, completions)
+-   Configure Git (name, email, delta pager, gh extensions)
 
 ## Manual Configuration
 
@@ -109,17 +108,16 @@ stow . --adopt
 
 ## Customization
 
-The setup is configurable through an interactive prompt that allows you to:
+Tool selection is driven by the curated Brewfiles in `.setup/` — one per
+machine profile (`development`, `productivity`, `personal`). The installer
+parses their `## Section` headers and prompts per section, so you can adopt
+only the parts of this tooling you want. To add or change tools, edit the
+Brewfiles — they are the single source of truth.
 
--   Select which applications to install
--   Configure Git credentials
--   Choose development tools
--   Select productivity applications
-
-To reconfigure at any time:
+To re-run tool installation at any time:
 
 ```bash
-./.setup/configure.sh
+./.setup/scripts/01-tool-install.sh
 ```
 
 ### Additional Configurations
