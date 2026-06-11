@@ -11,20 +11,6 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 cask "ghostty"
 
-## [OPTIONAL] Neovim
-brew "neovim"
-brew "imagemagick"     # image.nvim
-brew "mermaid-cli"     # mermaid diagram rendering
-brew "prettierd"       # conform.nvim formatter
-brew "ripgrep"         # telescope.nvim live_grep
-brew "stylua"          # conform.nvim formatter
-brew "tree-sitter-cli" # nvim-treesitter parser compilation
-brew "whisper-cpp"     # whisper.nvim local speech-to-text
-
-## [OPTIONAL] Git & GitHub
-brew "gh"        # extensions managed in 05-git.sh
-cask "gitkraken"
-
 ## [OPTIONAL] CLI Tools
 brew "jq"
 brew "the_silver_searcher"
@@ -35,6 +21,20 @@ brew "tree"
 # brew "wget"
 # brew "yamllint"
 # brew "yq"
+
+## [OPTIONAL] Git & GitHub
+brew "gh"        # extensions managed in 05-git.sh
+cask "gitkraken"
+
+## [OPTIONAL] Neovim
+brew "neovim"
+brew "imagemagick"     # image.nvim
+brew "mermaid-cli"     # mermaid diagram rendering
+brew "prettierd"       # conform.nvim formatter
+brew "ripgrep"         # telescope.nvim live_grep
+brew "stylua"          # conform.nvim formatter
+brew "tree-sitter-cli" # nvim-treesitter parser compilation
+brew "whisper-cpp"     # whisper.nvim local speech-to-text
 
 ## [OPTIONAL] Editors & IDEs
 cask "zed"
@@ -51,18 +51,18 @@ brew "awscli"
 brew "hashicorp/tap/terraform"
 cask "gcloud-cli"
 
+## [OPTIONAL] Kubernetes
+brew "fluxcd/tap/flux"
+brew "kubectx"
+brew "talhelper"
+cask "rancher"
+
 ## [OPTIONAL] Secrets & Auth
 brew "age"
 brew "gnupg"
 brew "sops"
 cask "1password"
 cask "1password-cli"
-
-## [OPTIONAL] Kubernetes
-brew "fluxcd/tap/flux"
-brew "kubectx"
-brew "talhelper"
-cask "rancher"
 
 ## [OPTIONAL] Browsers
 cask "ungoogled-chromium" # mermaid-cli puppeteer backend
