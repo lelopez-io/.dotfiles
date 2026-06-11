@@ -9,12 +9,8 @@ echo "=== Starting Development Environment Setup ==="
 echo "Installing core dependencies..."
 source "$SCRIPTS_DIR/00-core.sh"
 
-# Always run tool selection, it will handle existing Brewfiles appropriately
-echo "Setting up tool selection..."
-"$SCRIPTS_DIR/01-tool-select.sh"
-
 echo "Installing selected tools and applications..."
-source "$SCRIPTS_DIR/02-tool-install.sh"
+source "$SCRIPTS_DIR/01-tool-install.sh"
 
 echo "Setting up language environments..."
 source "$SCRIPTS_DIR/03-languages.sh"
