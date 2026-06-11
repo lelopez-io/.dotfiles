@@ -29,6 +29,27 @@ if [ -z "$(git config --global core.excludesfile)" ]; then
     git config --global core.excludesfile ~/.gitignore
 fi
 
+# Configure delta as git pager if not already set
+if [ -z "$(git config --global core.pager)" ]; then
+    echo "Setting up delta as git pager..."
+    git config --global core.pager delta
+    git config --global interactive.diffFilter "delta --color-only"
+    git config --global delta.navigate true
+fi
+
+# Install gh CLI extensions (not supported by brew bundle)
+GH_EXTENSIONS=(
+    seachicken/gh-poi
+)
+if command -v gh &> /dev/null && gh auth status &> /dev/null; then
+    installed=$(gh extension list 2>/dev/null)
+    for ext in "${GH_EXTENSIONS[@]}"; do
+        echo "$installed" | grep -q "$ext" || gh extension install "$ext"
+    done
+else
+    echo "Skipping gh extensions (gh not installed or not authenticated)"
+fi
+
 # Setup SSH for GitHub if not already configured
 echo "Checking SSH configuration for Git..."
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
