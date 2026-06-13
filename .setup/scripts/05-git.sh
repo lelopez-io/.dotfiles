@@ -23,6 +23,11 @@ if [ -z "$(git config --global init.defaultBranch)" ]; then
     git config --global init.defaultBranch main
 fi
 
+# Stacked PR settings
+git config --global rebase.updateRefs true     # rebases move every branch in the stack
+git config --global rerere.enabled true        # record/replay conflict resolutions
+git config --global push.autoSetupRemote true  # first push creates upstream automatically
+
 # Configure git to use global gitignore if not already set
 if [ -z "$(git config --global core.excludesfile)" ]; then
     echo "Setting up global gitignore..."
