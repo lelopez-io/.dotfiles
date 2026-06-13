@@ -19,7 +19,6 @@ brew "prettierd"          # conform.nvim formatter
 brew "ripgrep"            # telescope.nvim live_grep
 brew "stylua"             # conform.nvim formatter
 brew "tree-sitter-cli"    # nvim-treesitter parser compilation
-brew "whisper-cpp"        # whisper.nvim local speech-to-text
 cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 
 ## [OPTIONAL] CLI Tools
