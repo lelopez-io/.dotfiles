@@ -221,7 +221,10 @@ end
 -- Global functions for tmux to call via nvim --remote-expr
 _G.mermaid_clear = function()
     render_blocked = true
-    clear_mermaid_images()
+    -- Defer so the RPC reply ships before clear_mermaid_images writes Kitty
+    -- escapes via io.stdout. A blocking write would freeze the main loop and
+    -- pile up --remote-expr callers as zombie processes.
+    vim.schedule(clear_mermaid_images)
 end
 
 _G.mermaid_redraw = function()

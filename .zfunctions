@@ -297,13 +297,44 @@ uncheck_md() {
     echo "✓ Unchecked all checkboxes in $file"
 }
 
+# Print video metadata (fps, frame count, duration, resolution) as key=value lines
+video_info() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: video_info <video_file>" >&2
+        return 1
+    fi
+
+    ffprobe -v error -select_streams v:0 -count_packets \
+        -show_entries stream=width,height,r_frame_rate,avg_frame_rate,nb_read_packets,duration \
+        -of default=noprint_wrappers=1 "$1"
+}
+
+# Extract every frame in a time range of a video to <video_basename>_frames/
+# Times use HH:MM:SS(.ms) format (e.g. 00:00:42, 00:01:05.500)
+extract_range() {
+    if [[ -z "$3" ]]; then
+        echo "Usage: extract_range <video_file> <HH:MM:SS> <HH:MM:SS>" >&2
+        return 1
+    fi
+
+    local input="$1" start="$2" end="$3"
+    local output="${input:t:r}_frames/frame_%04d.jpg"
+    mkdir -p "${output:h}"
+
+    ffmpeg -ss "$start" -to "$end" -i "$input" -q:v 2 "$output"
+}
+
 # Clear/redraw mermaid images in all nvim instances
 # Called by tmux before session browser to prevent Kitty graphics persistence
+# Each --remote-expr is detached in a subshell so a single wedged nvim can't
+# hang tmux's choose-tree binding. Healthy nvims reply near-instantly because
+# _G.mermaid_clear uses vim.schedule.
 # Usage: mermaid_clear [clear|redraw|debug]
 mermaid_clear() {
     local func="${1:-clear}"
     local tmpdir="${TMPDIR:-$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || echo /tmp)}"
     for sock in "$tmpdir"/nvim.*/*/nvim.*.0; do
-        [[ -S "$sock" ]] && nvim --server "$sock" --remote-expr "v:lua.mermaid_${func}()" &>/dev/null
+        [[ -S "$sock" ]] || continue
+        ( nvim --server "$sock" --remote-expr "v:lua.mermaid_${func}()" &>/dev/null & )
     done
 }
