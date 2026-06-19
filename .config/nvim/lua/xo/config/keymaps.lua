@@ -1,3 +1,13 @@
+-- ---------------------------------------------------------------------------
+-- Built-in defaults worth reaching for (don't shadow these)
+-- ---------------------------------------------------------------------------
+-- gd        Go to definition (LSP convention; obsidian.nvim smart_action
+--           also follows [[wikilinks]] under cursor on markdown buffers)
+-- <CR>      Follow wikilink under cursor (markdown buffers, via obsidian.nvim)
+-- <C-o>     Jumplist: go back to older position
+-- <C-i>     Jumplist: go forward to newer position (also <Tab>)
+-- ---------------------------------------------------------------------------
+
 -- Leader key configuration
 vim.g.mapleader = " "
 
@@ -84,7 +94,10 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], {
 vim.keymap.set("n", "<leader><C-y>", function()
     local full_path = vim.fn.expand("%:p")
     vim.fn.setreg("+", full_path)
-    vim.notify("Copied: " .. full_path)
+    -- Notify with shortened path so the message fits in cmdheight; a long
+    -- message triggers the hit-enter prompt, whose post-dismiss redraw can
+    -- wedge tmux when image.nvim re-emits Kitty escapes for mermaid blocks.
+    vim.notify("Copied: " .. vim.fn.fnamemodify(full_path, ":~:."))
 end, {
     noremap = true,
     silent = true,
@@ -198,6 +211,13 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", {
     noremap = false,
     silent = false,
     desc = "Previous location list item",
+})
+
+-- Jumplist navigation
+vim.keymap.set("n", "<leader>gb", "<C-o>", {
+    noremap = true,
+    silent = true,
+    desc = "Jumplist: go back",
 })
 
 -- Quick actions

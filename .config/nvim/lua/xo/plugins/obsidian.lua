@@ -19,6 +19,9 @@ return {
     },
     opts = {
         legacy_commands = false,
+        frontmatter = {
+            enabled = false,
+        },
         workspaces = {
             {
                 name = "lelopez",
@@ -27,7 +30,8 @@ return {
         },
         daily_notes = {
             folder = "daily",
-            date_format = "%Y-%m-%d",
+            date_format = "%Y.%m.%d--%A",
+            template = "2025.02.05--template--daily.md",
         },
         templates = {
             folder = "_templates",
