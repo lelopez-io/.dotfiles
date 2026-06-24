@@ -17,15 +17,17 @@ return {
         { "<leader>or", "<cmd>Obsidian rename<cr>",       desc = "Obsidian: rename note" },
         { "<leader>ol", "<cmd>Obsidian links<cr>",        desc = "Obsidian: list links" },
     },
-    opts = {
+    opts = (function()
+        local user = vim.fn.fnamemodify(vim.fn.expand("~"), ":t")
+        return {
         legacy_commands = false,
         frontmatter = {
             enabled = false,
         },
         workspaces = {
             {
-                name = "lelopez",
-                path = vim.fn.expand("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/lelopez"),
+                name = user,
+                path = vim.fn.expand("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/" .. user),
             },
         },
         daily_notes = {
@@ -42,7 +44,8 @@ return {
         },
         -- render-markdown.nvim handles UI; let obsidian.nvim stay out of its way
         ui = { enable = false },
-    },
+    }
+    end)(),
     config = function(_, opts)
         require("obsidian").setup(opts)
 
