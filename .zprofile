@@ -10,6 +10,10 @@ export TERM=xterm-256color
 # tools
 export PATH="$HOME/.local/bin:$PATH"
 
+# tools-bun
+export PATH="$HOME/.bun/bin:$PATH"
+
+
 # rancher-desktop
 export PATH="$HOME/.rd/bin:$PATH"
 

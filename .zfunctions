@@ -257,6 +257,48 @@ cld() {
     fi
 }
 
+# Launch pi with optional API key profile via 1Password
+# Each 1Password item (pi | <profile>) needs two fields:
+#   credential - the API key
+#   env_var    - the provider's env var name
+# pi selects the provider from whichever key is set; switch models in-session via /model.
+pie() {
+    local profile="$1"
+
+    case "$profile" in
+        -h|--help)
+            echo "Usage: pie [profile] [pi args...]"
+            echo ""
+            echo "Profile resolves to a 1Password item named 'pi | <profile>'."
+            echo "Each item must have 'credential' and 'env_var' fields."
+            echo ""
+            echo "Without a profile, launches pi with default config."
+            return 0
+            ;;
+        -*)
+            # flags like --continue, pass through to pi
+            ;;
+        ?*)
+            shift
+            ;;
+    esac
+
+    if [[ -n "$profile" && "$profile" != -* ]]; then
+        local op_item="pi | $profile"
+        local key key_var
+
+        key=$(op item get "$op_item" --fields credential --reveal) || { echo "Error: Failed to read credential from 1Password"; return 1; }
+        key_var=$(op item get "$op_item" --fields env_var --reveal) || { echo "Error: Failed to read env_var from 1Password"; return 1; }
+
+        echo "Starting pi [$profile]"
+        export "$key_var=$key"
+        command pi "$@"
+        unset "$key_var"
+    else
+        command pi "$@"
+    fi
+}
+
 # Uncheck all checkboxes in a markdown file
 uncheck_md() {
     if [[ -z "$1" ]]; then
