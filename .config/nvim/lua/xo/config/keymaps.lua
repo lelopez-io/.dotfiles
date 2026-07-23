@@ -94,6 +94,11 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], {
 vim.keymap.set("n", "<leader><C-y>", function()
     local full_path = vim.fn.expand("%:p")
     vim.fn.setreg("+", full_path)
+    -- setreg does not fire TextYankPost, so mirror into the tmux paste
+    -- buffer explicitly (register yanks are covered by the autocmd bridge)
+    if vim.env.TMUX then
+        vim.fn.system({ "tmux", "load-buffer", "-" }, full_path)
+    end
     -- Notify with shortened path so the message fits in cmdheight; a long
     -- message triggers the hit-enter prompt, whose post-dismiss redraw can
     -- wedge tmux when image.nvim re-emits Kitty escapes for mermaid blocks.
