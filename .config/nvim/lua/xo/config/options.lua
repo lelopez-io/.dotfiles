@@ -40,3 +40,10 @@ vim.filetype.add({
         templ = "templ",
     },
 })
+
+-- Clipboard over SSH: no pasteboard is reachable from a remote session, so
+-- use OSC 52 to carry yanks back through the terminal to the client machine.
+-- Local sessions keep the default pbcopy provider.
+if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
+    vim.g.clipboard = "osc52"
+end
