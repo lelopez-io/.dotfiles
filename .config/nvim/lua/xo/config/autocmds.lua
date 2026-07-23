@@ -12,6 +12,20 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+-- Mirror yanks into the tmux paste buffer so `prefix ]` pastes them in other
+-- panes. Application OSC 52 reaches the client clipboard but is not buffered
+-- by tmux, so bridge explicitly. Works locally and over SSH.
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = yank_group,
+    pattern = "*",
+    callback = function()
+        if vim.env.TMUX and vim.v.event.operator == "y" then
+            local text = table.concat(vim.v.event.regcontents, "\n")
+            vim.fn.system({ "tmux", "load-buffer", "-" }, text)
+        end
+    end,
+})
+
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = lsp_group,
     pattern = "*",
