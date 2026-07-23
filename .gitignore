@@ -23,3 +23,5 @@
 
 # Keep nvim plugin versions in git
 !.config/nvim/lazy-lock.json
+
+**/.claude/settings.local.json

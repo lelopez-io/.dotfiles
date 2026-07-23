@@ -17,6 +17,9 @@ export PATH="$HOME/.bun/bin:$PATH"
 # rancher-desktop
 export PATH="$HOME/.rd/bin:$PATH"
 
+# gcloud
+export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
+
 # prettierd
 export PRETTIERD_DEFAULT_CONFIG="$HOME/.prettierrc"
 
