@@ -1,53 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "effortLevel": "high",
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "osascript -e 'beep 3'",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "sx report-usage --client=claude-code",
-            "type": "command"
-          }
-        ],
-        "matcher": "Skill|Task|SlashCommand|mcp__.*"
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "sx install --hook-mode --client=claude-code",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "osascript -e 'beep 3'",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ]
-  },
   "includeCoAuthoredBy": false,
-  "model": "opus",
   "permissions": {
     "allow": [
       "Edit",
@@ -94,5 +47,33 @@
     "deny": [
       "Bash(git -C:*)"
     ]
-  }
+  },
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'beep 3'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'beep 3'"
+          }
+        ]
+      }
+    ]
+  },
+  "effortLevel": "xhigh",
+  "skipWorkflowUsageWarning": true,
+  "skipAutoPermissionPrompt": true
 }
