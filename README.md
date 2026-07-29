@@ -128,6 +128,51 @@ The setup also creates symlinks for:
 -   `.gitignore` → `~/.gitignore` (used as global git excludes file)
 -   `.env.aider` → `~/.env.aider` (for aider configuration access from any directory)
 
+## Scripts vs Shell Functions
+
+Two homes for personal helpers, split by one question: **does it need to change
+the *current* shell?**
+
+| Need | Home | Why |
+|------|------|-----|
+| A `cd` you stay in, an `export`/`unset` that persists, a `setopt` | **function** in `.zfunctions` | Only a sourced function can mutate the calling shell |
+| Per-project env, team-shared (repo-relative paths) | **`[env]` in that repo's committed `mise.toml`** | Identical for every team member; set on cd in, unset on cd out |
+| Per-project env, user-specific (your local `DATABASE_URL` for a scratch DB) | **`mise.local.toml`** next to it (globally git-ignored via `~/.gitignore`) | mise merges it over `mise.toml`; never committed |
+| Personal defaults that apply everywhere (your AWS profile) | The tool's own untracked config (`~/.aws/config`), or `awsprof` per session | Env vars are overrides; ambient defaults live with the tool |
+| Everything else — self-contained "programs" | **script** in `.local/bin/` | One file per tool; not parsed at shell startup; gets `--help`, exit codes, `set -euo pipefail`; language-agnostic |
+| Self-contained *logic* — real parsing, concurrency, tests, or distribution | **compiled binary** (e.g. a `rust/` workspace, installed via `cargo install --root ~/.local`) | Shell has become the liability rather than the glue |
+
+`.local/bin` is already on `PATH` (`.zprofile`) and stows to `~/.local/bin`, so a
+new tool is just: drop an executable in `.dotfiles/.local/bin/`, `chmod +x`, and
+`stow .` once to link it.
+
+This repo is public, so it holds **mechanisms, not specifics**. The bar isn't
+whether a *name* appears (a cSpell entry is just a spelling) — it's whether
+something reveals how an organization works: emails, internal hosts, 1Password
+item names, project layouts. Those live at the call site (typed per session)
+or in the project's `mise.local.toml` (globally git-ignored).
+
+Secrets never persist in the session env either: wrappers resolve them
+per-invocation into the *child's* env only (`sopsx`, `opx`, `cld`, `pie`).
+`OP_SESSION_*` from `opsignin` is the one sanctioned exception — but never
+launch an agent from a shell that has it; `cld` and `pie` strip it before
+exec as a backstop.
+
+Script conventions:
+
+-   Shebang `#!/usr/bin/env bash`, `set -euo pipefail`, a `usage()` heredoc, and
+    a `-h|--help` case.
+-   No filename extension (invoke as `keepawake`, not `keepawake.sh`).
+-   Name a git helper `git-<verb>` and git picks it up as `git <verb>`
+    automatically.
+-   Keep GNU-only tool flags out of portable scripts, or guard for them — the
+    shell has gnu-sed on `PATH`, a bare script may not.
+
+`.zfunctions` was migrated to `.local/bin/` in one batch (some names went
+underscore → hyphen, e.g. `video_info` → `video-info`) and briefly deleted —
+then recreated when true shell-mutators showed up (`opsignin`, `awsprof`).
+New self-contained helpers land in `.local/bin/`.
+
 ## Resources
 
 -   [Setting the Stage][_r00]
