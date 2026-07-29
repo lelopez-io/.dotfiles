@@ -1,5 +1,5 @@
-# sops
-alias encrypt-secrets='sops --encrypt --age $(op read "$SOPS_AGE_KEY_FILE" | grep "public key:" | cut -d: -f2 | tr -d " ")'
+# sops — see sopsx (run sops with the repo age key) + sopse (encrypt to its
+# public key) in ~/.local/bin
 
 # git
 alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
