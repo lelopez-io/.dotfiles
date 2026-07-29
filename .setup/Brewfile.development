@@ -23,6 +23,8 @@ cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 
 ## [OPTIONAL] CLI Tools
 brew "jq"
+brew "pv"                 # pipe progress meter, used by verify-copy
+brew "shellcheck"         # lints ~/.local/bin scripts
 brew "the_silver_searcher"
 brew "tree"
 # brew "atuin"             # shell history w/ sync, evaluate
