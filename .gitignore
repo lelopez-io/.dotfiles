@@ -11,6 +11,12 @@
 .env*.local
 .env*.aider
 
+# mise local (user-specific) overrides — never committed
+mise.local.toml
+.mise.local.toml
+mise.*.local.toml
+.mise.*.local.toml
+
 # aider
 .aider*
 
