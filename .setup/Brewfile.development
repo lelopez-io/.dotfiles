@@ -37,6 +37,7 @@ brew "tree"
 ## [OPTIONAL] Git & GitHub
 brew "gh"        # extensions managed in 05-git.sh
 brew "git-town"  # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
+brew "lazygit"   # git TUI for SSH/headless sessions
 cask "gitkraken"
 
 ## [OPTIONAL] Editors & IDEs
