@@ -3,6 +3,7 @@
 
 # git
 alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
+alias lg='lazygit'
 
 # neovim
 alias vim='nvim'
