@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# mermaid-clear — clear/redraw mermaid images in all running nvim instances.
+#
+# Usage: mermaid-clear [clear|redraw|debug]   (default: clear)
+#
+# Called by tmux before the session browser to prevent Kitty graphics
+# persistence (see .tmux.conf). Talks to each nvim over its socket; every
+# --remote-expr is detached in a subshell so a single wedged nvim can't hang
+# tmux's choose-tree binding. Healthy nvims reply near-instantly because
+# _G.mermaid_clear uses vim.schedule.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+mermaid-clear — clear/redraw mermaid images in all running nvim instances.
+
+Usage: mermaid-clear [clear|redraw|debug]   (default: clear)
+
+Called by tmux before the session browser (see .tmux.conf); talks to each
+nvim over its socket in detached subshells so a wedged nvim can't hang tmux.
+EOF
+}
+
+case "${1:-clear}" in
+    -h|--help) usage; exit 0 ;;
+    clear|redraw|debug) func=${1:-clear} ;;
+    *) echo "mermaid-clear: unknown mode: $1" >&2; usage >&2; exit 2 ;;
+esac
+
+tmpdir=${TMPDIR:-$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || echo /tmp)}
+
+shopt -s nullglob
+for sock in "$tmpdir"/nvim.*/*/nvim.*.0; do
+    [[ -S $sock ]] || continue
+    ( nvim --server "$sock" --remote-expr "v:lua.mermaid_${func}()" &>/dev/null & )
+done

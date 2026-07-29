@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# sopsx — run sops with a repo's age key materialized from 1Password for this
+# invocation only.
+#
+# Usage: sopsx <project> [sops args...]
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+sopsx — run sops with a repo's age key materialized from 1Password for this
+invocation only.
+
+Usage: sopsx <project> [sops args...]
+
+Reads the 1Password document "sops-key | <project>" and hands it to sops via
+SOPS_AGE_KEY_FILE as a process-substitution FD — the key never enters your
+shell's env and never touches disk. Run opsignin once per session for
+biometric-free invocations.
+
+Examples:
+  sopsx myrepo -d secrets.sops.yaml
+  sopsx myrepo exec-env secrets.sops.yaml -- terraform plan
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -lt 1 ]]; then
+    usage >&2
+    exit 2
+fi
+
+project=$1; shift
+
+key=$(op document get "sops-key | $project") \
+    || { echo "sopsx: failed to fetch 'sops-key | $project' (run opsignin first?)" >&2; exit 1; }
+[[ -n "$key" ]] || { echo "sopsx: empty document 'sops-key | $project'" >&2; exit 1; }
+
+# Key transits only this script's memory (unexported) and the FIFO sops reads;
+# it is never in any process's env.
+SOPS_AGE_KEY_FILE=<(printf '%s' "$key") sops "$@"

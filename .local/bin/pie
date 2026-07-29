@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# pie — launch pi with an optional API key profile via 1Password.
+#
+# Usage: pie [profile] [pi args...]
+#
+# Profile resolves to a 1Password item named "pi | <profile>" with two fields:
+#   credential  - the API key
+#   env_var     - the provider's env var name
+# pi selects the provider from whichever key is set; switch models in-session
+# via /model. Without a profile, launches pi with the default config.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+pie — launch pi with an optional API key profile via 1Password.
+
+Usage: pie [profile] [pi args...]
+
+Profile resolves to a 1Password item named "pi | <profile>" with two fields:
+  credential   the API key
+  env_var      the provider's env var name
+
+pi selects the provider from whichever key is set; switch models in-session
+via /model. Without a profile, launches pi with the default config.
+Flags (e.g. --continue) without a profile are passed through.
+EOF
+}
+
+profile=${1:-}
+
+case "$profile" in
+    -h|--help) usage; exit 0 ;;
+    -*) profile="" ;;    # flag for pi, not a profile — pass through
+    ?*) shift ;;         # profile name consumed
+esac
+
+if [[ -n "$profile" ]]; then
+    op_item="pi | $profile"
+    key=$(op item get "$op_item" --fields credential --reveal) \
+        || { echo "pie: failed to read credential from 1Password item '$op_item'" >&2; exit 1; }
+    key_var=$(op item get "$op_item" --fields env_var --reveal) \
+        || { echo "pie: failed to read env_var from 1Password item '$op_item'" >&2; exit 1; }
+
+    echo "Starting pi [$profile]"
+    export "$key_var=$key"
+fi
+
+# Strip OP_SESSION_* so the agent can't ride this shell's op session into the
+# whole vault (backstop for "don't opsignin in agent-launching shells").
+for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
+
+# exec replaces this script: pi's exit status propagates, and the exported
+# key lives only in pi's own process environment.
+exec pi "$@"

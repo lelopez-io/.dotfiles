@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#
+# cld — launch Claude Code with an optional API key profile via 1Password.
+#
+# Usage: cld [profile] [claude args...]
+#
+# Profile resolves to a 1Password item named "cld | <profile>" with fields:
+#   credential  - the API key or OAuth token
+#   env_var     - ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN
+# Without a profile, launches claude with the default config.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+cld — launch Claude Code with an optional API key profile via 1Password.
+
+Usage: cld [profile] [claude args...]
+
+Profile resolves to a 1Password item named "cld | <profile>" with two fields:
+  credential   the API key or OAuth token
+  env_var      ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN
+
+Without a profile, launches claude with the default config.
+Flags (e.g. --resume) without a profile are passed through.
+EOF
+}
+
+profile=${1:-}
+
+case "$profile" in
+    -h|--help) usage; exit 0 ;;
+    -*) profile="" ;;    # flag for claude, not a profile — pass through
+    ?*) shift ;;         # profile name consumed
+esac
+
+if [[ -n "$profile" ]]; then
+    op_item="cld | $profile"
+    key=$(op item get "$op_item" --fields credential --reveal) \
+        || { echo "cld: failed to read credential from 1Password item '$op_item'" >&2; exit 1; }
+    key_var=$(op item get "$op_item" --fields env_var --reveal) \
+        || { echo "cld: failed to read env_var from 1Password item '$op_item'" >&2; exit 1; }
+
+    echo "Starting Claude Code [$profile]"
+    export "$key_var=$key"
+fi
+
+# Strip OP_SESSION_* so the agent can't ride this shell's op session into the
+# whole vault (backstop for "don't opsignin in agent-launching shells").
+for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
+
+# exec replaces this script: claude's exit status propagates, and the exported
+# key lives only in claude's own process environment.
+exec claude "$@"

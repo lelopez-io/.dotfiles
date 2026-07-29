@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# print-env-vars — list the variable NAMES defined in an env file (values not shown).
+#
+# Usage: print-env-vars <file>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+print-env-vars — list the variable NAMES defined in an env file (values not shown).
+
+Usage: print-env-vars <file>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 2
+fi
+if [[ ! -f "$1" ]]; then
+    echo "print-env-vars: file not found: $1" >&2
+    exit 2
+fi
+
+grep -oE '^[A-Za-z_][A-Za-z0-9_]*=' "$1" | sed 's/=$//' | sort || true

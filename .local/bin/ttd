@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# ttd — yt-dlp download as "[uploader-id] <title>.<ext>".
+#
+# Usage: ttd <url> <title>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+ttd — download a video as "[uploader-id] <title>.<ext>".
+
+Usage: ttd <url> <title>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 2 ]]; then
+    usage >&2
+    exit 2
+fi
+
+yt-dlp --verbose -o "[%(uploader)s-%(id)s] $2.%(ext)s" "$1"

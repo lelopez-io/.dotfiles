@@ -1,0 +1,229 @@
+#!/usr/bin/env bash
+#
+# verify-copy — confirm every file under SRC has an identical copy under DST.
+#
+# Compares every regular file in SRC against its counterpart in DST byte-for-byte
+# (cmp). A clean result means the copy is exact and it is safe to erase SRC —
+# e.g. format an SD card after copying it to an SSD. With pv installed you get a
+# live per-file progress bar (rate + ETA), so large media files aren't a black
+# box; without pv you still get per-file status, just no in-file byte meter.
+#
+# --quick checks names + sizes only (no content reads) — a fast triage before
+# committing to the full pass. It never replaces the full pass before erasing.
+#
+# One-directional: extra files in DST are ignored. Only SRC files that are
+# missing from DST, different, or unreadable on either side are reported.
+#
+# Usage: verify-copy [-i] [-q] <src-dir> <dst-dir>
+#
+#   -i, --ignore-system   Skip macOS volume cruft (.Spotlight-V100, .fseventsd,
+#                         .Trashes, .TemporaryItems, .DS_Store, ._*) that the OS
+#                         writes onto removable media and you never copy.
+#   -q, --quick           Names + sizes only — seconds instead of hours, but
+#                         content is NOT compared. Triage only.
+#   -h, --help            This help.
+#
+# Exit: 0 verified match · 1 missing/different files · 2 read error or usage
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+verify-copy — confirm every file under SRC has an identical copy under DST.
+
+Compares every regular file byte-for-byte (cmp). A clean result means the copy
+is exact and it is safe to erase SRC (e.g. format an SD card). Install pv for a
+live per-file progress bar.
+
+Usage: verify-copy [-i] [-q] <src-dir> <dst-dir>
+
+  -i, --ignore-system   Skip macOS volume cruft (.Spotlight-V100, .fseventsd,
+                        .Trashes, .TemporaryItems, .DS_Store, ._*).
+  -q, --quick           Names + sizes only — content NOT compared. Triage
+                        before the full pass, never a replacement for it.
+  -h, --help            This help.
+
+Extra files in DST are ignored — only SRC files missing, different, or
+unreadable are reported.
+
+Exit: 0 verified match · 1 missing/different files · 2 read error or usage
+EOF
+}
+
+ignore_system=false
+quick=false
+args=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help) usage; exit 0 ;;
+        -i|--ignore-system) ignore_system=true; shift ;;
+        -q|--quick) quick=true; shift ;;
+        --) shift; while [[ $# -gt 0 ]]; do args+=("$1"); shift; done ;;
+        -*) echo "verify-copy: unknown option: $1" >&2; usage >&2; exit 2 ;;
+        *) args+=("$1"); shift ;;
+    esac
+done
+
+if [[ ${#args[@]} -ne 2 ]]; then
+    echo "verify-copy: need exactly two directories (SRC and DST)." >&2
+    usage >&2
+    exit 2
+fi
+
+src="${args[0]%/}"
+dst="${args[1]%/}"
+for d in "$src" "$dst"; do
+    [[ -d "$d" ]] || { echo "verify-copy: not a directory: $d" >&2; exit 2; }
+done
+
+# Portable file size: BSD stat on macOS, GNU stat elsewhere.
+if stat -f%z "$src" >/dev/null 2>&1; then
+    fsize() { stat -f%z "$1"; }
+else
+    fsize() { stat -c%s "$1"; }
+fi
+
+human() {
+    awk -v b="$1" 'BEGIN{
+        split("B KiB MiB GiB TiB PiB", u, " "); i = 1
+        while (b >= 1024 && i < 6) { b /= 1024; i++ }
+        printf (i == 1 ? "%d %s" : "%.1f %s"), b, u[i]
+    }'
+}
+
+is_excluded() {
+    case "/$1/" in
+        */.Spotlight-V100/*|*/.fseventsd/*|*/.Trashes/*|*/.TemporaryItems/*|*/.DocumentRevisions-V100/*) return 0 ;;
+    esac
+    case "$1" in
+        .DS_Store|*/.DS_Store|._*|*/._*) return 0 ;;
+    esac
+    return 1
+}
+
+report() {
+    local title=$1; shift
+    [[ $# -eq 0 ]] && return 0
+    echo "$title" >&2
+    local n=0
+    for x in "$@"; do
+        echo "   $x" >&2
+        n=$((n + 1))
+        [[ "$n" -ge 50 ]] && { echo "   ... and $(($# - 50)) more" >&2; break; }
+    done
+}
+
+have_pv=false
+command -v pv >/dev/null 2>&1 && have_pv=true
+
+echo "Verifying:  $src/" >&2
+echo "     ->     $dst/" >&2
+if $quick; then
+    echo "Quick mode: names + sizes only — content NOT compared." >&2
+else
+    echo "Comparing every file byte-for-byte (reads all data — this can take a while)..." >&2
+    $have_pv || echo "(tip: brew install pv for a live progress bar)" >&2
+fi
+echo "Scanning source file list..." >&2
+
+# Enumerate regular files (skips symlinks/dirs), null-delimited for odd names.
+srcs=(); rels=(); sizes=(); total=0
+while IFS= read -r -d '' f; do
+    rel=${f#"$src"/}
+    if $ignore_system && is_excluded "$rel"; then continue; fi
+    s=$(fsize "$f")
+    srcs+=("$f"); rels+=("$rel"); sizes+=("$s"); total=$((total + s))
+done < <(find "$src" -type f -print0)
+
+N=${#srcs[@]}
+if [[ "$N" -eq 0 ]]; then
+    echo "verify-copy: no regular files found under $src (wrong directory?)." >&2
+    exit 2
+fi
+echo "Found $N file(s), $(human "$total") to verify." >&2
+echo >&2
+
+if $quick; then
+    qmissing=(); qsize=()
+    for idx in "${!srcs[@]}"; do
+        rel=${rels[idx]}; sz=${sizes[idx]}
+        dst_f="$dst/$rel"
+        if [[ ! -e "$dst_f" ]]; then
+            qmissing+=("$rel")
+        elif [[ $(fsize "$dst_f") != "$sz" ]]; then
+            qsize+=("$rel")
+        fi
+    done
+    report "Missing on DST:" ${qmissing[@]+"${qmissing[@]}"}
+    report "Size differs:"   ${qsize[@]+"${qsize[@]}"}
+    echo >&2
+    if [[ $(( ${#qmissing[@]} + ${#qsize[@]} )) -gt 0 ]]; then
+        echo "❌ MISMATCH — $(( ${#qmissing[@]} + ${#qsize[@]} )) file(s) missing or wrong size. DO NOT format SRC." >&2
+        exit 1
+    fi
+    echo "✅ QUICK CHECK — all $N file(s) present, sizes match." >&2
+    echo "   Content NOT compared — run full verify-copy before erasing SRC." >&2
+    exit 0
+fi
+
+missing=(); differ=(); errored=(); ok=0; done_bytes=0; i=0
+for idx in "${!srcs[@]}"; do
+    i=$((i + 1))
+    f=${srcs[idx]}; rel=${rels[idx]}; sz=${sizes[idx]}
+    dst_f="$dst/$rel"
+    pct=$(( total > 0 ? done_bytes * 100 / total : 100 ))
+
+    if [[ ! -e "$dst_f" ]]; then
+        printf '[%d/%d] %3d%%  MISSING   %s\n' "$i" "$N" "$pct" "$rel" >&2
+        missing+=("$rel"); done_bytes=$((done_bytes + sz)); continue
+    fi
+
+    rc_pv=0; rc_cmp=0
+    if $have_pv; then
+        set +e
+        pv -N "[$i/$N] $rel" "$f" | cmp -s - "$dst_f"
+        ps=("${PIPESTATUS[@]}")   # snapshot in one statement (see set -u note)
+        set -e
+        rc_pv=${ps[0]:-0}; rc_cmp=${ps[1]:-0}
+    else
+        printf '[%d/%d] %3d%%  checking  %s (%s)... ' "$i" "$N" "$pct" "$rel" "$(human "$sz")" >&2
+        set +e
+        cmp -s "$f" "$dst_f"
+        rc_cmp=$?
+        set -e
+    fi
+
+    if [[ "$rc_pv" -ne 0 || "$rc_cmp" -eq 2 ]]; then
+        errored+=("$rel")
+        $have_pv || echo "READ ERROR" >&2
+        $have_pv && printf '[%d/%d]        READ ERROR %s\n' "$i" "$N" "$rel" >&2
+    elif [[ "$rc_cmp" -eq 1 ]]; then
+        differ+=("$rel")
+        $have_pv || echo "DIFFERS" >&2
+        $have_pv && printf '[%d/%d]        DIFFERS   %s\n' "$i" "$N" "$rel" >&2
+    else
+        ok=$((ok + 1))
+        $have_pv || echo "ok" >&2
+    fi
+    done_bytes=$((done_bytes + sz))
+done
+
+echo >&2
+echo "Checked $N file(s), $ok verified OK." >&2
+
+report "Missing on DST:"    ${missing[@]+"${missing[@]}"}
+report "Different content:" ${differ[@]+"${differ[@]}"}
+report "Read errors:"       ${errored[@]+"${errored[@]}"}
+echo >&2
+
+if [[ ${#errored[@]} -gt 0 ]]; then
+    echo "⚠️  COULD NOT VERIFY — ${#errored[@]} file(s) unreadable (see above)." >&2
+    echo "   The source media may be failing or was disconnected. DO NOT format SRC." >&2
+    exit 2
+elif [[ $(( ${#missing[@]} + ${#differ[@]} )) -gt 0 ]]; then
+    echo "❌ MISMATCH — $(( ${#missing[@]} + ${#differ[@]} )) file(s) missing or different. DO NOT format SRC." >&2
+    exit 1
+else
+    echo "✅ VERIFIED — all $N file(s) byte-for-byte identical in DST. Safe to erase / format SRC." >&2
+    exit 0
+fi

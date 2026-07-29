@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# sopse — encrypt with a repo's age public key, fetched from 1Password.
+#
+# Usage: sopse <project> [sops flags...] <file>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+sopse — encrypt with a repo's age public key, fetched from 1Password.
+
+Usage: sopse <project> [sops flags...] <file>
+
+Wraps `sops --encrypt --age <pub>`; sops flags pass through. Examples:
+  sopse myrepo --in-place secrets.yaml
+  sopse myrepo secrets.yaml > secrets.enc.yaml
+
+Only the public half is needed to encrypt, but it rides in the same 1Password
+document ("sops-key | <project>") as the private half — it transits this
+script's memory only (unexported), never your shell's env. Run opsignin once
+per session for biometric-free use.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -lt 2 ]]; then
+    usage >&2
+    exit 2
+fi
+
+project=$1; shift
+
+doc=$(op document get "sops-key | $project") \
+    || { echo "sopse: failed to fetch 'sops-key | $project' (run opsignin first?)" >&2; exit 1; }
+pub=$(printf '%s\n' "$doc" | grep 'public key:' | cut -d: -f2 | tr -d ' ')
+[[ "$pub" == age1* ]] || { echo "sopse: no public key found in 'sops-key | $project'" >&2; exit 1; }
+
+exec sops --encrypt --age "$pub" "$@"

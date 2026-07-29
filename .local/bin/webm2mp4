@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# webm2mp4 — convert a video to .mp4 (h264/aac) alongside the original.
+#
+# Usage: webm2mp4 <file>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+webm2mp4 — convert a video to .mp4 (h264 video, aac audio) alongside the original.
+
+Usage: webm2mp4 <file>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 2
+fi
+if [[ ! -f "$1" ]]; then
+    echo "webm2mp4: file not found: $1" >&2
+    exit 2
+fi
+
+input=$1
+output="${input%.*}.mp4"
+ffmpeg -i "$input" -c:v libx264 -crf 23 -c:a aac -q:a 100 "$output"
+echo "Converted $input to $output"

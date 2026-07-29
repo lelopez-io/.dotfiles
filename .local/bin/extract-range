@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# extract-range — extract every frame in a time range of a video to <name>_frames/.
+#
+# Usage: extract-range <video-file> <start> <end>
+#
+# Times are HH:MM:SS(.ms), e.g. 00:00:42 or 00:01:05.500.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+extract-range — extract every frame in a time range of a video.
+
+Creates <video-name>_frames/frame_%04d.jpg in the current directory.
+Times are HH:MM:SS(.ms), e.g. 00:00:42 or 00:01:05.500.
+
+Usage: extract-range <video-file> <start> <end>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 3 ]]; then
+    usage >&2
+    exit 2
+fi
+if [[ ! -f "$1" ]]; then
+    echo "extract-range: file not found: $1" >&2
+    exit 2
+fi
+
+input=$1 start=$2 end=$3
+base=$(basename "$input")
+outdir="${base%.*}_frames"
+mkdir -p "$outdir"
+
+ffmpeg -ss "$start" -to "$end" -i "$input" -q:v 2 "$outdir/frame_%04d.jpg"

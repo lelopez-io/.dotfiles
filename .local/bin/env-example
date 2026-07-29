@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# env-example — create/update an env example file by stripping values from a source env file.
+#
+# Usage: env-example [source-file] [target-file]   (defaults: .env.local → .env.example)
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+env-example — create or update an env example file by stripping values.
+
+Usage: env-example [source-file] [target-file]
+
+Defaults: source .env.local, target .env.example.
+An existing target is backed up to <target>.bak first.
+
+Preview without writing: sed 's/=.*$/=/' <source>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+source=${1:-.env.local}
+target=${2:-.env.example}
+
+if [[ ! -f "$source" ]]; then
+    echo "env-example: source file not found: $source" >&2
+    exit 2
+fi
+
+if [[ -f "$target" ]]; then
+    cp "$target" "$target.bak"
+fi
+
+sed 's/=.*$/=/' "$source" > "$target"
+
+echo "Created $target from $source"

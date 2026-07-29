@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# mira — launch workday apps (idempotent: open -a activates if already running).
+#
+# Usage: mira
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+mira — launch workday apps (idempotent — open -a activates if already running).
+
+Usage: mira
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+open -ga "Obsidian"
+open -ga "GitKraken"
+open -ga "Google Chrome"
+open -ga "Slack"

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#
+# git-time-log — write "date hash subject" lines since a base ref to git-time-log.txt.
+#
+# Usage: git-time-log [base-ref]
+#
+# Also runnable as `git time-log`.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+git-time-log — write "YYYY-MM-DD HH:MM:SS <hash> <subject>" lines since a base
+ref (default: main, else master) to git-time-log.txt in the current directory.
+
+Usage: git-time-log [base-ref]
+
+Also works as `git time-log` — git treats git-* on PATH as subcommands.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -gt 1 ]]; then
+    usage >&2
+    exit 2
+fi
+
+if [[ $# -eq 1 ]]; then
+    if git rev-parse --verify "$1" >/dev/null 2>&1; then
+        base_ref=$1
+    else
+        echo "git-time-log: invalid ref: $1" >&2
+        exit 1
+    fi
+elif git show-ref --quiet refs/heads/main; then
+    base_ref=main
+elif git show-ref --quiet refs/heads/master; then
+    base_ref=master
+else
+    echo "git-time-log: neither 'main' nor 'master' branch found." >&2
+    exit 1
+fi
+
+git -P log --pretty=format:"%ad %h %s" --date=format:"%Y-%m-%d %H:%M:%S" "${base_ref}..HEAD" > git-time-log.txt
+echo "Generated git-time-log.txt with timestamps"

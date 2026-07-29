@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# uncheck-md — reset all checked [x]/[X] boxes in a markdown file to [ ].
+#
+# Usage: uncheck-md [-b] <markdown-file>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+uncheck-md — reset all checked [x]/[X] boxes in a markdown file to [ ].
+
+Usage: uncheck-md [-b] <markdown-file>
+
+  -b          Back up to <file>.bak before editing.
+  -h, --help  This help.
+EOF
+}
+
+backup=false
+file=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help) usage; exit 0 ;;
+        -b) backup=true; shift ;;
+        -*) echo "uncheck-md: unknown option: $1" >&2; usage >&2; exit 2 ;;
+        *) file=$1; shift ;;
+    esac
+done
+
+file=${file/#\~/$HOME}
+
+if [[ -z "$file" ]]; then
+    usage >&2
+    exit 2
+fi
+if [[ ! -f "$file" ]]; then
+    echo "uncheck-md: file not found: $file" >&2
+    exit 2
+fi
+
+if $backup; then
+    cp "$file" "$file.bak"
+    echo "Created backup: $file.bak"
+fi
+
+sed -i '' 's/\[x\]/[ ]/g;s/\[X\]/[ ]/g' "$file"
+
+echo "✓ Unchecked all checkboxes in $file"

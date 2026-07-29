@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# ytd — download a YouTube video (best res, vp9 preferred); convert if it lands as webm.
+#
+# Usage: ytd <url>
+#
+# Depends on webm2mp4 (also in ~/.local/bin).
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+ytd — download a YouTube video (best resolution, vp9 preferred).
+
+If the result is a .webm, it is converted to .mp4 (via webm2mp4) and the
+webm is deleted.
+
+Usage: ytd <url>
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 2
+fi
+
+output=$(yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose --get-filename "$1")
+yt-dlp --extractor-args youtube:player_client=default,ios -S res,vcodec:vp9 --verbose "$1"
+
+if [[ "$output" == *.webm ]]; then
+    webm2mp4 "$output"
+    rm "$output"
+fi

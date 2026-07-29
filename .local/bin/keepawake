@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+#
+# keepawake — keep macOS awake with the lid closed until you Ctrl+C.
+#
+# Disables lid-close (clamshell) sleep for all power sources, then blocks.
+# Useful for letting a long transfer or job finish with the laptop shut.
+# On Ctrl+C (or terminal close / kill) it re-enables sleep and exits, so the
+# setting never leaks past the run. Keep the Mac on power — this only stops
+# sleep, it does not conjure battery.
+#
+# Note: caffeinate does NOT cover a closed lid; pmset disablesleep is the one
+# that does. That is why this exists instead of a caffeinate wrapper.
+#
+# Usage: keepawake [-h|--help]
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+keepawake — keep macOS awake with the lid closed until you Ctrl+C.
+
+Disables lid-close (clamshell) sleep for all power sources, then blocks.
+Useful for letting a long transfer or job finish with the laptop shut.
+On Ctrl+C (or terminal close / kill) it re-enables sleep and exits, so the
+setting never leaks past the run. Keep the Mac on power — this only stops
+sleep, it does not conjure battery.
+
+Note: caffeinate does NOT cover a closed lid; pmset disablesleep is the one
+that does. That is why this exists instead of a caffeinate wrapper.
+
+Usage: keepawake [-h|--help]
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+    "") ;;
+    *) echo "keepawake: unknown argument: $1" >&2; usage >&2; exit 1 ;;
+esac
+
+if [[ "$(uname)" != "Darwin" ]]; then
+    echo "keepawake: macOS only (uses pmset)." >&2
+    exit 1
+fi
+
+# Let the root inner shell own signal handling and cleanup; the outer shell
+# just waits for it. Use a no-op HANDLER (':'), never trap '' (ignore): an
+# ignored signal is inherited as un-trappable by the non-interactive root
+# shell below, which would make Ctrl+C do nothing. A caught signal resets to
+# default across exec, so the inner shell can trap it.
+trap ':' INT TERM HUP
+
+echo "Requesting sudo to toggle lid-close sleep..."
+sudo bash -c '
+    pmset -a disablesleep 1
+    echo "☕ Lid-close sleep DISABLED — close the lid, work keeps running."
+    echo "   Press Ctrl+C to re-enable sleep and exit."
+    cleanup() { pmset -a disablesleep 0; echo; echo "✅ Sleep re-enabled. Safe to close the terminal."; exit 0; }
+    trap cleanup INT TERM HUP
+    while true; do sleep 86400; done
+'

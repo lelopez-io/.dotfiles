@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# opx — run a command with one env var resolved from 1Password, scoped to that
+# invocation.
+#
+# Usage: opx <ENV_VAR> <op-item> [field] -- <command...>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+opx — run a command with one env var resolved from 1Password, scoped to that
+invocation.
+
+Usage: opx <ENV_VAR> <op-item> [field] -- <command...>
+
+  [field]   1Password field to read (default: credential).
+
+The secret exists only in the child process's env — it never enters your
+shell's env, so it can't leak into later commands or agent sessions.
+
+Scoped ad-hoc session (exit to drop the var):
+  opx NPM_TOKEN 'npm | personal' -- $SHELL
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -lt 3 ]]; then
+    usage >&2
+    exit 2
+fi
+
+var=$1 item=$2; shift 2
+field=credential
+if [[ $1 != -- ]]; then
+    field=$1; shift
+fi
+if [[ ${1:-} != -- ]]; then
+    echo "opx: expected '--' before the command" >&2
+    usage >&2
+    exit 2
+fi
+shift
+if [[ $# -lt 1 ]]; then
+    echo "opx: missing command" >&2
+    exit 2
+fi
+
+val=$(op item get "$item" --fields "$field" --reveal) \
+    || { echo "opx: failed to read '$item' (run opsignin first?)" >&2; exit 1; }
+[[ -n "$val" ]] || { echo "opx: empty value for field '$field' in '$item'" >&2; exit 1; }
+
+exec env "$var=$val" "$@"

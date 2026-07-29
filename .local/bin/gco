@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# gco — fuzzy-switch to any git branch, local or remote, via fzf.
+#
+# Usage: gco [query]
+#
+#   [query]     Optional initial fzf query to narrow the branch list.
+#   -h, --help  This help.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+gco — fuzzy-switch to any git branch, local or remote, via fzf.
+
+Usage: gco [query]
+
+  [query]     Optional initial fzf query to narrow the branch list.
+  -h, --help  This help.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+git fetch -q origin 2>/dev/null || true
+
+branch=$(git branch -a --format='%(refname:short)' | sed 's|^origin/||' | sort -u | fzf --query="${1:-}") || true
+if [[ -n "$branch" ]]; then
+    git switch "$branch"
+fi

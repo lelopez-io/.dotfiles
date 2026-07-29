@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# backup-folder — create a timestamped .bak.tar.gz of a folder, excluding node_modules.
+#
+# Usage: backup-folder <folder>
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+backup-folder — create a compressed, timestamped backup of a folder.
+
+Usage: backup-folder <folder>
+
+Creates <YYYY.MM.DD.HHMMSS>--<name>.bak.tar.gz in the current directory,
+excluding any node_modules directories.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 2
+fi
+if [[ ! -d "$1" ]]; then
+    echo "backup-folder: not a directory: $1" >&2
+    exit 2
+fi
+
+folder=${1%/}
+timestamp=$(date +"%Y.%m.%d.%H%M%S")
+backup_name="${timestamp}--$(basename "$folder").bak.tar.gz"
+
+echo "Starting backup process..."
+echo "Source folder: $folder"
+echo "Backup name:   $backup_name"
+echo "Excluding:     */node_modules"
+
+node_modules=$(find "$folder" -type d -name node_modules -print)
+if [[ -n "$node_modules" ]]; then
+    echo "Found node_modules directories that will be excluded:"
+    echo "$node_modules"
+fi
+
+echo "Creating backup archive..."
+if tar --exclude='*/node_modules' -czvf "$backup_name" "$folder"; then
+    size=$(du -h "$backup_name" | cut -f1)
+    echo "✓ Backup completed successfully"
+    echo "Location: $(pwd)/$backup_name"
+    echo "Size:     $size"
+else
+    echo "✗ Error creating backup" >&2
+    exit 1
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# gitk — open the current directory's repo in GitKraken, detached.
+#
+# Usage: gitk
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+gitk — open the current directory's repo in GitKraken, detached.
+
+Usage: gitk
+EOF
+}
+
+case "${1:-}" in
+    -h|--help) usage; exit 0 ;;
+esac
+
+# `script` hands the child a pty so it fully detaches from this terminal.
+script -q /dev/null /Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(pwd)" </dev/null >/dev/null 2>&1 &
