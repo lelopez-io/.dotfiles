@@ -34,3 +34,12 @@ fi
 # gco - disable file completion, arg is an fzf query
 compdef _nothing gco
 
+# recover orphaned mouse-tracking mode. SSH into a `mouse on` tmux enables
+# mouse reporting on THIS terminal; an abrupt drop (laptop closed -> broken
+# pipe) never sends the disable, leaving the terminal spewing SGR mouse codes
+# (\e[<b;x;yM). turn all mouse-report modes off on every prompt so a dead
+# session can't leave the terminal stuck.
+_disable_mouse_reporting() { print -n '\e[?1000l\e[?1002l\e[?1003l\e[?1006l\e[?1015l' }
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _disable_mouse_reporting
+
