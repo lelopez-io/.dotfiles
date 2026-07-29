@@ -4,7 +4,7 @@
 --   1. Images render inline below ```mermaid blocks using image.nvim + Kitty protocol
 --   2. Cached in /tmp as mermaid_{hash}.png (re-renders only when content changes)
 --   3. External clear (tmux session browser, etc):
---      - tmux calls `mermaid_clear` zsh function before showing overlays
+--      - tmux calls `mermaid-clear` (~/.local/bin) before showing overlays
 --      - mermaid_clear() clears images and sets render_blocked=true
 --   4. Redraw triggers: FocusGained, WinScrolled, CursorMoved, BufEnter
 --   5. VimResized (tmux splits): clears images, re-renders on next scroll/interaction
