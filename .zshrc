@@ -25,3 +25,6 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zaliases
 source $HOME/.zfunctions
 source $HOME/.zoptions
+
+# local overrides (untracked, non-secret — template: .zshrc.local.example)
+[[ -f $HOME/.zshrc.local ]] && source $HOME/.zshrc.local

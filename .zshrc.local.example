@@ -1,0 +1,14 @@
+# .zshrc.local — local overrides that ~/.zshrc sources last.
+#
+# Setup copies this template to ~/.zshrc.local on the first run and never
+# overwrites an existing file. The real file is gitignored: values stay on
+# this machine, out of the repo and its history. Keep user-specific,
+# non-secret config here only — resolve secrets per invocation with
+# op/sopsx (see ~/.zfunctions).
+
+# obsidian.nvim default vault. Explicit by design — no auto-detect: with
+# multiple vaults, "first found" is arbitrary, not your intent. Three states:
+#   set to a valid path  -> enabled
+#   unset/commented out  -> nvim warns once per session
+#   "off"                -> explicitly disabled, silent
+# export OBSIDIAN_VAULT="$HOME/path/to/your/vault"

@@ -3,6 +3,17 @@ set -e
 
 echo "=== Setting up Shell Configuration ==="
 
+# Create ~/.zshrc.local from the committed template (first run only)
+echo "Checking local shell overrides..."
+if [ ! -f "$HOME/.zshrc.local" ]; then
+    if [ -f "$HOME/.zshrc.local.example" ]; then
+        cp "$HOME/.zshrc.local.example" "$HOME/.zshrc.local"
+        echo "- Created ~/.zshrc.local from template — add your values"
+    else
+        echo "Warning: ~/.zshrc.local.example not found (stow not run yet?). Continuing..."
+    fi
+fi
+
 # Install Python packages
 echo "Installing Python packages..."
 echo "- Installing aider for AI-assisted coding"

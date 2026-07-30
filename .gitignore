@@ -11,6 +11,9 @@
 .env*.local
 .env*.aider
 
+# zsh local (user-specific) overrides — never committed
+.zshrc.local
+
 # mise local (user-specific) overrides — never committed
 mise.local.toml
 .mise.local.toml
