@@ -1,3 +1,22 @@
+-- The vault path comes from $OBSIDIAN_VAULT, set in the untracked
+-- ~/.zshrc.local (template: .zshrc.local.example) so no user-specific
+-- path lands in this repo or its history. Explicit over auto-detect:
+-- with multiple vaults, "first found" is arbitrary, not intent. States:
+--   valid path -> enabled
+--   bogus path -> warn once per session, inert
+--   unset      -> warn once per session, inert (set a path, or "off")
+--   "off"      -> explicitly disabled, silent
+local function find_vault()
+    local path = vim.env.OBSIDIAN_VAULT
+    if path == "off" then return end
+    if not path or path == "" then
+        vim.notify("obsidian.nvim: $OBSIDIAN_VAULT not set — configure it in ~/.zshrc.local, or set it to 'off' to disable", vim.log.levels.WARN)
+        return
+    end
+    if vim.uv.fs_stat(path) then return path end
+    vim.notify("obsidian.nvim: $OBSIDIAN_VAULT is not a directory: " .. path, vim.log.levels.WARN)
+end
+
 return {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
@@ -17,8 +36,9 @@ return {
         { "<leader>or", "<cmd>Obsidian rename<cr>",       desc = "Obsidian: rename note" },
         { "<leader>ol", "<cmd>Obsidian links<cr>",        desc = "Obsidian: list links" },
     },
-    opts = (function()
-        local user = vim.fn.fnamemodify(vim.fn.expand("~"), ":t")
+    opts = function()
+        local vault = find_vault()
+        if not vault then return end
         return {
         legacy_commands = false,
         frontmatter = {
@@ -26,8 +46,8 @@ return {
         },
         workspaces = {
             {
-                name = user,
-                path = vim.fn.expand("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/" .. user),
+                name = vim.fn.fnamemodify(vault, ":t"),
+                path = vault,
             },
         },
         daily_notes = {
@@ -42,11 +62,13 @@ return {
             nvim_cmp = false,
             min_chars = 2,
         },
-        -- render-markdown.nvim handles UI; let obsidian.nvim stay out of its way
+        -- render-markdown.nvim handles UI. Let obsidian.nvim stay out of its way.
         ui = { enable = false },
     }
-    end)(),
+    end,
     config = function(_, opts)
+        -- No vault found: opts fn returned nil and lazy hands us {}
+        if not (opts and opts.workspaces) then return end
         require("obsidian").setup(opts)
 
         -- Bind on LspAttach so obsidian's `gd` wins over the buffer-local
