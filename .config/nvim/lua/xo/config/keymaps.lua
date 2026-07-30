@@ -299,7 +299,7 @@ end, {
 
 -- Reload configurations
 vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("source ~/.config/nvim/init.lua")
+    vim.cmd("source $MYVIMRC")
     vim.cmd("edit")
     vim.notify("Reloaded config + current file", vim.log.levels.INFO)
 end, {
