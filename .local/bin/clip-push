@@ -1,0 +1,21 @@
+#!/bin/zsh
+# clip-push — push this Mac's clipboard image to the remote pasteboard.
+# Rides a dedicated forced-command key: it can only run clip-receive, so
+# it stays safe passphrase-less. Target comes from $CLIP_PUSH_TARGET (set
+# in machine-local ~/.zshrc.local) so this repo stays machine-agnostic.
+set -euo pipefail
+
+: "${CLIP_PUSH_TARGET:?set CLIP_PUSH_TARGET in ~/.zshrc.local}"
+
+# osascript emits «data PNGf<hex>»; the pipeline strips the wrapper and
+# decodes. Nothing touches disk on this side — bytes stream into ssh.
+if ! RAW=$(osascript -e 'the clipboard as «class PNGf»' 2>/dev/null); then
+  print -u2 "clip-push: no PNG on the clipboard — copy a screenshot first"
+  exit 1
+fi
+
+print -r -- "$RAW" \
+  | sed -e 's/^«data PNGf//' -e 's/»[[:space:]]*$//' \
+  | tr -d '[:space:]' \
+  | xxd -r -p \
+  | ssh "$CLIP_PUSH_TARGET"

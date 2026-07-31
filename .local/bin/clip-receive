@@ -1,0 +1,39 @@
+#!/bin/zsh
+# clip-receive — forced command for the pushing machine's dedicated key.
+# Installed on the receiving machine as an authorized_keys line:
+#   restrict,command="$HOME/.local/bin/clip-receive" ssh-ed25519 …
+# sshd runs it via $SHELL -c; the image arrives on stdin. SSH_ORIGINAL_COMMAND
+# is ignored by design — a stolen key gets exactly one behavior.
+set -euo pipefail
+
+LIMIT=$((20 * 1024 * 1024))   # 20 MB ceiling — stolen key can't fill the disk
+CLIP=$(mktemp -t push-clip)   # mode 600 by default
+
+head -c "$LIMIT" > "$CLIP"
+if [[ $(stat -f%z "$CLIP") -ge $LIMIT ]]; then
+  rm -f "$CLIP"
+  print -u2 "clip-receive: exceeds 20 MB cap"
+  exit 1
+fi
+
+# refuse non-PNG stdin before touching the pasteboard
+if [[ $(xxd -p -l 8 "$CLIP") != 89504e470d0a1a0a ]]; then
+  rm -f "$CLIP"
+  print -u2 "clip-receive: stdin was not a PNG"
+  exit 1
+fi
+
+ln -sf "$CLIP" /tmp/push-clip-latest.png
+
+# prune our own day-old clips — screenshots can show secrets
+find "${TMPDIR:-/tmp}" -name 'push-clip.*' -mtime +1 -delete 2>/dev/null || true
+
+# pasteboard set needs the user's console session; without it, degrade to
+# file-only — the stable symlink above still works.
+if osascript -e 'on run argv' \
+     -e 'set the clipboard to (read (POSIX file (item 1 of argv)) as «class PNGf»)' \
+     -e 'end run' "$CLIP" 2>/dev/null; then
+  print -r -- "clip-receive: pasteboard set (also $CLIP)"
+else
+  print -u2 "clip-receive: no pasteboard access — image at $CLIP"
+fi
