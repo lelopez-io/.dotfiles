@@ -56,6 +56,10 @@ copy_on_select = true
 # single-tab spaces — the common case — stay clean.
 hide_tab_bar_when_single_tab = true
 
+# Don't block tab creation on a name prompt; tabs get generated names and
+# can be renamed later with prefix+shift+t.
+prompt_new_tab_name = false
+
 # Screen-sharing hygiene: sidebar hidden at launch, and collapsing hides it
 # entirely (zero width, no status rail). Toggle with prefix+b.
 sidebar_start_collapsed = true
