@@ -34,6 +34,24 @@ if [ -z "$(git config --global core.excludesfile)" ]; then
     git config --global core.excludesfile ~/.gitignore
 fi
 
+# Dotfiles repo: use the committed hooks (pre-commit blocks hardcoded
+# /Users/<name> paths — convention is $HOME for portability). Repo-local
+# config, so it must be set on every machine that runs this setup.
+git -C "$HOME/.dotfiles" config core.hooksPath .githooks
+
+# git-ai-commit org blocks: each ~/.config/git-ai-commit/*.inc is
+# self-describing — [git-ai-commit] gitdir (repo tree it applies to,
+# trailing / = recursive) and agent (drafting command). Wire each as a git
+# includeIf so repos under that tree inherit the org's drafting agent.
+# Org identities live only in those per-machine files, never in this repo.
+for ai_inc in "$HOME"/.config/git-ai-commit/*.inc; do
+    [ -e "$ai_inc" ] || continue
+    ai_gitdir=$(git config -f "$ai_inc" --get git-ai-commit.gitdir || true)
+    [ -n "$ai_gitdir" ] || continue
+    git config --global "includeIf.gitdir:${ai_gitdir}.path" "$ai_inc"
+done
+unset ai_inc ai_gitdir
+
 # Configure delta as git pager if installed and not already set
 if command -v delta &> /dev/null; then
     if [ -z "$(git config --global core.pager)" ]; then

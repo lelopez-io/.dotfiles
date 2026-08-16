@@ -1,0 +1,22 @@
+#!/bin/bash
+# pre-commit: block hardcoded /Users/<name> paths in staged changes.
+# Convention: $HOME (or ~) so dotfiles port across machines and usernames.
+# Intentional match (docs, examples)? Bypass: git commit --no-verify
+#
+# Scans only ADDED lines in the staged diff — pre-existing matches don't
+# block you. The .githooks dir is excluded (this script's own regex would
+# self-match).
+
+matches=$(git diff --cached --unified=0 --no-color -- . ':(exclude).githooks' | awk '
+  /^\+\+\+ / { file = substr($0, 7) }    # +++ b/path
+  /^\+[^+]/ && /\/Users\/[A-Za-z0-9._-]+/ { print "  " file ": " substr($0, 2) }
+')
+
+if [ -n "$matches" ]; then
+  echo "pre-commit: hardcoded /Users/... path in staged changes:"
+  echo "$matches" | head -20
+  echo
+  echo "Use \$HOME (or ~) instead — dotfiles must port across machines."
+  echo "If intentional (docs, examples): git commit --no-verify"
+  exit 1
+fi
