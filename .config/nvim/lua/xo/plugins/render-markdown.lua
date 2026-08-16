@@ -66,8 +66,32 @@ local function remove_heading_bold()
     end
 end
 
+-- Rio templates wrap example diagrams in {{description, e.g., ... }} blocks
+-- and inline {{name, e.g., value}} placeholders. Sanitize so templates
+-- preview with their example values. Careful: mermaid hexagons are also
+-- {{...}} — only rewrite when the placeholder carries ", e.g.,".
+local function sanitize_template(content)
+    local out = {}
+    local in_wrapper = false
+    for line in (content .. "\n"):gmatch("([^\n]*)\n") do
+        if not in_wrapper and line:match("^{{.+, e%.g%.,?$") and not line:match("}}") then
+            in_wrapper = true            -- wrapper opener: "{{description, e.g.," — drop
+        elseif in_wrapper and line:match("^}}%s*$") then
+            in_wrapper = false           -- wrapper closer: "}}" — drop
+        else
+            line = line:gsub("{{([^}]+)}}", function(inner)
+                local example = inner:match(",%s*e%.g%.,%s*(.+)$")
+                return example or ("{{" .. inner .. "}}")
+            end)
+            table.insert(out, line)
+        end
+    end
+    return table.concat(out, "\n")
+end
+
 -- Normalize mermaid: \n -> <br/>, quote labels with / to avoid shape parsing
 local function normalize_mermaid(content)
+    content = sanitize_template(content)
     content = content:gsub("%[([^%]\"]+)%]", function(label)
         local needs_quotes = false
         local new_label = label
