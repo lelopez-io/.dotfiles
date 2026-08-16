@@ -1,6 +1,15 @@
 # lazygit — https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
 
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --paging=never
+      command: delta --paging=never
+# C (files panel): draft a commit message with an agent and open it in
+# $EDITOR for review. Logic lives in ~/.local/bin/git-ai-commit (stowed,
+# shellcheck-linted) rather than inline YAML.
+customCommands:
+  - key: 'C'
+    description: 'Commit with AI-drafted message'
+    context: 'files'
+    command: git-ai-commit
+    output: terminal  # hands the terminal to the agent + $EDITOR

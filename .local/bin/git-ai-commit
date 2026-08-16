@@ -1,0 +1,114 @@
+#!/bin/bash
+# git-ai-commit — draft a commit message for staged changes with an agent,
+# open it in $EDITOR for review, then commit. Invoked from lazygit (key: C);
+# also works standalone. Args override the configured agent, e.g.:
+#   git-ai-commit cld <profile> -p
+#
+# Why a script and not inline lazygit YAML: quoting stays sane, shellcheck
+# lints ~/.local/bin, and the prompt is versioned with the dotfiles.
+set -euo pipefail
+
+# Drafting command, read as a full command line from a per-machine,
+# uncommitted file — any agent works because pie and cld share one
+# interface: <wrapper> <profile> <agent args...> (house rule: AI access
+# stays behind 1Password, resolved per invocation into the child's env).
+#   ~/.config/git-ai-commit/agent — one line, e.g.:
+#     pie <profile> -p     # pi,    via 1Password item "pi | <profile>"
+#     cld <profile> -p     # claude, via 1Password item "cld | <profile>"
+# Args to this script override the file.
+#
+# Why per-invocation resolution: popup/headless contexts (lazygit via herdr
+# server) run `zsh -c` — no shell startup files, so exported keys vanish.
+# op talks to the 1Password desktop app (op-daemon.sock, verified: vault
+# reads succeed with no CLI session): app unlocked = silent, locked =
+# Touch ID. opsignin only where the app isn't (SSH, headless).
+# Resolution order (first match wins):
+#   1. CLI args — one-off override:  git-ai-commit cld <profile> -p
+#   2. git config git-ai-commit.agent — per-REPO: `git config
+#      git-ai-commit.agent "..."` in a clone (.git/config, never committed).
+#      Per-ORG: self-describing blocks in ~/.config/git-ai-commit/*.inc
+#      (gitdir + agent); 05-git.sh wires each as a git includeIf, and git's
+#      own precedence (repo > org > user) does the layering.
+#   3. ~/.config/git-ai-commit/agent — per-machine default (fallback)
+if [ "$#" -gt 0 ]; then
+  agent_cmd=("$@")
+else
+  configured=$(git config --get git-ai-commit.agent 2>/dev/null || true)
+  if [ -n "$configured" ]; then
+    read -ra agent_cmd <<< "$configured"
+  else
+    agent_file="$HOME/.config/git-ai-commit/agent"
+    [ -f "$agent_file" ] || {
+      echo "git-ai-commit: no drafting command configured" >&2
+      echo "set one: git config git-ai-commit.agent 'pie <profile> -p'   (this repo)" >&2
+      echo "or:      echo 'pie <profile> -p' > $agent_file              (machine default)" >&2
+      exit 1
+    }
+    read -ra agent_cmd < "$agent_file"
+  fi
+fi
+
+command -v "${agent_cmd[0]}" >/dev/null || {
+  echo "git-ai-commit: ${agent_cmd[0]} not installed" >&2
+  exit 1
+}
+
+staged=$(git diff --staged)
+[ -n "$staged" ] || {
+  echo "git-ai-commit: nothing staged" >&2
+  exit 1
+}
+
+# Conventions: prefer the rio-commit skill (user's committed source of
+# truth, synced to ~/.pi/agent/skills) when present — includes milestone
+# format and the no-AI-attribution rule. Fall back to generic conventional
+# commits so the script still works on machines without rio.
+conventions="$HOME/.rio/skills/rio-commit/SKILL.md"
+if [ -f "$conventions" ]; then
+  prompt='Draft a commit message for the staged changes at the end.
+Follow the commit conventions below exactly. Use the milestone format only
+when the diff clearly spans multiple features. Output ONLY the message:
+no explanation, no code fences.
+
+Conventions (rio-commit):
+'
+  # strip YAML frontmatter and the rio management comment
+  conv_body=$(awk 'NR==1 && /^---$/ {f=1; next} f && /^---$/ {f=0; next} f {next} /^<!--/ {next} {print}' "$conventions")
+else
+  prompt='Draft a commit message for the staged changes at the end.
+Rules:
+- Conventional commits matching this repo history: type or type(scope),
+  lowercase, imperative, subject <= 72 chars.
+- Short body only if the diff warrants it.
+- No AI attribution or Co-Authored-By lines.
+- Output ONLY the message: no explanation, no code fences.
+'
+  conv_body=''
+fi
+
+echo "git-ai-commit: drafting with ${agent_cmd[*]} (1Password may prompt)..." >&2
+
+msg=$(
+  {
+    printf '%s' "$prompt"
+    if [ -n "$conv_body" ]; then printf '%s\n\n' "$conv_body"; fi
+    printf 'Recent history for style reference:\n'
+    git log --oneline -15
+    printf '\nStaged diff:\n'
+    printf '%s' "$staged"
+  } | "${agent_cmd[@]}"
+)
+
+[ -n "${msg//[[:space:]]/}" ] || {
+  echo "git-ai-commit: agent returned an empty message" >&2
+  exit 1
+}
+{
+  echo "----- draft -----"
+  printf '%s\n' "$msg"
+  echo "----- opening \$EDITOR to review -----"
+} >&2
+
+# -e -m: editor opens with the draft prefilled; save+close commits, abort
+# the editor to abort the commit.
+git commit -e -m "$msg"
