@@ -18,6 +18,12 @@ confirm() {
 # Navigate to dotfiles directory
 cd "$HOME/.dotfiles"
 
+# herdr mixes config with machine-specific runtime state (sockets, session.json,
+# logs) in ~/.config/herdr. Pre-create the real directory so stow links
+# config.toml file-level instead of folding the whole directory into a
+# symlink — which would drop live runtime files inside this repo.
+mkdir -p "$HOME/.config/herdr"
+
 # Ask user how to handle existing configs
 if confirm "Would you like to force repo versions of all dotfiles? (This will overwrite your current configs)"; then
     echo "Force installing dotfiles from repo..."

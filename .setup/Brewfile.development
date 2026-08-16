@@ -6,6 +6,7 @@ brew "libyaml"                 # ruby build dependency (mise)
 brew "mise"
 brew "starship"
 brew "stow"
+brew "herdr"                  # terminal workspace manager (tmux successor, on trial)
 brew "tmux"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"

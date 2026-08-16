@@ -30,6 +30,12 @@ mise.*.local.toml
 # Setup generated state
 .setup/Brewfile.*.lock.json
 
+# herdr runtime state (sockets, session, logs) — only config.toml is shared.
+# Guards the case where stow folds ~/.config/herdr into a dir symlink on a
+# fresh machine; 02-dotfiles.sh pre-creates the real dir to prevent that.
+.config/herdr/*
+!.config/herdr/config.toml
+
 # Keep nvim plugin versions in git
 !.config/nvim/lazy-lock.json
 

@@ -1,0 +1,91 @@
+onboarding = false
+# herdr configuration
+# Validate: herdr config check    Apply: herdr server reload-config (or prefix+shift+r)
+# Docs:     https://herdr.dev/docs/configuration/
+
+[keys]
+# Years of tmux/screen muscle memory. Pass-through is covered: `a` after the
+# prefix sends a literal ctrl+a to the pane (readline beginning-of-line), and
+# ctrl+e (end-of-line) is unclaimed — so shell line editing survives the remap.
+prefix = "ctrl+a"
+
+# Mental model carried over from tmux: one repo = one workspace (what tmux
+# called a "window"). So `n` — the old new-window habit — creates workspaces.
+new_workspace = ["prefix+n", "prefix+shift+n"]
+new_tab = "prefix+c"  # tabs are occasional per-repo views (e.g. a PR-review layout)
+next_tab = ""         # unbound: n was herdr's next-tab; use prefix+1..9 / prefix+g
+
+# Terminals deliver shift+punctuation inconsistently (the shifted symbol vs
+# shift+key), so every variant is bound — whichever Ghostty sends, one matches.
+split_vertical = ["prefix+v", "prefix+shift+backslash", "prefix+|"]
+split_horizontal = ["prefix+minus", "prefix+shift+minus", "prefix+_"]
+
+# Navigate mode (prefix+w) defaults to arrows; j/k walk the workspace list
+# instead. Pane focus keeps h/l; vertical pane focus moves to shift+j/shift+k
+# (plain arrows always work for panes regardless).
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+navigate_pane_up = "shift+k"
+navigate_pane_down = "shift+j"
+
+# Stock herdr, relied on daily but not configured here: prefix+h/j/k/l focus
+# panes, prefix+shift+h/j/k/l swap directionally, prefix+[ vi copy mode,
+# prefix+shift+r reload, prefix+? live keymap.
+
+# ctrl+alt is the one modifier family macOS, Ghostty, and shells all leave
+# free — plain alt+g would be composed into © before herdr could see it.
+# Trial: lazygit popup as a GitKraken replacement.
+[[keys.command]]
+key = "ctrl+alt+g"
+type = "popup"
+command = "lazygit"
+width = "80%"
+height = "80%"
+
+[terminal]
+# Default, stated explicitly because tmux splits relied on -c pane_current_path:
+# new panes/tabs/workspaces inherit the focused pane's directory.
+new_cwd = "follow"
+
+[ui]
+# Drag-select copies immediately (tmux needed a MouseDragEnd1Pane binding for
+# this; herdr is mouse-native).
+copy_on_select = true
+
+# Tab bar only appears once a space grows a second tab (e.g. a review tab);
+# single-tab spaces — the common case — stay clean.
+hide_tab_bar_when_single_tab = true
+
+# Screen-sharing hygiene: sidebar hidden at launch, and collapsing hides it
+# entirely (zero width, no status rail). Toggle with prefix+b.
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
+
+# Show the detected agent (pi, claude) on pane borders when no manual pane
+# name is set.
+show_agent_labels_on_pane_borders = true
+
+[session]
+# Reboot persistence for agents: after a server restart, pi/claude panes
+# resume their native conversation sessions. Works because both integrations
+# are installed (herdr integration status). Default true; stated because this
+# replaces tmux resurrect/continuum.
+resume_agents_on_restore = true
+
+[experimental]
+# Kitty graphics for image.nvim/mermaid inside panes (tmux needed
+# allow-passthrough for this). Outer terminal is Ghostty, which supports it.
+kitty_graphics = true
+
+# Restore pane scrollback across full server restarts. With the LaunchAgent
+# (brew services start herdr) starting the server at login, this is the
+# resurrect/continuum replacement for reboots. Shells respawn fresh in their
+# cwd — same limit resurrect always had.
+pane_history = true
+
+[ui.toast]
+delivery = "herdr"
+
+[theme]
+name = "one-dark"
+auto_switch = false
