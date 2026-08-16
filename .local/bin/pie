@@ -43,7 +43,7 @@ if [[ -n "$profile" ]]; then
     key_var=$(op item get "$op_item" --fields env_var --reveal) \
         || { echo "pie: failed to read env_var from 1Password item '$op_item'" >&2; exit 1; }
 
-    echo "Starting pi [$profile]"
+    echo "Starting pi [$profile]" >&2  # status, not data: stdout is the agent's
     export "$key_var=$key"
 fi
 
