@@ -1,0 +1,35 @@
+#!/bin/bash
+# herdr-fork-update — build and install the patched herdr from the fork.
+#
+# Why: we run a local fork of herdr with the popup kitty-graphics patch
+# (~/xo/herdrdev/herdr, branch popup-kitty-graphics) until upstream lands a
+# fix (discussion herdrdev/herdr#2863). This keeps any machine current:
+# clones on first run, fetches+fast-forwards after, builds release, installs
+# to ~/.local/bin/herdr (which shadows the brew binary via PATH order).
+#
+# Works locally and on SSH remotes. Needs mise-managed rust + zig:
+#   mise install rust@1.96.1 zig@0.15.2
+# (zig 0.15.2 exactly: the vendored libghostty-vt build breaks on 0.16.)
+set -euo pipefail
+
+REPO="${HERDR_FORK_REPO:-$HOME/xo/herdrdev/herdr}"
+BRANCH="${HERDR_FORK_BRANCH:-popup-kitty-graphics}"
+REMOTE_URL="${HERDR_FORK_URL:-https://github.com/lelopez-io/herdr.git}"
+
+if [ ! -d "$REPO/.git" ]; then
+  echo "herdr-fork-update: cloning $REMOTE_URL into $REPO"
+  mkdir -p "$(dirname "$REPO")"
+  git clone --branch "$BRANCH" "$REMOTE_URL" "$REPO"
+fi
+
+cd "$REPO"
+git fetch origin "$BRANCH"
+git checkout "$BRANCH" -q
+git merge --ff-only "origin/$BRANCH"
+
+echo "herdr-fork-update: building release (rust 1.96.1, zig 0.15.2)..."
+mise x rust@1.96.1 zig@0.15.2 -- cargo build --release
+
+mkdir -p "$HOME/.local/bin"
+install -m 755 target/release/herdr "$HOME/.local/bin/herdr"
+echo "herdr-fork-update: installed $("$HOME/.local/bin/herdr" --version) to ~/.local/bin/herdr"
