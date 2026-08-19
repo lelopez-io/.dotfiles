@@ -40,3 +40,6 @@ mise.*.local.toml
 !.config/nvim/lazy-lock.json
 
 **/.claude/settings.local.json
+
+# rio per-repo workspace state (origin: studio drift, upstreamed 2026-08-15)
+.rio/
