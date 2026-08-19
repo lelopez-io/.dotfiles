@@ -12,7 +12,7 @@
 # (zig 0.15.2 exactly: the vendored libghostty-vt build breaks on 0.16.)
 set -euo pipefail
 
-REPO="${HERDR_FORK_REPO:-$HOME/xo/herdrdev/herdr}"
+REPO="${HERDR_FORK_REPO:-$HOME/xo/lelopez-io/herdr}"
 BRANCH="${HERDR_FORK_BRANCH:-popup-kitty-graphics}"
 REMOTE_URL="${HERDR_FORK_URL:-https://github.com/lelopez-io/herdr.git}"
 
