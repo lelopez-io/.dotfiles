@@ -3,7 +3,7 @@
 git:
   diffRenderers:
     - colorArg: always
-      command: delta --paging=never
+      command: delta --paging=never --side-by-side
 # C (files panel): draft a commit message with an agent and open it in
 # $EDITOR for review. Logic lives in ~/.local/bin/git-ai-commit (stowed,
 # shellcheck-linted) rather than inline YAML.
