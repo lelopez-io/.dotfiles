@@ -51,7 +51,7 @@ height = "95%"
 [[keys.command]]
 key = "ctrl+alt+shift+g"
 type = "pane"
-command = "serie -p kitty"
+command = "serie -p kitty; echo EXIT=$?; read -r _"  # TEMP debug: keep pane open to see why it exits
 
 [terminal]
 # Default, stated explicitly because tmux splits relied on -c pane_current_path:
