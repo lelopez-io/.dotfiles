@@ -13,7 +13,7 @@ real_claude() {
   fi
   local latest
   # shellcheck disable=SC2012 # ls -dt is the mtime-ordered answer here; find+stat is worse.
-  latest=$(ls -dt "$HOME"/.local/share/claude/versions/*/ 2>/dev/null | head -1)
+  latest=$(ls -dt "$HOME"/.local/share/claude/versions/* 2>/dev/null | head -1)
   [ -n "$latest" ] && [ -x "$latest" ] && echo "$latest"
 }
 
