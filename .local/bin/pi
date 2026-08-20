@@ -1,7 +1,9 @@
 #!/bin/bash
-# pi — shim that routes every pi invocation through the 1Password profile
-# wrapper. Exists so NON-interactive launchers (herdr's agent resume runs
-# bare `pi --session <path>`) authenticate the same way as interactive ones.
-# Resolution order: ~/.local/bin is first in PATH (.zprofile/.zshenv), so
-# this shim wins; pie then execs the real binary via its absolute bun path.
-exec pie "$AGENT_PROFILE" "$@"
+# pi — route every invocation through the 1Password profile wrapper so
+# non-interactive launchers (herdr agent resume runs bare `pi --session ...`)
+# authenticate the same way interactive ones do. Profile resolves per
+# directory via agent-profile (git config agent.pi.profile > org includeIf >
+# ~/.config/agent-profiles/pi &&. Shim wins PATH via .zprofile's
+# last-prepend; pie execs the real binary by absolute path.
+profile=$(agent-profile pi || true)
+exec pie "${AGENT_PROFILE}" "$@"

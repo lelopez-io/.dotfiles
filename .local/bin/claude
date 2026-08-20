@@ -1,0 +1,11 @@
+#!/bin/bash
+# claude — use a 1Password profile (via cld) only when one is configured for
+# this directory (git config agent.claude.profile > org includeIf >
+# ~/.config/agent-profiles/claude). Otherwise exec the real binary directly:
+# personal OAuth login needs no key. Profile-aware calls (e.g. work repos)
+# go through 1Password; everything else stays plain.
+profile=$(agent-profile claude || true)
+if [ -n "$profile" ]; then
+  exec cld "$profile" "$@"
+fi
+exec /opt/homebrew/bin/claude "$@"

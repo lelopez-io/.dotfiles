@@ -1,0 +1,15 @@
+#!/bin/bash
+# agent-profile — print the 1Password profile for agent $1 in this directory.
+# Resolution order (first match wins):
+#   1. git config agent.<name>.profile   (per-repo, or per-org via includeIf
+#      blocks such as ~/.config/git-ai-commit/org.inc)
+#   2. ~/.config/agent-profiles/<name>   (machine-local default)
+# Empty output = no profile; callers decide what "bare" means for their agent.
+set -euo pipefail
+agent="${1:?usage: agent-profile <name>}"
+profile=$(git config --get "agent.$agent.profile" 2>/dev/null || true)
+if [ -z "$profile" ]; then
+  f="$HOME/.config/agent-profiles/$agent"
+  [ -f "$f" ] && read -r profile < "$f" || true
+fi
+printf '%s' "${profile:-}"
