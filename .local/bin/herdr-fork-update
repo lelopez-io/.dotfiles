@@ -24,8 +24,11 @@ fi
 
 cd "$REPO"
 git fetch origin "$BRANCH"
-git checkout "$BRANCH" -q
-git merge --ff-only "origin/$BRANCH"
+# Reset rather than merge: the patch branch is rebased onto upstream and
+# force-pushed on each release, so a build checkout follows it exactly.
+# (No local edits belong here — keep them upstream of this script.)
+git checkout -B "$BRANCH" -q "origin/$BRANCH"
+git reset --hard -q "origin/$BRANCH"
 
 # Preflight: zig 0.15.2 targets plain arm64-macos, but the macOS 26.5 SDK
 # stub (libSystem.tbd) is arm64e-only, so linking fails with pages of
