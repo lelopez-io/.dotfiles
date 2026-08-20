@@ -7,9 +7,6 @@ export EDITOR="nvim"
 # 256 color support
 export TERM=xterm-256color
 
-# tools
-export PATH="$HOME/.local/bin:$PATH"
-
 # tools-bun
 export PATH="$HOME/.bun/bin:$PATH"
 
@@ -34,3 +31,7 @@ PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 # android sdk (installed via android-studio cask)
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+# user tools LAST: every block above prepends, so this must come last to win.
+# Shims in ~/.local/bin (e.g. pi -> pie) rely on outranking ~/.bun/bin.
+export PATH="$HOME/.local/bin:$PATH"
