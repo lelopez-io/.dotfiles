@@ -49,7 +49,20 @@ fi
 # whole vault (backstop for "don't opsignin in agent-launching shells").
 for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
 
+# Resolve the real claude: brew path first, then the native installer's
+# newest version dir (mtime). Needed because the shim and cld shadow
+# ~/.local/bin/claude, so PATH lookup would recurse.
+real_claude() {
+  if [ -x /opt/homebrew/bin/claude ]; then
+    echo /opt/homebrew/bin/claude
+    return 0
+  fi
+  local latest
+  # shellcheck disable=SC2012 # ls -dt is the mtime-ordered answer here; find+stat is worse.
+  latest=$(ls -dt "$HOME"/.local/share/claude/versions/*/ 2>/dev/null | head -1)
+  [ -n "$latest" ] && [ -x "$latest" ] && echo "$latest"
+}
+
 # exec replaces this script: claude's exit status propagates, and the exported
-# key lives only in claude's own process environment. Absolute path so the
-# ~/.local/bin/claude shim (which delegates to this wrapper) can't recurse.
-exec /opt/homebrew/bin/claude "$@"
+# key lives only in claude's own process environment.
+exec "$(real_claude)" "$@"

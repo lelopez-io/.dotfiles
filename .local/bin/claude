@@ -4,8 +4,21 @@
 # ~/.config/agent-profiles/claude). Otherwise exec the real binary directly:
 # personal OAuth login needs no key. Profile-aware calls (e.g. work repos)
 # go through 1Password; everything else stays plain.
+# Resolve the real claude: brew path first, then the native installer's
+# newest version dir (mtime). PATH lookup would recurse back into this shim.
+real_claude() {
+  if [ -x /opt/homebrew/bin/claude ]; then
+    echo /opt/homebrew/bin/claude
+    return 0
+  fi
+  local latest
+  # shellcheck disable=SC2012 # ls -dt is the mtime-ordered answer here; find+stat is worse.
+  latest=$(ls -dt "$HOME"/.local/share/claude/versions/*/ 2>/dev/null | head -1)
+  [ -n "$latest" ] && [ -x "$latest" ] && echo "$latest"
+}
+
 profile=$(agent-profile claude || true)
 if [ -n "$profile" ]; then
   exec cld "$profile" "$@"
 fi
-exec /opt/homebrew/bin/claude "$@"
+exec "$(real_claude)" "$@"
