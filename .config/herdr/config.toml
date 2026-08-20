@@ -7,6 +7,8 @@ onboarding = false
 # Years of tmux/screen muscle memory. Pass-through is covered: `a` after the
 # prefix sends a literal ctrl+a to the pane (readline beginning-of-line), and
 # ctrl+e (end-of-line) is unclaimed — so shell line editing survives the remap.
+# Nested herdr (ssh -> herdr on a remote): ctrl+a ctrl+a q detaches the INNER
+# session (the second prefix passes through to the pane's herdr).
 prefix = "ctrl+a"
 
 # Mental model carried over from tmux: one repo = one workspace (what tmux
