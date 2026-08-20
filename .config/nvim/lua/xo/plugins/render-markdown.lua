@@ -496,7 +496,9 @@ return {
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
         "nvim-tree/nvim-web-devicons",
-        "3rd/image.nvim",
+        -- Fork with the atomic kitty-write fix (SSH base64 leak); dogfooding
+        -- before upstreaming. Back to "3rd/image.nvim" when it lands.
+        { "lelopez-io/image.nvim", branch = "fix/kitty-direct-atomic-write" },
     },
     ft = { "markdown" },
     keys = {
