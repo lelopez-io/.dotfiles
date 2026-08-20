@@ -1,0 +1,7 @@
+#!/bin/bash
+# pi — shim that routes every pi invocation through the 1Password profile
+# wrapper. Exists so NON-interactive launchers (herdr's agent resume runs
+# bare `pi --session <path>`) authenticate the same way as interactive ones.
+# Resolution order: ~/.local/bin is first in PATH (.zprofile/.zshenv), so
+# this shim wins; pie then execs the real binary via its absolute bun path.
+exec pie "$AGENT_PROFILE" "$@"
