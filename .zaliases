@@ -5,6 +5,11 @@
 alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
 alias lg='lazygit'
 
+# herdr — named remote sessions on studio (server owns keybindings; detaches
+# with ctrl+a q). hwork = work session, hplay = personal.
+alias hwork='herdr --remote studio --session work --remote-keybindings server'
+alias hplay='herdr --remote studio --session personal --remote-keybindings server'
+
 # neovim
 alias vim='nvim'
 alias obs='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/. && nvim . && cd -'
