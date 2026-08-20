@@ -55,8 +55,8 @@ height = "95%"
 key = "ctrl+alt+shift+g"
 type = "popup"
 command = "/opt/homebrew/bin/serie -p kitty"
-width = "90%"
-height = "90%"
+width = "80%"
+height = "85%"
 
 [terminal]
 # Default, stated explicitly because tmux splits relied on -c pane_current_path:
