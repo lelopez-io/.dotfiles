@@ -45,16 +45,18 @@ height = "95%"
 # Graph overview companion (GitKraken-graph replacement trial): same chord
 # family, shift = "bigger git view". serie draws its lane graph as a kitty
 # graphics image (-p kitty: auto-detection doesn't recognize herdr). Runs as
-# a temp PANE, not a popup — herdr's popup layer does not place kitty
-# graphics (verified 2026-08-15 with a raw kitty-protocol probe in both
-# contexts; panes render, popups don't).
+# a temp PANE on stock herdr (its popup layer doesn't place kitty
+# graphics — verified 2026-08-15), a POPUP on our patched fork where the
+# placement fix lives (lelopez-io/herdr, branch popup-kitty-graphics).
 # Absolute path: temp command panes run /bin/sh -c with a minimal env —
 # no zsh profile loads, so brew's PATH never appears (both machines are
 # macOS arm64, same brew prefix).
 [[keys.command]]
 key = "ctrl+alt+shift+g"
-type = "pane"
+type = "popup"
 command = "/opt/homebrew/bin/serie -p kitty"
+width = "90%"
+height = "90%"
 
 [terminal]
 # Default, stated explicitly because tmux splits relied on -c pane_current_path:
