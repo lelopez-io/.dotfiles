@@ -27,6 +27,21 @@ git fetch origin "$BRANCH"
 git checkout "$BRANCH" -q
 git merge --ff-only "origin/$BRANCH"
 
+# Preflight: zig 0.15.2 targets plain arm64-macos, but the macOS 26.5 SDK
+# stub (libSystem.tbd) is arm64e-only, so linking fails with pages of
+# "undefined symbol" errors. Detect and point at the fix before building.
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  sdk=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
+  tbd="$sdk/usr/lib/libSystem.tbd"
+  if [ -f "$tbd" ] && ! grep -q "arm64-macos" "$tbd"; then
+    echo "herdr-fork-update: ERROR: active SDK ($sdk) has no arm64-macos stub" >&2
+    echo "  zig 0.15.2 cannot link against the 26.5 SDK (arm64e-only libSystem.tbd)." >&2
+    echo "  Quarantine it so xcrun returns an older SDK, e.g.:" >&2
+    echo "  sudo mkdir -p /tmp/sdk-quarantine && sudo mv \"$sdk\" /tmp/sdk-quarantine/" >&2
+    exit 1
+  fi
+fi
+
 echo "herdr-fork-update: building release (rust 1.96.1, zig 0.15.2)..."
 mise x rust@1.96.1 zig@0.15.2 -- cargo build --release
 
