@@ -2,7 +2,7 @@
 # agent-profile — print the 1Password profile for agent $1 in this directory.
 # Resolution order (first match wins):
 #   1. git config agent.<name>.profile   (agent-specific, per-repo/org includeIf)
-#   2. git config agent.profile          (context profile for ALL agents, e.g. work)
+#   2. git config agent.profile          (context profile for ALL agents)
 #   3. ~/.config/agent-profiles/<name>   (machine-local default)
 # Empty output = no profile; callers decide what "bare" means for their agent.
 # Profile names are contexts, not keys: each wrapper resolves its own item

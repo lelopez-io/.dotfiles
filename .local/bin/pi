@@ -1,9 +1,15 @@
 #!/bin/bash
 # pi — route every invocation through the 1Password profile wrapper so
 # non-interactive launchers (herdr agent resume runs bare `pi --session ...`)
-# authenticate the same way interactive ones do. Profile resolves per
-# directory via agent-profile (git config agent.pi.profile > org includeIf >
-# ~/.config/agent-profiles/pi &&. Shim wins PATH via .zprofile's
+# authenticate the same way interactive ones do. The profile itself is
+# per-machine (see agent-profile: git config agent.pi.profile, generic
+# agent.profile, or ~/.config/agent-profiles/pi) — deliberately NOT set here,
+# so no identity lives in the repo. Shim wins PATH via .zprofile's
 # last-prepend; pie execs the real binary by absolute path.
 profile=$(agent-profile pi || true)
-exec pie "${AGENT_PROFILE}" "$@"
+[ -n "$profile" ] || {
+  echo "pi: no profile resolved — set 'git config agent.pi.profile <name>' or" >&2
+  echo "    create ~/.config/agent-profiles/pi (machine-local, uncommitted)" >&2
+  exit 1
+}
+exec pie "$profile" "$@"
