@@ -30,6 +30,11 @@ navigate_workspace_down = "j"
 navigate_pane_up = "shift+k"
 navigate_pane_down = "shift+j"
 
+# Git tools own the g family: prefix+g lazygit, prefix+shift+g serie graph.
+# goto (fuzzy picker) moves to prefix+f; new_worktree (unused) gives up its key.
+goto = "prefix+f"
+new_worktree = ""
+
 # Stock herdr, relied on daily but not configured here: prefix+h/j/k/l focus
 # panes, prefix+shift+h/j/k/l swap directionally, prefix+[ vi copy mode,
 # prefix+shift+r reload, prefix+? live keymap.
@@ -38,7 +43,7 @@ navigate_pane_down = "shift+j"
 # free — plain alt+g would be composed into © before herdr could see it.
 # Trial: lazygit popup as a GitKraken replacement.
 [[keys.command]]
-key = "ctrl+alt+g"
+key = ["prefix+g", "ctrl+alt+g"]  # prefix chord + legacy ctrl+alt chord
 type = "popup"
 command = "lazygit"
 width = "95%"
@@ -54,7 +59,7 @@ height = "95%"
 # no zsh profile loads, so brew's PATH never appears (both machines are
 # macOS arm64, same brew prefix).
 [[keys.command]]
-key = "ctrl+alt+shift+g"
+key = ["prefix+shift+g", "ctrl+alt+shift+g"]  # big G = graph
 type = "popup"
 command = "/opt/homebrew/bin/serie -p kitty"
 width = "80%"
