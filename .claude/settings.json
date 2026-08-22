@@ -16,6 +16,7 @@
       "Bash(xargs cat:*)",
       "Bash(flutter:*)",
       "Bash(mise trust:*)",
+      "Bash(obsidian:*)",
       "Bash(gh pr diff:*)",
       "Bash(gh pr view:*)",
       "Bash(gh run view:*)",
@@ -42,13 +43,19 @@
       "Bash(yarn test:*)",
       "Bash(yarn typecheck)",
       "Bash(gt checkout:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:docs.turso.tech)",
+      "WebFetch(domain:fnox.jdx.dev)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:mise.jdx.dev)",
+      "WebFetch(domain:turso.tech)",
+      "WebFetch(domain:tursodatabase.github.io)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebSearch"
     ],
     "deny": [
       "Bash(git -C:*)"
     ]
   },
-  "model": "claude-fable-5[1m]",
   "hooks": {
     "Notification": [
       {
@@ -78,24 +85,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '$HOME/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash '$HOME/.claude/hooks/herdr-agent-state.sh' session",
+            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
             "timeout": 10
           }
         ]
       }
     ]
   },
-  "effortLevel": "xhigh",
   "skipWorkflowUsageWarning": true,
   "skipAutoPermissionPrompt": true
 }
