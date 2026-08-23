@@ -39,29 +39,22 @@ new_worktree = ""
 # panes, prefix+shift+h/j/k/l swap directionally, prefix+[ vi copy mode,
 # prefix+shift+r reload, prefix+? live keymap.
 
-# ctrl+alt is the one modifier family macOS, Ghostty, and shells all leave
-# free — plain alt+g would be composed into © before herdr could see it.
-# Trial: lazygit popup as a GitKraken replacement.
+# zsh -lc on both: the server starts from launchd, whose PATH has no brew
+# or ~/.local/bin, so a bare command name exits 127 before the popup draws.
 [[keys.command]]
-key = ["prefix+g", "ctrl+alt+g"]  # prefix chord + legacy ctrl+alt chord
+key = "prefix+g"
 type = "popup"
-command = "lazygit"
+command = "zsh -lc lazygit"
 width = "95%"
 height = "95%"
 
-# Graph overview companion (GitKraken-graph replacement trial): same chord
-# family, shift = "bigger git view". serie draws its lane graph as a kitty
-# graphics image (-p kitty: auto-detection doesn't recognize herdr). Runs as
-# a temp PANE on stock herdr (its popup layer doesn't place kitty
-# graphics — verified 2026-08-15), a POPUP on our patched fork where the
-# placement fix lives (lelopez-io/herdr, branch popup-kitty-graphics).
-# Absolute path: temp command panes run /bin/sh -c with a minimal env —
-# no zsh profile loads, so brew's PATH never appears (both machines are
-# macOS arm64, same brew prefix).
+# Quick glance; the full flow is `gg` (git-graph). -p kitty: serie's
+# detection doesn't recognize herdr; popup graphics placement needs the
+# lelopez-io/herdr popup-kitty-graphics fork.
 [[keys.command]]
-key = ["prefix+shift+g", "ctrl+alt+shift+g"]  # big G = graph
+key = "prefix+shift+g"
 type = "popup"
-command = "/opt/homebrew/bin/serie -p kitty"
+command = "zsh -lc 'serie -p kitty'"
 width = "80%"
 height = "85%"
 
