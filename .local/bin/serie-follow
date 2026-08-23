@@ -31,6 +31,9 @@ import tty
 DEBOUNCE_S = float(os.environ.get("SERIE_FOLLOW_DEBOUNCE_MS", "120")) / 1000
 SGR = re.compile(rb"\x1b\[[0-9;]*m")
 ROW = re.compile(r"([0-9a-f]{7,40})\s+\d{4}-\d{2}-\d{2}")
+# The fork's footer: "(circled dot) <hash>  <date>  <author>". The rows
+# themselves no longer carry hash or date columns.
+FOOTER = re.compile(r"\u2299 ([0-9a-f]{7,40})\s+\d{4}-\d{2}-\d{2}")
 
 
 def log(msg):
@@ -45,8 +48,13 @@ def selected_hash(pane_id):
         ["herdr", "pane", "read", pane_id, "--source", "visible",
          "--format", "ansi"],
         capture_output=True, timeout=5).stdout
+    text = SGR.sub(b"", out).decode("utf-8", "replace")
+    footer = FOOTER.findall(text)
+    if footer:
+        return footer[-1]
+    # Stock serie fallback: hash+date columns on the highlighted row.
     for line in out.splitlines():
-        if b"\x1b[48;" not in line:  # background SGR = the selected row
+        if b"\x1b[48;" not in line:
             continue
         found = ROW.findall(SGR.sub(b"", line).decode("utf-8", "replace"))
         if found:

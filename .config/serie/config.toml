@@ -26,3 +26,8 @@ commands_3 = { name = "review commit", type = "silent", commands = ["zsh", "-lc"
 # like the gg layout; small terminals clamp safely.
 [ui.user_command]
 height = 45
+
+# Subject over metadata: name/hash/date leave the rows for the fork's
+# selected-commit footer line, which serie-follow also parses.
+[ui.list]
+columns = ["graph", "marker", "subject"]
