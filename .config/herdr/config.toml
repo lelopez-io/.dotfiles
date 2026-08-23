@@ -67,11 +67,13 @@ width = "95%"
 height = "95%"
 
 # -i: only interactive shells source ~/.zshrc.local, home of OBSIDIAN_VAULT.
+# 130 cols: ~120ch prose + nvim gutters + popup border; percent width would
+# drift with the display.
 [[keys.command]]
 key = "prefix+shift+o"
 type = "popup"
 command = "zsh -ilc 'cd \"${OBSIDIAN_VAULT:?set in ~/.zshrc.local}\" && nvim .'"
-width = "95%"
+width = 130
 height = "95%"
 
 [terminal]
