@@ -59,7 +59,6 @@ return {
             folder = "_templates",
         },
         completion = {
-            nvim_cmp = false,
             min_chars = 2,
         },
         -- render-markdown.nvim handles UI. Let obsidian.nvim stay out of its way.
