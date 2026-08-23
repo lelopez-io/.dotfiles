@@ -548,6 +548,9 @@ return {
                 showbreak = { default = vim.o.showbreak, rendered = "  " },
                 breakindent = { default = vim.o.breakindent, rendered = true },
                 breakindentopt = { default = vim.o.breakindentopt, rendered = "" },
+                -- cc=80 segments on wrapped prose: col 80 only exists on each
+                -- line's first display row, so the guide shatters into dashes.
+                colorcolumn = { default = vim.o.colorcolumn, rendered = "" },
             },
             pipe_table = { enabled = true },
             callout = {
