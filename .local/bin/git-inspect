@@ -1,0 +1,28 @@
+#!/bin/bash
+# git-inspect — hunk on the working tree, following edits live via hunk's
+# own --watch; reloads keep notes and layout. The forward half of review,
+# git-graph being the backward half. Also `git inspect`.
+#
+#   git-inspect                 working tree incl. untracked, live
+#   git-inspect --staged        the index
+#   git-inspect --once          one snapshot, no watching
+#   git-inspect <ref> [-- <p>]  tree vs ref, optional pathspecs
+set -euo pipefail
+
+watch=1
+args=()
+for a in "$@"; do
+  if [ "$a" = "--once" ]; then watch=0; else args+=("$a"); fi
+done
+
+if command -v hunk > /dev/null 2>&1; then
+  if [ "$watch" -eq 1 ]; then
+    exec hunk diff --watch ${args[@]+"${args[@]}"}
+  fi
+  exec hunk diff ${args[@]+"${args[@]}"}
+fi
+
+# No hunk on this machine: a delta snapshot. Untracked files won't appear;
+# git diff cannot see them.
+exec git -c core.pager="delta --paging=always --side-by-side --navigate" \
+    diff --color=always ${args[@]+"${args[@]}"}
