@@ -4,6 +4,9 @@
 # Stock serie stops at a commit's file list; these commands add diffs.
 
 [keybind]
+# q backs out one level: closes an open view, quits from the list (the
+# fork maps Close to Quit on the root view). esc still closes views.
+close = ["q"]
 user_command_1 = ["|"]
 user_command_2 = ["\\"]
 user_command_3 = ["v"]
