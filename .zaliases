@@ -2,8 +2,9 @@
 # public key) in ~/.local/bin
 
 # git
-alias gg='git-graph'  # the review flow; quick glances are the herdr popups
-alias lg='lazygit'
+# review flows in panes; quick glances are the herdr popups
+alias gg='git-graph'
+alias gi='git-inspect'
 
 # herdr — named remote sessions on studio (server owns keybindings; detaches
 # with ctrl+a q). hwork = work session, hplay = personal.
