@@ -9,29 +9,44 @@
 #   git-graph --inspect  load the working tree instead (serie's i)
 set -euo pipefail
 
-# Snapshot of uncommitted work; unlike `gi` it does not watch — moving
-# the graph cursor hands the pane back to commits.
+# Serie's v and i run inside the layout, where serie-follow's exported
+# pane id pins the session — without it a second hunk on the repo (a gi
+# pane) makes --repo . ambiguous. Standalone falls back to --repo ..
+resolve_target() {
+  target=(--repo .)
+  [ -n "${SERIE_FOLLOW_HUNK_PANE:-}" ] || return 0
+  local pids sid
+  pids=$(herdr pane process-info --pane "$SERIE_FOLLOW_HUNK_PANE" 2>/dev/null \
+    | jq -c '[.result.process_info.foreground_processes[].pid]') || return 0
+  sid=$(hunk session list --json 2>/dev/null \
+    | jq -r --argjson pids "${pids:-[]}" \
+        '.sessions[] | select(.pid as $p | $pids | index($p)) | .sessionId' \
+    | head -1)
+  [ -n "$sid" ] && target=("$sid")
+  return 0
+}
+
+# Snapshot of uncommitted work; unlike `gi` it does not watch (r inside
+# hunk refreshes). Toggles: on the worktree already, i returns to the
+# selected commit.
 if [ "${1:-}" = "--inspect" ]; then
-  exec hunk session reload --repo . -- diff > /dev/null
+  resolve_target
+  if [ -n "${2:-}" ]; then
+    kind=$(hunk session get "${target[@]}" --json 2>/dev/null \
+      | jq -r '.session.inputKind // empty')
+    if [ "$kind" = "vcs" ]; then
+      exec hunk session reload "${target[@]}" -- show "$2" > /dev/null
+    fi
+  fi
+  exec hunk session reload "${target[@]}" -- diff > /dev/null
 fi
 
 if [ "${1:-}" = "--send" ]; then
   # Serie runs this silent: drop the success stdout; a failure exits 1
   # and lands in serie's status line.
   [ -n "${2:-}" ] || { echo "git-graph: --send needs a commit hash" >&2; exit 1; }
-  exec hunk session reload --repo . -- show "$2" > /dev/null
-fi
-
-# Runs in the strip pane after serie exits. q rather than a signal so
-# hunk unwinds normally; guarded on hunk still owning the pane so a
-# hunk quit earlier doesn't get q typed into its shell.
-if [ "${1:-}" = "--teardown" ]; then
-  if herdr pane process-info --pane "$2" 2>/dev/null \
-      | jq -e '[.result.process_info.foreground_processes[]?
-                | select(.name == "hunk")] | length > 0' > /dev/null; then
-    herdr pane send-keys "$2" q > /dev/null 2>&1 || true
-  fi
-  exec herdr pane close "$3" > /dev/null 2>&1
+  resolve_target
+  exec hunk session reload "${target[@]}" -- show "$2" > /dev/null
 fi
 
 for cmd in hunk serie jq serie-follow; do

@@ -22,7 +22,7 @@ commands_2 = { name = "unified diff", commands = ["zsh", "-lc", "git show --colo
 # silent: success shows in the hunk pane; a failure's nonzero exit
 # lands in serie's status line.
 commands_3 = { name = "review commit", type = "silent", commands = ["zsh", "-lc", "git-graph --send {{target_hash}}"] }
-commands_4 = { name = "inspect worktree", type = "silent", commands = ["zsh", "-lc", "git-graph --inspect"] }
+commands_4 = { name = "inspect worktree", type = "silent", commands = ["zsh", "-lc", "git-graph --inspect {{target_hash}}"] }
 
 # Rows, not a share. 45 of the ~65-row popup makes | and \ diff-heavy
 # like the gg layout; small terminals clamp safely.
