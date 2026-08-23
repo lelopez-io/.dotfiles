@@ -5,3 +5,7 @@ theme = "one-dark-pro"
 # Show agent-authored notes by default (`a` toggles); replies posted via
 # `hunk session comment` are invisible without this.
 agent_notes = true
+
+# Auto-reload when the loaded diff's inputs change: under gg the WIP pane
+# otherwise goes stale until serie's select hook fires a reload.
+watch = true
