@@ -115,9 +115,11 @@ class Follower:
                 if h and not (self.last
                               and (self.last.startswith(h)
                                    or h.startswith(self.last))):
+                    # The WIP row's zero-hash sentinel means the worktree.
+                    view = ["diff"] if set(h) == {"0"} else ["show", h]
                     r = subprocess.run(
                         ["hunk", "session", "reload", *self._target(),
-                         "--", "show", h],
+                         "--", *view],
                         capture_output=True, timeout=15)
                     if r.returncode == 0:
                         self.last = h

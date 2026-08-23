@@ -5,8 +5,8 @@
 # hunk's session daemon re-pointing a live pane.
 #
 #   git-graph            hunk on HEAD in this pane, serie underneath
-#   git-graph --send <h> load commit <h> into the hunk pane (serie's v)
-#   git-graph --inspect  load the working tree instead (serie's i)
+#   git-graph --send <h> load commit <h> into the hunk pane (serie's v);
+#                        the WIP row's zero hash loads the working tree
 set -euo pipefail
 
 # Serie's v and i run inside the layout, where serie-follow's exported
@@ -26,27 +26,15 @@ resolve_target() {
   return 0
 }
 
-# Snapshot of uncommitted work; unlike `gi` it does not watch (r inside
-# hunk refreshes). Toggles: on the worktree already, i returns to the
-# selected commit.
-if [ "${1:-}" = "--inspect" ]; then
-  resolve_target
-  if [ -n "${2:-}" ]; then
-    kind=$(hunk session get "${target[@]}" --json 2>/dev/null \
-      | jq -r '.session.inputKind // empty')
-    if [ "$kind" = "vcs" ]; then
-      exec hunk session reload "${target[@]}" -- show "$2" > /dev/null
-    fi
-  fi
-  exec hunk session reload "${target[@]}" -- diff > /dev/null
-fi
-
 if [ "${1:-}" = "--send" ]; then
   # Serie runs this silent: drop the success stdout; a failure exits 1
   # and lands in serie's status line.
   [ -n "${2:-}" ] || { echo "git-graph: --send needs a commit hash" >&2; exit 1; }
   resolve_target
-  exec hunk session reload "${target[@]}" -- show "$2" > /dev/null
+  case $2 in
+    0000000*) exec hunk session reload "${target[@]}" -- diff > /dev/null ;;
+    *)        exec hunk session reload "${target[@]}" -- show "$2" > /dev/null ;;
+  esac
 fi
 
 for cmd in hunk serie jq serie-follow; do

@@ -10,19 +10,17 @@ close = ["q"]
 user_command_1 = ["|"]
 user_command_2 = ["\\"]
 user_command_3 = ["v"]
-user_command_4 = ["i"]
 
 [core.user_command]
 # | and \ mirror lazygit's renderer-cycle keys. Captured stdout is not a
 # tty: git/delta need --color=always and explicit --width. zsh -lc:
 # popups inherit the launchd PATH (see herdr config).
-commands_1 = { name = "split diff", commands = ["zsh", "-lc", "git show --color=always {{target_hash}} | delta --paging=never --side-by-side --width={{area_width}}"] }
-commands_2 = { name = "unified diff", commands = ["zsh", "-lc", "git show --color=always {{target_hash}} | delta --paging=never --width={{area_width}}"] }
+commands_1 = { name = "split diff", commands = ["zsh", "-lc", "case {{target_hash}} in 0000000*) git diff --color=always ;; *) git show --color=always {{target_hash}} ;; esac | delta --paging=never --side-by-side --width={{area_width}}"] }
+commands_2 = { name = "unified diff", commands = ["zsh", "-lc", "case {{target_hash}} in 0000000*) git diff --color=always ;; *) git show --color=always {{target_hash}} ;; esac | delta --paging=never --width={{area_width}}"] }
 
 # silent: success shows in the hunk pane; a failure's nonzero exit
 # lands in serie's status line.
 commands_3 = { name = "review commit", type = "silent", commands = ["zsh", "-lc", "git-graph --send {{target_hash}}"] }
-commands_4 = { name = "inspect worktree", type = "silent", commands = ["zsh", "-lc", "git-graph --inspect {{target_hash}}"] }
 
 # Rows, not a share. 45 of the ~65-row popup makes | and \ diff-heavy
 # like the gg layout; small terminals clamp safely.
