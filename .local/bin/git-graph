@@ -6,7 +6,14 @@
 #
 #   git-graph            hunk on HEAD in this pane, serie underneath
 #   git-graph --send <h> load commit <h> into the hunk pane (serie's v)
+#   git-graph --inspect  load the working tree instead (serie's i)
 set -euo pipefail
+
+# Snapshot of uncommitted work; unlike `gi` it does not watch — moving
+# the graph cursor hands the pane back to commits.
+if [ "${1:-}" = "--inspect" ]; then
+  exec hunk session reload --repo . -- diff > /dev/null
+fi
 
 if [ "${1:-}" = "--send" ]; then
   # Serie runs this silent: drop the success stdout; a failure exits 1
