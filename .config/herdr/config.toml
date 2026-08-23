@@ -58,6 +58,22 @@ command = "zsh -lc 'serie -p kitty'"
 width = "80%"
 height = "85%"
 
+# o family, like g: plain = this repo, shift = the obsidian vault.
+[[keys.command]]
+key = "prefix+o"
+type = "popup"
+command = "zsh -lc 'nvim .'"
+width = "95%"
+height = "95%"
+
+# -i: only interactive shells source ~/.zshrc.local, home of OBSIDIAN_VAULT.
+[[keys.command]]
+key = "prefix+shift+o"
+type = "popup"
+command = "zsh -ilc 'cd \"${OBSIDIAN_VAULT:?set in ~/.zshrc.local}\" && nvim .'"
+width = "95%"
+height = "95%"
+
 [terminal]
 # Default, stated explicitly because tmux splits relied on -c pane_current_path:
 # new panes/tabs/workspaces inherit the focused pane's directory.
