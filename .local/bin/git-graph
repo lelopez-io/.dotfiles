@@ -14,9 +14,9 @@ set -euo pipefail
 # pane) makes --repo . ambiguous. Standalone falls back to --repo ..
 resolve_target() {
   target=(--repo .)
-  [ -n "${SERIE_FOLLOW_HUNK_PANE:-}" ] || return 0
+  [ -n "${GIT_GRAPH_HUNK_PANE:-}" ] || return 0
   local pids sid
-  pids=$(herdr pane process-info --pane "$SERIE_FOLLOW_HUNK_PANE" 2>/dev/null \
+  pids=$(herdr pane process-info --pane "$GIT_GRAPH_HUNK_PANE" 2>/dev/null \
     | jq -c '[.result.process_info.foreground_processes[].pid]') || return 0
   sid=$(hunk session list --json 2>/dev/null \
     | jq -r --argjson pids "${pids:-[]}" \
@@ -53,7 +53,7 @@ case ${1:-} in
   -*) echo "git-graph: unknown mode $1" >&2; exit 2 ;;
 esac
 
-for cmd in hunk serie jq serie-follow; do
+for cmd in hunk serie jq; do
   command -v "$cmd" > /dev/null 2>&1 || {
     echo "git-graph: $cmd not found — brew install it first." >&2; exit 1; }
 done
@@ -70,17 +70,18 @@ pane_id=$(herdr pane split --current --direction down --ratio 0.75 \
 [ -n "$pane_id" ] && [ "$pane_id" != "null" ] || {
   echo "git-graph: herdr pane split returned no pane id" >&2; exit 1; }
 
-# SERIE_FOLLOW_HUNK_PANE pins the follower to this pane's hunk session,
-# so a second hunk on the repo cannot make its reloads ambiguous.
+# GIT_GRAPH_HUNK_PANE pins v and the select hook to this pane's hunk
+# session, so a second hunk on the repo cannot misroute reloads. The
+# cursor-follow itself is serie's trigger = "select" command.
 herdr pane run "$pane_id" \
-    "SERIE_FOLLOW_HUNK_PANE=$HERDR_PANE_ID serie-follow; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
+    "GIT_GRAPH_HUNK_PANE=$HERDR_PANE_ID serie; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
 
 # Quitting either side ends the whole layout: the strip tears this pane's
 # hunk down when serie exits, and this path closes the strip when hunk
 # exits first. The guard skips the close when the strip is already mid-
 # teardown (its shell, not serie, is then in the foreground).
 # The worktree, not HEAD: serie boots with the WIP row selected, and
-# the pane must show what the selection says (serie-follow seeds match).
+# the select hook treats its boot selection as baseline, never firing.
 zsh -lc 'hunk diff' || true
 if herdr pane process-info --pane "$pane_id" 2>/dev/null \
     | jq -e '[.result.process_info.foreground_processes[]?
