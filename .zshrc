@@ -9,6 +9,9 @@ setopt hist_ignore_space
 setopt hist_verify
 setopt share_history
 
+# ghostty maps cmd+enter to Ctrl-S (hunk note save); ^S must not freeze the shell
+setopt no_flow_control
+
 # completions
 fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit && compinit
