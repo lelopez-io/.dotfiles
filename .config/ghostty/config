@@ -2,7 +2,8 @@ window-padding-x = 8
 font-family = "AnonymicePro Nerd Font Mono"
 font-size = 16
 theme = "Relaxed"
-keybind = super+enter=ignore
+# cmd+enter types Ctrl-S — hunk's note-save key; shell-safe via no_flow_control
+keybind = super+enter=text:\x13
 
 confirm-close-surface = false
 keybind = shift+enter=text:\n
