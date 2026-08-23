@@ -1,0 +1,3 @@
+# Strip per-machine keys Claude Code rewrites on /model and /effort; the
+# filter is wired by 05-git.sh (repo git config, jq required).
+.claude/settings.json filter=claude-settings
