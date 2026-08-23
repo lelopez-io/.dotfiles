@@ -26,6 +26,18 @@ resolve_target() {
   return 0
 }
 
+# Runs in the strip pane after serie exits. q rather than a signal so
+# hunk unwinds normally; guarded on hunk still owning the pane so a
+# hunk quit earlier doesn't get q typed into its shell.
+if [ "${1:-}" = "--teardown" ]; then
+  if herdr pane process-info --pane "$2" 2>/dev/null \
+      | jq -e '[.result.process_info.foreground_processes[]?
+                | select(.name == "hunk")] | length > 0' > /dev/null; then
+    herdr pane send-keys "$2" q > /dev/null 2>&1 || true
+  fi
+  exec herdr pane close "$3" > /dev/null 2>&1
+fi
+
 if [ "${1:-}" = "--send" ]; then
   # Serie runs this silent: drop the success stdout; a failure exits 1
   # and lands in serie's status line.
@@ -36,6 +48,10 @@ if [ "${1:-}" = "--send" ]; then
     *)        exec hunk session reload "${target[@]}" -- show "$2" > /dev/null ;;
   esac
 fi
+
+case ${1:-} in
+  -*) echo "git-graph: unknown mode $1" >&2; exit 2 ;;
+esac
 
 for cmd in hunk serie jq serie-follow; do
   command -v "$cmd" > /dev/null 2>&1 || {
