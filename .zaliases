@@ -2,7 +2,7 @@
 # public key) in ~/.local/bin
 
 # git
-alias gg='git --no-pager log --all --decorate --oneline --graph -n 60'
+alias gg='git-graph'  # the review flow; quick glances are the herdr popups
 alias lg='lazygit'
 
 # herdr — named remote sessions on studio (server owns keybindings; detaches
