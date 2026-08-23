@@ -75,4 +75,14 @@ pane_id=$(herdr pane split --current --direction down --ratio 0.75 \
 herdr pane run "$pane_id" \
     "SERIE_FOLLOW_HUNK_PANE=$HERDR_PANE_ID serie-follow; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
 
-exec zsh -lc 'hunk show HEAD'
+# Quitting either side ends the whole layout: the strip tears this pane's
+# hunk down when serie exits, and this path closes the strip when hunk
+# exits first. The guard skips the close when the strip is already mid-
+# teardown (its shell, not serie, is then in the foreground).
+zsh -lc 'hunk show HEAD' || true
+if herdr pane process-info --pane "$pane_id" 2>/dev/null \
+    | jq -e '[.result.process_info.foreground_processes[]?
+              | select(.name == "serie" or (.name | startswith("python")))]
+             | length > 0' > /dev/null; then
+  herdr pane close "$pane_id" > /dev/null 2>&1 || true
+fi
