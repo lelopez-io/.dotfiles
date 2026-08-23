@@ -39,11 +39,12 @@ fi
 # config, so it must be set on every machine that runs this setup.
 git -C "$HOME/.dotfiles" config core.hooksPath .githooks
 
-# Clean filter for .claude/settings.json (see .gitattributes): strips the
-# model keys Claude Code rewrites per machine, so they never reach git.
+# Clean filter for .claude/settings.json (see .gitattributes): strips keys
+# Claude Code writes with per-machine or private content (model prefs,
+# automode environment), so they never reach git.
 if command -v jq &> /dev/null; then
     git -C "$HOME/.dotfiles" config filter.claude-settings.clean \
-        "jq --indent 2 'del(.model, .modelSettings)'"
+        "jq --indent 2 'del(.model, .modelSettings, .autoMode)'"
 fi
 
 # git-ai-commit org blocks: each ~/.config/git-ai-commit/*.inc is
