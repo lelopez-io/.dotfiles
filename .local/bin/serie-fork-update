@@ -1,0 +1,32 @@
+#!/bin/bash
+# serie-fork-update — build and install the patched serie from the fork.
+#
+# The fork (lelopez-io/serie, branch close-quits-on-list) makes q back
+# out one level: close a view first, quit from the list. Installs to
+# ~/.local/bin/serie, shadowing brew's binary via PATH order; keep brew
+# serie installed as fallback.
+set -euo pipefail
+
+REPO="${SERIE_FORK_REPO:-$HOME/xo/lelopez-io/serie}"
+BRANCH="${SERIE_FORK_BRANCH:-close-quits-on-list}"
+REMOTE_URL="${SERIE_FORK_URL:-https://github.com/lelopez-io/serie.git}"
+
+if [ ! -d "$REPO/.git" ]; then
+  echo "serie-fork-update: cloning $REMOTE_URL into $REPO"
+  mkdir -p "$(dirname "$REPO")"
+  git clone --branch "$BRANCH" "$REMOTE_URL" "$REPO"
+fi
+
+cd "$REPO"
+git fetch origin "$BRANCH"
+# Reset rather than merge: the patch branch is rebased onto upstream and
+# force-pushed on each release, so a build checkout follows it exactly.
+git checkout -B "$BRANCH" -q "origin/$BRANCH"
+git reset --hard -q "origin/$BRANCH"
+
+echo "serie-fork-update: building release..."
+mise x rust -- cargo build --release
+
+mkdir -p "$HOME/.local/bin"
+install -m 755 target/release/serie "$HOME/.local/bin/serie"
+echo "serie-fork-update: installed $("$HOME/.local/bin/serie" --version) to ~/.local/bin/serie"
