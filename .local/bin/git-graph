@@ -4,7 +4,7 @@
 # split and hunk needs a real tty, so the layout is panes, synced by
 # hunk's session daemon re-pointing a live pane.
 #
-#   git-graph            hunk on HEAD in this pane, serie underneath
+#   git-graph            hunk on the worktree in this pane, serie under
 #   git-graph --send <h> load commit <h> into the hunk pane (serie's v);
 #                        the WIP row's zero hash loads the working tree
 set -euo pipefail
@@ -79,7 +79,9 @@ herdr pane run "$pane_id" \
 # hunk down when serie exits, and this path closes the strip when hunk
 # exits first. The guard skips the close when the strip is already mid-
 # teardown (its shell, not serie, is then in the foreground).
-zsh -lc 'hunk show HEAD' || true
+# The worktree, not HEAD: serie boots with the WIP row selected, and
+# the pane must show what the selection says (serie-follow seeds match).
+zsh -lc 'hunk diff' || true
 if herdr pane process-info --pane "$pane_id" 2>/dev/null \
     | jq -e '[.result.process_info.foreground_processes[]?
               | select(.name == "serie" or (.name | startswith("python")))]

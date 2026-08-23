@@ -64,11 +64,10 @@ class Follower:
 
     def __init__(self):
         self.pane_id = os.environ.get("HERDR_PANE_ID")
-        # Seed with HEAD: git-graph already opened hunk there, so the
-        # first settle on the top row must not reload.
-        head = subprocess.run(["git", "rev-parse", "HEAD"],
-                              capture_output=True, text=True)
-        self.last = head.stdout.strip() if head.returncode == 0 else ""
+        # Seed with the WIP sentinel: git-graph opens hunk on the
+        # worktree, and serie boots on the WIP row, so the first settle
+        # there must not reload.
+        self.last = "0" * 40
         # Matching the exported pane's foreground pid to a session pins
         # the reload target; a second hunk on the repo would make
         # --repo . ambiguous. Standalone falls back to --repo ..
