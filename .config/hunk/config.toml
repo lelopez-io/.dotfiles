@@ -1,3 +1,7 @@
 # In-TUI theme picks don't persist; match the herdr/ghostty one-dark
 # family here. Per-repo override: .hunk/config.toml
 theme = "one-dark-pro"
+
+# Show agent-authored notes by default (`a` toggles); replies posted via
+# `hunk session comment` are invisible without this.
+agent_notes = true
