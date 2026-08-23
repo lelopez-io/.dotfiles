@@ -1,0 +1,52 @@
+#!/bin/bash
+# git-graph — a live hunk pane with serie's graph as a strip below, hunk
+# following the graph cursor (also `git graph`). herdr popups cannot be
+# split and hunk needs a real tty, so the layout is panes, synced by
+# hunk's session daemon re-pointing a live pane.
+#
+#   git-graph            hunk on HEAD in this pane, serie underneath
+#   git-graph --send <h> load commit <h> into the hunk pane (serie's v)
+set -euo pipefail
+
+if [ "${1:-}" = "--send" ]; then
+  # Serie runs this silent: drop the success stdout; a failure exits 1
+  # and lands in serie's status line.
+  [ -n "${2:-}" ] || { echo "git-graph: --send needs a commit hash" >&2; exit 1; }
+  exec hunk session reload --repo . -- show "$2" > /dev/null
+fi
+
+# Runs in the strip pane after serie exits. q rather than a signal so
+# hunk unwinds normally; guarded on hunk still owning the pane so a
+# hunk quit earlier doesn't get q typed into its shell.
+if [ "${1:-}" = "--teardown" ]; then
+  if herdr pane process-info --pane "$2" 2>/dev/null \
+      | jq -e '[.result.process_info.foreground_processes[]?
+                | select(.name == "hunk")] | length > 0' > /dev/null; then
+    herdr pane send-keys "$2" q > /dev/null 2>&1 || true
+  fi
+  exec herdr pane close "$3" > /dev/null 2>&1
+fi
+
+for cmd in hunk serie jq serie-follow; do
+  command -v "$cmd" > /dev/null 2>&1 || {
+    echo "git-graph: $cmd not found — brew install it first." >&2; exit 1; }
+done
+[ -n "${HERDR_PANE_ID:-}" ] || {
+  echo "git-graph: not inside a herdr pane — the layout needs herdr splits." >&2
+  exit 1
+}
+git rev-parse --is-inside-work-tree > /dev/null
+
+# --ratio is the current pane's share: hunk keeps 75% at full width,
+# enough for its side-by-side layout. --focus lands you in serie.
+pane_id=$(herdr pane split --current --direction down --ratio 0.75 \
+    --cwd "$PWD" --focus | jq -r '.result.pane.pane_id')
+[ -n "$pane_id" ] && [ "$pane_id" != "null" ] || {
+  echo "git-graph: herdr pane split returned no pane id" >&2; exit 1; }
+
+# SERIE_FOLLOW_HUNK_PANE pins the follower to this pane's hunk session,
+# so a second hunk on the repo cannot make its reloads ambiguous.
+herdr pane run "$pane_id" \
+    "SERIE_FOLLOW_HUNK_PANE=$HERDR_PANE_ID serie-follow; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
+
+exec zsh -lc 'hunk show HEAD'
