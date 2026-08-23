@@ -40,6 +40,7 @@ brew "gh"        # extensions managed in 05-git.sh
 brew "git-town"  # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
 brew "lazygit"   # git TUI for SSH/headless sessions
 brew "serie"     # commit-graph TUI (GitKraken-graph replacement trial)
+brew "modem-dev/tap/hunk"  # diff reviewer; git-graph (backward) and git-inspect (forward) build on it
 cask "gitkraken"
 
 ## [OPTIONAL] Editors & IDEs

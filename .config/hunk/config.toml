@@ -1,0 +1,3 @@
+# In-TUI theme picks don't persist; match the herdr/ghostty one-dark
+# family here. Per-repo override: .hunk/config.toml
+theme = "one-dark-pro"
