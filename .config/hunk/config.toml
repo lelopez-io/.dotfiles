@@ -9,3 +9,10 @@ agent_notes = true
 # Auto-reload when the loaded diff's inputs change: under gg the WIP pane
 # otherwise goes stale until serie's select hook fires a reload.
 watch = true
+mode = "auto"
+line_numbers = true
+wrap_lines = false
+hunk_headers = true
+menu_bar = true
+copy_decorations = false
+cursor_line = "row"
