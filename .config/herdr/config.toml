@@ -58,16 +58,15 @@ width = "80%"
 height = "85%"
 
 # o family, like g: plain = this repo, shift = the obsidian vault.
+# One editor-popup shape for both: -i so ~/.zshrc.local loads (OBSIDIAN_VAULT
+# et al), 130 cols ≈ 120ch prose + nvim gutters + border.
 [[keys.command]]
 key = "prefix+o"
 type = "popup"
-command = "zsh -lc 'nvim .'"
-width = "95%"
+command = "zsh -ilc 'nvim .'"
+width = 130
 height = "95%"
 
-# -i: only interactive shells source ~/.zshrc.local, home of OBSIDIAN_VAULT.
-# 130 cols: ~120ch prose + nvim gutters + popup border; percent width would
-# drift with the display.
 [[keys.command]]
 key = "prefix+shift+o"
 type = "popup"
