@@ -48,13 +48,12 @@ command = "zsh -lc lazygit"
 width = "95%"
 height = "95%"
 
-# Quick glance; the full flow is `gg` (git-graph). -p kitty: serie's
-# detection doesn't recognize herdr; popup graphics placement needs the
-# lelopez-io/herdr popup-kitty-graphics fork.
+# Quick glance; the full flow is `gg` (git-graph). Graphics: the fork
+# advertises HERDR_IMAGE_PROTOCOL to panes and handles popup placement.
 [[keys.command]]
 key = "prefix+shift+g"
 type = "popup"
-command = "zsh -lc 'serie -p kitty'"
+command = "zsh -lc 'serie'"
 width = "80%"
 height = "85%"
 
