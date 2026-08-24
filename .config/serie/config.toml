@@ -36,7 +36,8 @@ commands_5 = { name = "fetch", type = "silent", refresh = true, commands = ["git
 [ui.user_command]
 height = 45
 
-# Subject over metadata: name/hash/date leave the rows for the fork's
-# selected-commit footer line, which serie-follow also parses.
+# hash + subject rows mirror the pr-respond reply format, so a reply's
+# hash finds its row at a glance; / search matches hashes regardless.
+# name/date stay on the selected-commit footer line.
 [ui.list]
-columns = ["graph", "marker", "subject"]
+columns = ["graph", "marker", "hash", "subject"]
