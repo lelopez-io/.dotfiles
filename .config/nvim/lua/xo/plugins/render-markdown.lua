@@ -15,13 +15,14 @@
 --   mermaid_redraw() - Unblock and redraw images
 --   mermaid_debug()  - Print state for debugging
 
--- image.nvim auto-detection fails over SSH: TERM_PROGRAM doesn't cross the
--- wire, so on remote hosts it can't tell the outer terminal supports kitty
--- graphics and silently never renders. When we KNOW the outer terminal is
--- Ghostty (locally via TERM_PROGRAM; on remote hosts via OUTER_TERMINAL set
--- in that host's shell config — hosts we only ever reach from Ghostty),
--- force the backend.
-if vim.env.TERM_PROGRAM == "ghostty" or vim.env.OUTER_TERMINAL == "ghostty" then
+-- Auto-detection can't see kitty support here: herdr panes hide the host
+-- TERM (HERDR_IMAGE_PROTOCOL advertises the relay), and TERM_PROGRAM doesn't
+-- cross SSH (OUTER_TERMINAL declares Ghostty on hosts we reach from it).
+if
+    vim.env.HERDR_IMAGE_PROTOCOL == "kitty"
+    or vim.env.TERM_PROGRAM == "ghostty"
+    or vim.env.OUTER_TERMINAL == "ghostty"
+then
     require("image").setup({ backend = "kitty" })
 end
 
