@@ -11,6 +11,7 @@ user_command_1 = ["|"]
 user_command_2 = ["\\"]
 user_command_3 = ["v"]
 user_command_4 = ["shift-p"]
+user_command_5 = ["shift-f"]
 
 [core.user_command]
 # | and \ mirror lazygit's renderer-cycle keys. Captured stdout is not a
@@ -26,6 +27,9 @@ commands_3 = { name = "review commit", type = "silent", trigger = "select", comm
 # silent + refresh: a good push moves the origin markers in place; a
 # rejected one lands its stderr in the status line.
 commands_4 = { name = "push", type = "silent", refresh = true, commands = ["git", "push"] }
+
+# fetch is invisible to the status-watcher auto-refresh; pair it with one.
+commands_5 = { name = "fetch", type = "silent", refresh = true, commands = ["git", "fetch", "--prune"] }
 
 # Rows, not a share. 45 of the ~65-row popup makes | and \ diff-heavy
 # like the gg layout; small terminals clamp safely.
