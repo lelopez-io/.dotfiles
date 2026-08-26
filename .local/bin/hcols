@@ -1,0 +1,29 @@
+#!/bin/bash
+# hcols — split the current herdr pane into N equal vertical columns.
+#
+#   hcols [n]   default 3
+set -euo pipefail
+
+n=${1:-3}
+case $n in
+  ''|*[!0-9]*) echo "hcols: n must be a number >= 2" >&2; exit 2 ;;
+esac
+[ "$n" -ge 2 ] || { echo "hcols: n must be >= 2" >&2; exit 2; }
+[ -n "${HERDR_PANE_ID:-}" ] || {
+  echo "hcols: not inside a herdr pane" >&2; exit 1; }
+for cmd in herdr jq; do
+  command -v "$cmd" > /dev/null 2>&1 || {
+    echo "hcols: $cmd not found" >&2; exit 1; }
+done
+
+# --ratio is the share the split pane keeps: each round it becomes a
+# finished 1/k column and the loop walks into the remainder, so every
+# column lands at 1/n of the tab.
+pane=$HERDR_PANE_ID
+for ((k = n; k >= 2; k--)); do
+  pane=$(herdr pane split --pane "$pane" --direction right \
+      --ratio "$(awk "BEGIN { printf \"%.4f\", 1/$k }")" --cwd "$PWD" \
+    | jq -r '.result.pane.pane_id')
+  [ -n "$pane" ] && [ "$pane" != "null" ] || {
+    echo "hcols: pane split returned no pane id" >&2; exit 1; }
+done
