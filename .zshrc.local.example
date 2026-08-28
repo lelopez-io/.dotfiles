@@ -12,3 +12,7 @@
 #   unset/commented out  -> nvim warns once per session
 #   "off"                -> explicitly disabled, silent
 # export OBSIDIAN_VAULT="$HOME/path/to/your/vault"
+
+# TERM_PROGRAM doesn't cross SSH; declare the outer terminal on hosts you
+# only ever reach from a kitty-graphics terminal.
+# export OUTER_TERMINAL=ghostty
