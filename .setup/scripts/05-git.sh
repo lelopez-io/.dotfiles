@@ -52,13 +52,18 @@ fi
 # trailing / = recursive) and agent (drafting command). Wire each as a git
 # includeIf so repos under that tree inherit the org's drafting agent.
 # Org identities live only in those per-machine files, never in this repo.
+ai_wired=0
 for ai_inc in "$HOME"/.config/git-ai-commit/*.inc; do
     [ -e "$ai_inc" ] || continue
     ai_gitdir=$(git config -f "$ai_inc" --get git-ai-commit.gitdir || true)
     [ -n "$ai_gitdir" ] || continue
     git config --global "includeIf.gitdir:${ai_gitdir}.path" "$ai_inc"
+    ai_wired=$((ai_wired + 1))
 done
-unset ai_inc ai_gitdir
+if [ "$ai_wired" -eq 0 ]; then
+    echo "No org profiles wired (~/.config/git-ai-commit/*.inc — format documented in 05-git.sh); re-run after adding."
+fi
+unset ai_inc ai_gitdir ai_wired
 
 # Configure delta as git pager if installed and not already set
 if command -v delta &> /dev/null; then
