@@ -1,14 +1,13 @@
 #!/bin/bash
 # serie-fork-update — build and install the patched serie from the fork.
 #
-# The fork (lelopez-io/serie, branch close-quits-on-list) makes q back
-# out one level: close a view first, quit from the list. Installs to
-# ~/.local/bin/serie, shadowing brew's binary via PATH order; keep brew
-# serie installed as fallback.
+# The fork's build branch is reconstructed per sync: upstream plus one
+# feature branch per patch, force-pushed. Installs to ~/.local/bin/serie,
+# shadowing brew's binary via PATH order; keep brew serie as fallback.
 set -euo pipefail
 
 REPO="${SERIE_FORK_REPO:-$HOME/xo/lelopez-io/serie}"
-BRANCH="${SERIE_FORK_BRANCH:-close-quits-on-list}"
+BRANCH="${SERIE_FORK_BRANCH:-build}"
 REMOTE_URL="${SERIE_FORK_URL:-https://github.com/lelopez-io/serie.git}"
 
 if [ ! -d "$REPO/.git" ]; then
@@ -19,8 +18,9 @@ fi
 
 cd "$REPO"
 git fetch origin "$BRANCH"
-# Reset rather than merge: the patch branch is rebased onto upstream and
-# force-pushed on each release, so a build checkout follows it exactly.
+# Reset rather than merge: the build branch is reconstructed from upstream
+# plus the feature branches and force-pushed per sync, so a build checkout
+# follows it exactly.
 git checkout -B "$BRANCH" -q "origin/$BRANCH"
 git reset --hard -q "origin/$BRANCH"
 

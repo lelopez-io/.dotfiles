@@ -1,9 +1,9 @@
 #!/bin/bash
 # herdr-fork-update — build and install the patched herdr from the fork.
 #
-# Why: we run a local fork of herdr with the popup kitty-graphics patch
-# (~/xo/herdrdev/herdr, branch popup-kitty-graphics) until upstream lands a
-# fix (discussion herdrdev/herdr#2863). This keeps any machine current:
+# Why: we run a local fork of herdr (feature branches merged into a
+# reconstructed build branch) until upstream lands the graphics fix
+# (discussion herdrdev/herdr#2863). This keeps any machine current:
 # clones on first run, fetches+fast-forwards after, builds release, installs
 # to ~/.local/bin/herdr (which shadows the brew binary via PATH order).
 #
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 REPO="${HERDR_FORK_REPO:-$HOME/xo/lelopez-io/herdr}"
-BRANCH="${HERDR_FORK_BRANCH:-popup-kitty-graphics}"
+BRANCH="${HERDR_FORK_BRANCH:-build}"
 REMOTE_URL="${HERDR_FORK_URL:-https://github.com/lelopez-io/herdr.git}"
 
 if [ ! -d "$REPO/.git" ]; then
@@ -24,8 +24,9 @@ fi
 
 cd "$REPO"
 git fetch origin "$BRANCH"
-# Reset rather than merge: the patch branch is rebased onto upstream and
-# force-pushed on each release, so a build checkout follows it exactly.
+# Reset rather than merge: the build branch is reconstructed from upstream
+# plus the feature branches and force-pushed per sync, so a build checkout
+# follows it exactly.
 # (No local edits belong here — keep them upstream of this script.)
 git checkout -B "$BRANCH" -q "origin/$BRANCH"
 git reset --hard -q "origin/$BRANCH"
