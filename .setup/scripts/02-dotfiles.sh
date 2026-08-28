@@ -53,6 +53,5 @@ fi
 
 echo "Setting up additional symlinks..."
 ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
-ln -sf "$HOME/.dotfiles/.env.aider" "$HOME/.env.aider"
 
 echo "Dotfiles setup complete!"

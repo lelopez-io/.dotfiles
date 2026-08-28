@@ -126,7 +126,6 @@ To re-run tool installation at any time:
 The setup also creates symlinks for:
 
 -   `.gitignore` → `~/.gitignore` (used as global git excludes file)
--   `.env.aider` → `~/.env.aider` (for aider configuration access from any directory)
 
 ## Scripts vs Shell Functions
 
