@@ -18,21 +18,19 @@ confirm() {
 # Navigate to dotfiles directory
 cd "$HOME/.dotfiles"
 
-# herdr mixes config with machine-specific runtime state (sockets, session.json,
-# logs) in ~/.config/herdr. Pre-create the real directory so stow links
-# config.toml file-level instead of folding the whole directory into a
-# symlink — which would drop live runtime files inside this repo.
-mkdir -p "$HOME/.config/herdr"
+# --no-folding: never collapse a directory into one symlink — tools that
+# write runtime state beside their stowed config would land it in this repo.
+STOW_FLAGS=(--no-folding)
 
 # Ask user how to handle existing configs
 if confirm "Would you like to force repo versions of all dotfiles? (This will overwrite your current configs)"; then
     echo "Force installing dotfiles from repo..."
-    stow . --adopt  # First adopt to handle any new files
+    stow . --adopt "${STOW_FLAGS[@]}"  # First adopt to handle any new files
     git restore .    # Discard any adopted changes
-    stow . --restow # Reinstall all symlinks
+    stow . --restow "${STOW_FLAGS[@]}" # Reinstall all symlinks
 else
     echo "Adopting existing files..."
-    stow . --adopt
+    stow . --adopt "${STOW_FLAGS[@]}"
 
     # Show what changes were adopted
     echo -e "\nChanges adopted from existing files:"
@@ -50,7 +48,7 @@ else
     echo "1. Keep adopted changes: git add . && git commit -m 'feat: adopt existing configs'"
     echo "2. Stash adopted changes: git stash save 'adopted configs'"
     echo "3. Discard adopted changes: git restore ."
-    echo -e "   Then use 'stow . --restow' to use repo versions\n"
+    echo -e "   Then use 'stow . --restow --no-folding' to use repo versions\n"
 fi
 
 echo "Setting up additional symlinks..."
