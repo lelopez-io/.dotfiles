@@ -24,5 +24,8 @@ source "$SCRIPTS_DIR/04-shell.sh"
 echo "Setting up Git configuration..."
 source "$SCRIPTS_DIR/05-git.sh"
 
+echo "Building patched forks..."
+source "$SCRIPTS_DIR/06-forks.sh"
+
 echo "=== Setup Complete! ==="
 echo "NOTE: You may need to restart your terminal for all changes to take effect."
