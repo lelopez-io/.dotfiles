@@ -22,6 +22,10 @@ brew "stylua"             # conform.nvim formatter
 brew "tree-sitter-cli"    # nvim-treesitter parser compilation
 cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 
+## [REQUIRED] Git review
+brew "modem-dev/tap/hunk"  # git-graph and git-inspect wrap it
+brew "serie"               # git-graph's graph strip; 06-forks shadows it
+
 ## [OPTIONAL] CLI Tools
 brew "jq"
 brew "pv"                 # pipe progress meter, used by verify-copy
@@ -39,8 +43,6 @@ brew "tree"
 brew "gh"        # extensions managed in 05-git.sh
 brew "git-town"  # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
 brew "lazygit"   # git TUI for SSH/headless sessions
-brew "serie"     # commit-graph TUI; shadowed by the fork serie-fork-update builds
-brew "modem-dev/tap/hunk"  # diff reviewer; git-graph (backward) and git-inspect (forward) build on it
 cask "gitkraken"
 
 ## [OPTIONAL] Editors & IDEs
