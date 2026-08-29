@@ -1,26 +1,26 @@
 ## [OPTIONAL] Notes & Writing
-cask "grammarly-desktop"
+cask "grammarly-desktop"  # @account-required
 cask "obsidian"
-# cask "typora"
+# cask "typora"  # @license-required
 
 ## [OPTIONAL] Communication
-# cask "slack"
-# cask "discord"
+# cask "slack"  # @account-required
+# cask "discord"  # @account-required
 
 ## [OPTIONAL] Window & Menubar
 cask "hiddenbar"
 cask "raycast"
-cask "swish"
-# cask "steermouse"
+cask "swish"  # @license-required
+# cask "steermouse"  # @license-required
 
 ## [OPTIONAL] Meetings & Audio
 cask "meetingbar"
-# cask "loopback"
-# cask "soundsource"
+# cask "loopback"  # @license-required
+# cask "soundsource"  # @license-required
 
 ## [OPTIONAL] Screenshots
-cask "cleanshot"
-cask "pixelsnap"
+cask "cleanshot"  # @license-required
+cask "pixelsnap"  # @license-required
 
 ## [OPTIONAL] Remote Access
 cask "anydesk"

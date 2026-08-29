@@ -40,25 +40,25 @@ brew "tree"
 # brew "yq"
 
 ## [OPTIONAL] Git & GitHub
-brew "gh"        # extensions managed in 05-git.sh
+brew "gh"        # @account-required; extensions managed in 05-git.sh
 brew "git-town"  # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
 brew "lazygit"   # git TUI for SSH/headless sessions
-cask "gitkraken"
+cask "gitkraken"  # @account-required
 
 ## [OPTIONAL] Editors & IDEs
 cask "zed"
 # cask "android-studio"
-# cask "postman"
+# cask "postman"  # @account-required
 # cask "visual-studio-code"
 
 ## [OPTIONAL] AI Tools
-cask "claude-code"
+cask "claude-code"  # @account-required
 
 ## [OPTIONAL] Cloud & Infrastructure
 brew "ansible"
-brew "awscli"
+brew "awscli"  # @account-required
 brew "hashicorp/tap/terraform"
-cask "gcloud-cli"
+cask "gcloud-cli"  # @account-required
 
 ## [OPTIONAL] Kubernetes
 brew "fluxcd/tap/flux"
@@ -70,8 +70,8 @@ cask "rancher"
 brew "age"
 brew "gnupg"
 brew "sops"
-cask "1password"
-cask "1password-cli"
+cask "1password"  # @account-required
+cask "1password-cli"  # @account-required
 
 ## [OPTIONAL] Browsers
 # cask "firefox"
