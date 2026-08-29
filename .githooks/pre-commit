@@ -20,3 +20,39 @@ if [ -n "$matches" ]; then
   echo "If intentional (docs, examples): git commit --no-verify"
   exit 1
 fi
+
+# Brewfile section order: free entries, then @account-required, then
+# @license-required; active before commented, brew before cask, then the
+# package leaf name. Essential and Neovim group by meaning, so they are exempt.
+unordered=$(
+  for f in $(git diff --cached --name-only --diff-filter=ACM | grep '^\.setup/Brewfile\.'); do
+    git show ":$f" | awk -v file="$f" '
+      /^## / { section = substr($0, 4); prev = ""; next }
+      {
+        if (section == "[REQUIRED] Essential" || section == "[REQUIRED] Neovim") next
+        entry = $0; commented = 0
+        if (entry ~ /^#[[:space:]]*(tap|brew|cask|mas) /) {
+          commented = 1; sub(/^#[[:space:]]*/, "", entry)
+        }
+        if (entry !~ /^(tap|brew|cask|mas) /) next
+        kind = entry; sub(/ .*/, "", kind)
+        name = entry; sub(/^[a-z]+ "/, "", name); sub(/".*/, "", name)
+        leaf = name; sub(/.*\//, "", leaf)
+        tier = ($0 ~ /@account-required/) ? 1 : ($0 ~ /@license-required/) ? 2 : 0
+        key = sprintf("%d%d%d%s", tier, commented, (kind == "cask") ? 1 : 0, leaf)
+        if (prev != "" && key < prev) printf "  %s [%s]: %s\n", file, section, name
+        prev = key
+      }
+    '
+  done
+)
+
+if [ -n "$unordered" ]; then
+  echo "pre-commit: Brewfile entries out of order:"
+  echo "$unordered"
+  echo
+  echo "Order: free, then @account-required, then @license-required; active"
+  echo "before commented, brew before cask, then alphabetical."
+  echo "If intentional: git commit --no-verify"
+  exit 1
+fi
