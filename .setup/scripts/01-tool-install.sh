@@ -24,7 +24,9 @@ install_brewfile() {
     local -a names=() bodies=()
     local name="" body="" line
 
-    while IFS= read -r line; do
+    # The || guard keeps the last line when a Brewfile has no trailing newline;
+    # without it that package is dropped silently.
+    while IFS= read -r line || [[ -n "$line" ]]; do
         if [[ "$line" == "## "* ]]; then
             names+=("$name")
             bodies+=("$body")
