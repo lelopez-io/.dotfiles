@@ -11,10 +11,12 @@ cask "plexamp"
 cask "basictex"
 
 ## [OPTIONAL] Disk & Storage
-brew "borgbackup-fuse"
 cask "daisydisk"
-cask "macfuse"
 cask "the-unarchiver"
+
+## [OPTIONAL] Personal Backup
+brew "borgbackup-fuse"
+cask "macfuse"
 cask "vorta"
 # brew "ddrescue"
 # cask "balenaetcher"
