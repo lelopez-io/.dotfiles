@@ -7,7 +7,8 @@ echo "=== Installing Applications ==="
 
 confirm() {
     while true; do
-        read -p "$1 (y/n) " yn
+        # EOF means no answers left; decline rather than loop on empty input.
+        read -r -p "$1 (y/n) " yn || return 1
         case $yn in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
