@@ -40,24 +40,24 @@ brew "tree"
 # brew "yq"
 
 ## [OPTIONAL] Git & GitHub
-brew "gh"        # @account-required; extensions managed in 05-git.sh
 brew "git-town"  # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
 brew "lazygit"   # git TUI for SSH/headless sessions
+brew "gh"        # @account-required; extensions managed in 05-git.sh
 cask "gitkraken"  # @account-required
 
 ## [OPTIONAL] Editors & IDEs
 cask "zed"
 # cask "android-studio"
-# cask "postman"  # @account-required
 # cask "visual-studio-code"
+# cask "postman"  # @account-required
 
 ## [OPTIONAL] AI Tools
 cask "claude-code"  # @account-required
 
 ## [OPTIONAL] Cloud & Infrastructure
 brew "ansible"
-brew "awscli"  # @account-required
 brew "hashicorp/tap/terraform"
+brew "awscli"  # @account-required
 cask "gcloud-cli"  # @account-required
 
 ## [OPTIONAL] Kubernetes

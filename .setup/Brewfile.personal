@@ -1,18 +1,18 @@
 ## [OPTIONAL] Media
 cask "iina"
-cask "plexamp"  # @account-required
 # brew "ffmpeg"
 # brew "whisper-cpp"
 # brew "yt-dlp"
 # cask "audacity"
 # cask "calibre"
+cask "plexamp"  # @account-required
 
 ## [OPTIONAL] Documents
 cask "basictex"
 
 ## [OPTIONAL] Disk & Storage
-cask "daisydisk"  # @license-required
 cask "the-unarchiver"
+cask "daisydisk"  # @license-required
 
 ## [OPTIONAL] Personal Backup
 brew "borgbackup-fuse"
@@ -23,10 +23,10 @@ cask "vorta"
 # cask "veracrypt"
 
 ## [OPTIONAL] Networking & Privacy
-cask "little-snitch"  # @license-required
 cask "mullvad-browser"
 cask "mullvad-vpn"  # @account-required
 cask "tailscale-app"  # @account-required
+cask "little-snitch"  # @license-required
 
 ## [OPTIONAL] Virtualization
 # cask "deskpad"

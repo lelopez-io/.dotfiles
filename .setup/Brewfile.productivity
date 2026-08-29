@@ -1,11 +1,11 @@
 ## [OPTIONAL] Notes & Writing
-cask "grammarly-desktop"  # @account-required
 cask "obsidian"
+cask "grammarly-desktop"  # @account-required
 # cask "typora"  # @license-required
 
 ## [OPTIONAL] Communication
-# cask "slack"  # @account-required
 # cask "discord"  # @account-required
+# cask "slack"  # @account-required
 
 ## [OPTIONAL] Window & Menubar
 cask "hiddenbar"
