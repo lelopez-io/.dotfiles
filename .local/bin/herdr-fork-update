@@ -52,3 +52,24 @@ mise x rust@1.96.1 zig@0.15.2 -- cargo build --release
 mkdir -p "$HOME/.local/bin"
 install -m 755 target/release/herdr "$HOME/.local/bin/herdr"
 echo "herdr-fork-update: installed $("$HOME/.local/bin/herdr" --version) to ~/.local/bin/herdr"
+
+# install(1) swaps the binary under running servers. A PROTOCOL_VERSION
+# bump then blocks `herdr --remote` even when both versions print the
+# same. Warn only: stopping the server that owns this shell kills the caller.
+if command -v jq &> /dev/null; then
+  stale=$(
+    "$HOME/.local/bin/herdr" session list --json 2>/dev/null \
+      | jq -r '.sessions[] | select(.running) | "\(.name)\t\(.socket_path)"' \
+      | while IFS=$'\t' read -r name sock; do
+          compat=$(HERDR_SOCKET_PATH="$sock" "$HOME/.local/bin/herdr" \
+            status server --json 2>/dev/null | jq -r '.compatible')
+          if [ "$compat" = "false" ]; then printf '  %s\n' "$name"; fi
+        done
+  ) || true
+  if [ -n "$stale" ]; then
+    echo "herdr-fork-update: these servers still run the previous build:"
+    echo "$stale"
+    echo '  local panes keep working; `herdr --remote` will refuse to attach.'
+    echo "  clear each with: herdr --session <name> server stop"
+  fi
+fi
