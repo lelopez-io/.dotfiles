@@ -41,9 +41,13 @@ git -C "$HOME/.dotfiles" config core.hooksPath .githooks
 
 # Strips per-machine and private keys so they never reach git (bound to the
 # path in .gitattributes); -S sorts because Claude Code also churns key order.
+# required=true makes a missing filter fail loudly. smudge=cat because the
+# same flag fails checkouts otherwise; nothing re-adds the stripped keys.
 if command -v jq &> /dev/null; then
     git -C "$HOME/.dotfiles" config filter.claude-settings.clean \
         "jq -S --indent 2 'del(.model, .modelSettings, .autoMode, .effortLevel)'"
+    git -C "$HOME/.dotfiles" config filter.claude-settings.smudge cat
+    git -C "$HOME/.dotfiles" config filter.claude-settings.required true
 fi
 
 # git-ai-commit org blocks: each ~/.config/git-ai-commit/*.inc is
