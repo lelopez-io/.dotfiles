@@ -1,0 +1,17 @@
+#!/bin/bash
+# agent-session-profile — print the profile recorded for a session id.
+#   <name>  started under that profile
+#   none    started bare on purpose: do not attach a key
+#   empty   no record: fall back to agent-profile
+set -euo pipefail
+
+dir="${AGENT_SESSION_DIR:-$HOME/.local/state/agent-sessions}"
+id="${1:?usage: agent-session-profile <session-id>}"
+
+for f in "$dir"/*."$id"; do
+    [ -e "$f" ] || continue
+    name=${f##*/}
+    name=${name#*.}          # drop wrapper
+    printf '%s' "${name%.*}" # drop session id
+    exit 0
+done

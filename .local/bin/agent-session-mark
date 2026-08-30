@@ -1,0 +1,26 @@
+#!/bin/bash
+# agent-session-mark — stamp the profile a session started under.
+# The filename is the record: <wrapper>.<profile>.<id>, from cld/pie's
+# AGENT_WRAPPER/AGENT_PROFILE ("none" = keyless on purpose). First start
+# wins: a resume re-fires the hook, and the resuming cwd's guess must not
+# overwrite it. To re-profile, rm the marker.
+#
+# Usage: agent-session-mark <session-id>
+#        agent-session-mark --hook   # claude SessionStart: id from stdin JSON
+set -uo pipefail
+
+dir="${AGENT_SESSION_DIR:-$HOME/.local/state/agent-sessions}"
+id="${1:-}"
+
+if [ "$id" = "--hook" ]; then
+    id=$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("session_id") or "")' 2>/dev/null)
+fi
+
+# A hook that fails must never take the agent down with it.
+[ -n "$id" ] || exit 0
+
+mkdir -p "$dir" 2>/dev/null || exit 0
+for f in "$dir"/*."$id"; do
+    [ -e "$f" ] && exit 0
+done
+: > "$dir/${AGENT_WRAPPER:-none}.${AGENT_PROFILE:-none}.$id" 2>/dev/null || exit 0

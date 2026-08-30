@@ -1,9 +1,7 @@
 #!/bin/bash
-# claude — use a 1Password profile (via cld) only when one is configured for
-# this directory (git config agent.claude.profile > org includeIf >
-# ~/.config/agent-profiles/claude). Otherwise exec the real binary directly:
-# personal OAuth login needs no key. Profile-aware calls (e.g. work repos)
-# go through 1Password; everything else stays plain.
+# claude — run through cld only when this directory resolves a profile
+# (agent-profile). Everything else execs the real binary bare: personal
+# OAuth needs no key.
 # Resolve the real claude: brew path first, then the native installer's
 # newest version dir (mtime). PATH lookup would recurse back into this shim.
 real_claude() {
@@ -17,8 +15,32 @@ real_claude() {
   [ -n "$latest" ] && [ -x "$latest" ] && echo "$latest"
 }
 
-profile=$(agent-profile claude || true)
-if [ -n "$profile" ]; then
-  exec cld "$profile" "$@"
-fi
-exec "$(real_claude)" "$@"
+# Launch bare, recording that the session is keyless on purpose so a resume
+# from a profile-carrying directory doesn't attach a work key unnoticed.
+bare() {
+  export AGENT_WRAPPER=claude AGENT_PROFILE=none
+  exec "$(real_claude)" "$@"
+}
+
+# A resumed session keeps the profile it started under (agent-session-mark).
+# The resuming shell's cwd may belong to another org, or to none. Only an
+# explicit --resume id consults the record. -c and the picker stay on cwd.
+session_id=""
+prev=""
+for arg in "$@"; do
+  case $arg in
+    --resume=*) session_id=${arg#--resume=}; break ;;
+  esac
+  case $prev in
+    --resume|-r) session_id=$arg; break ;;
+  esac
+  prev=$arg
+done
+
+profile=""
+[ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null)
+[ "$profile" = none ] && bare "$@"
+
+[ -n "$profile" ] || profile=$(agent-profile claude || true)
+[ -n "$profile" ] && exec cld "$profile" "$@"
+bare "$@"

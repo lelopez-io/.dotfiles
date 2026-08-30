@@ -1,14 +1,36 @@
 #!/bin/bash
-# pi — route every invocation through the 1Password profile wrapper so
-# non-interactive launchers (herdr agent resume runs bare `pi --session ...`)
-# authenticate the same way interactive ones do. The profile itself is
-# per-machine (see agent-profile: git config agent.pi.profile, generic
-# agent.profile, or ~/.config/agent-profiles/pi) — deliberately NOT set here,
-# so no identity lives in the repo. Shim wins PATH via .zprofile's
-# last-prepend; pie execs the real binary by absolute path.
-profile=$(agent-profile pi || true)
+# pi — route every invocation through pie so non-interactive launchers
+# (herdr runs bare `pi --session ...`) authenticate like interactive ones.
+# The profile is per-machine (agent-profile), unset here so no identity
+# lives in the repo.
+
+# A resume names its session, and that id outranks the cwd: it may have
+# started under another org, or none (agent-session-mark). Fresh starts,
+# pickers, and partial ids name no exact session, so cwd decides for them.
+session_id=""
+prev=""
+for arg in "$@"; do
+  case $prev in
+    --session-id) session_id=$arg; break ;;
+    --session)
+      # The id is the trailing _<uuid> of the session filename. The marker
+      # extension derives it the same way, and the two must stay in sync.
+      f=${arg##*/}; f=${f%.jsonl}; session_id=${f##*_}
+      break
+      ;;
+  esac
+  prev=$arg
+done
+
+profile=""
+[ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null)
+
+# none is a recorded answer, not a missing one: stay keyless.
+[ "$profile" = none ] && exec pie "$@"
+
+[ -n "$profile" ] || profile=$(agent-profile pi || true)
 [ -n "$profile" ] || {
-  echo "pi: no profile resolved — set 'git config agent.pi.profile <name>' or" >&2
+  echo "pi: no profile resolved. Set 'git config agent.pi.profile <name>' or" >&2
   echo "    create ~/.config/agent-profiles/pi (machine-local, uncommitted)" >&2
   exit 1
 }

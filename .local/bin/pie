@@ -47,6 +47,11 @@ if [[ -n "$profile" ]]; then
     export "$key_var=$key"
 fi
 
+# Published for agent-session-mark: the session_start hook stamps this
+# context onto the session id, so a later resume replays it instead of
+# re-deriving a profile from wherever the resuming shell happens to be.
+export AGENT_WRAPPER=pie AGENT_PROFILE="${profile:-none}"
+
 # Strip OP_SESSION_* so the agent can't ride this shell's op session into the
 # whole vault (backstop for "don't opsignin in agent-launching shells").
 for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
