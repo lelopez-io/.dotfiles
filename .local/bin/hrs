@@ -1,0 +1,9 @@
+#!/bin/bash
+# hrs — attach to a session on a remote herdr server: hrs <remote> <session>
+# --remote-keybindings server gives the prefix to the remote host's keymap.
+# A script, not an alias like hs: the remote goes between the flags, and no
+# machine name lives in the repo.
+set -uo pipefail
+
+[ $# -ge 2 ] || { echo "usage: hrs <remote> <session>" >&2; exit 2; }
+exec herdr --remote "$1" --remote-keybindings server --session "$2"

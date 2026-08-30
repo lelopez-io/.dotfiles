@@ -6,10 +6,7 @@
 alias gg='git-graph'
 alias gi='git-inspect'
 
-# herdr — named remote sessions on studio (server owns keybindings; detaches
-# with ctrl+a q). hwork = work session, hplay = personal.
-alias hwork='herdr --remote studio --session work --remote-keybindings server'
-alias hplay='herdr --remote studio --session personal --remote-keybindings server'
+alias hs='herdr --session'
 
 # neovim
 alias vim='nvim'
