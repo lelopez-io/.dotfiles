@@ -1,4 +1,5 @@
 ^/\.setup
+^/\.rio
 ^/\.aider/.*
 ^/\.aider\..*
 !^/\.env\.aider
