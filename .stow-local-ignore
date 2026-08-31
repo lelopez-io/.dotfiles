@@ -1,8 +1,5 @@
 ^/\.setup
 ^/\.rio
-^/\.aider/.*
-^/\.aider\..*
-!^/\.env\.aider
 ^/\.DS_Store
 ^/README.*
 ^/\.git
