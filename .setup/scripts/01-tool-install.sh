@@ -18,10 +18,11 @@ confirm() {
 }
 
 count_entries() { grep -cE '^(tap|brew|cask|mas) ' || true; }
+count_offerable() { grep -cE '^#?[[:space:]]*(tap|brew|cask|mas) ' || true; }
 
-# Sections (## headers) drive the prompts: [REQUIRED] installs unasked,
-# [OPTIONAL] is opt-in. @account-required and @license-required entries sort
-# last and are asked individually, keeping the section answer about the topic.
+# [REQUIRED] installs unasked; [OPTIONAL] is asked per entry: only the user
+# knows whether they hold a license, or an account to sign into here.
+# Commented entries are dormant, not deleted, so they are offered too.
 install_brewfile() {
     local brewfile=$1 category=$2
     local -a names=() bodies=()
@@ -42,43 +43,44 @@ install_brewfile() {
     names+=("$name")
     bodies+=("$body")
 
-    local selection entries display pkgs acct i
+    local selection entries display pkgs pkg note i
     selection="$(mktemp)"
 
     for i in "${!names[@]}"; do
         pkgs="$(printf '%s' "${bodies[$i]}")"
-        entries=$(printf '%s' "$pkgs" | count_entries)
-        [[ "$entries" -eq 0 ]] && continue
-        acct=$(printf '%s' "$pkgs" | grep -E '@(account|license)-required' | count_entries)
         display="${names[$i]#\[REQUIRED\] }"
         display="${display#\[OPTIONAL\] }"
 
         if [[ "${names[$i]}" == "[REQUIRED]"* ]]; then
+            entries=$(printf '%s' "$pkgs" | count_entries)
+            [[ "$entries" -eq 0 ]] && continue
             echo "Including \"${display:-$category}\" ($entries packages)"
             printf '%s\n' "$pkgs" >> "$selection"
             continue
         fi
 
+        entries=$(printf '%s' "$pkgs" | count_offerable)
+        [[ "$entries" -eq 0 ]] && continue
+
         echo ""
-        printf '%s\n' "$pkgs" | grep -v '^$' | sed 's/^/  /'
-        if confirm "Include \"${display:-$category}\"?"; then
-            # An all-account section was already decided by the prompt above.
-            if [[ "$acct" -gt 0 && "$acct" -lt "$entries" ]]; then
-                # fd 3, not stdin: a here-string on `done` feeds the loop body
-                # too, so confirm would read packages instead of the answer.
-                while IFS= read -r line <&3; do
-                    if [[ "$line" =~ @(account|license)-required && "$line" =~ ^(tap|brew|cask|mas)\  ]]; then
-                        if confirm "  Include $(printf '%s' "$line" | sed 's/#.*//; s/[[:space:]]*$//')?"; then
-                            printf '%s\n' "$line" >> "$selection"
-                        fi
-                    else
-                        printf '%s\n' "$line" >> "$selection"
-                    fi
-                done 3<<< "$pkgs"
-            else
-                printf '%s\n' "$pkgs" >> "$selection"
+        echo "${display:-$category}"
+        # fd 3, not stdin: a here-string on `done` feeds the loop body too, so
+        # confirm would read packages instead of the answer.
+        while IFS= read -r line <&3; do
+            # Uncommented copy for the selection file; unchanged means active.
+            entry=$(printf '%s' "$line" | sed 's/^#[[:space:]]*//')
+            [[ "$entry" =~ ^(tap|brew|cask|mas)\  ]] || continue
+            pkg=$(printf '%s' "$entry" | sed 's/^[a-z]*[[:space:]]*"//; s/".*//')
+            note=""
+            [[ "$entry" == *@account-required* ]] && note="account required"
+            [[ "$entry" == *@license-required* ]] && note="${note:+$note, }license required"
+            [[ "$line" == "$entry" ]] || note="${note:+$note, }not actively used"
+            [[ -n "$note" ]] && note=" ($note)"
+            printf '  %s\n' "$line"
+            if confirm "  Include $pkg$note?"; then
+                printf '%s\n' "$entry" >> "$selection"
             fi
-        fi
+        done 3<<< "$pkgs"
     done
 
     if grep -qE '^(tap|brew|cask|mas) ' "$selection"; then
