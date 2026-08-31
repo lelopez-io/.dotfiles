@@ -74,7 +74,7 @@ install_brewfile() {
             note=""
             [[ "$entry" == *@account-required* ]] && note="account required"
             [[ "$entry" == *@license-required* ]] && note="${note:+$note, }license required"
-            [[ "$line" == "$entry" ]] || note="${note:+$note, }not actively used"
+            [[ "$line" == "$entry" ]] || note="${note:+$note, }dormant"
             [[ -n "$note" ]] && note=" ($note)"
             printf '  %s\n' "$line"
             if confirm "  Include $pkg$note?"; then

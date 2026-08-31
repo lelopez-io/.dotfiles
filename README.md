@@ -121,9 +121,9 @@ license). The prompt repeats the annotation so the decision lands with you —
 whether you hold that license, or have an account to sign into on *this*
 machine, is context the repo cannot know.
 
-Commented-out entries are offered too, marked *off by default* and
-uncommented if you accept — they are opt-outs you can reach for as needed,
-not deletions.
+Commented-out entries are offered too, marked *dormant*: kept for something
+you reach for as needed, or are on the way to dropping. Accepting one never
+rewrites the Brewfile; it uncomments the copy handed to `brew bundle`.
 
 To re-run tool installation at any time:
 
