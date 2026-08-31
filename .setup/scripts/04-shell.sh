@@ -14,13 +14,6 @@ if [ ! -f "$HOME/.zshrc.local" ]; then
     fi
 fi
 
-# Install Python packages
-echo "Installing Python packages..."
-echo "- Installing aider for AI-assisted coding"
-if ! mise exec python -- python -m pip install -U aider-chat; then
-    echo "Warning: Failed to install aider. Continuing..."
-fi
-
 # Cache kubectl completions for zsh
 echo "Caching kubectl completions..."
 mkdir -p "$HOME/.zsh/completions"
