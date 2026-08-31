@@ -21,6 +21,27 @@ if [ -n "$matches" ]; then
   exit 1
 fi
 
+# [REQUIRED] installs unasked and the installer offers comments only from
+# [OPTIONAL] sections, so a commented entry here never installs while still
+# reading as required.
+required_commented=$(
+  for f in $(git diff --cached --name-only --diff-filter=ACM | grep '^\.setup/Brewfile\.'); do
+    git show ":$f" | awk -v file="$f" '
+      /^## / { req = ($0 ~ /\[REQUIRED\]/); section = substr($0, 4); next }
+      req && /^#[[:space:]]*(tap|brew|cask|mas) / { printf "  %s [%s]: %s\n", file, section, $0 }
+    '
+  done
+)
+
+if [ -n "$required_commented" ]; then
+  echo "pre-commit: commented entry in a [REQUIRED] section:"
+  echo "$required_commented"
+  echo
+  echo "[REQUIRED] installs unasked, so a commented entry there never installs."
+  echo "Uncomment it, or move it to an [OPTIONAL] section."
+  exit 1
+fi
+
 # Brewfile section order: free entries, then @account-required, then
 # @license-required; active before commented, brew before cask, then the
 # package leaf name. Essential and Neovim group by meaning, so they are exempt.
