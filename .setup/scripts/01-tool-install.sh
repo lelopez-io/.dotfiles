@@ -20,9 +20,9 @@ confirm() {
 count_entries() { grep -cE '^(tap|brew|cask|mas) ' || true; }
 count_offerable() { grep -cE '^#?[[:space:]]*(tap|brew|cask|mas) ' || true; }
 
-# [REQUIRED] installs unasked; [OPTIONAL] is asked per entry: only the user
-# knows whether they hold a license, or an account to sign into here.
-# Commented entries are dormant, not deleted, so they are offered too.
+# Whether you hold a license, or have an account to sign into on this
+# machine, is context the repo does not have, so no section-wide answer
+# stands in for it. Commented entries are opt-outs, not deletions.
 install_brewfile() {
     local brewfile=$1 category=$2
     local -a names=() bodies=()
@@ -67,14 +67,15 @@ install_brewfile() {
         # fd 3, not stdin: a here-string on `done` feeds the loop body too, so
         # confirm would read packages instead of the answer.
         while IFS= read -r line <&3; do
-            # Uncommented copy for the selection file; unchanged means active.
+            # brew bundle ignores a commented line, so an accepted entry has
+            # to reach the selection uncommented.
             entry=$(printf '%s' "$line" | sed 's/^#[[:space:]]*//')
             [[ "$entry" =~ ^(tap|brew|cask|mas)\  ]] || continue
             pkg=$(printf '%s' "$entry" | sed 's/^[a-z]*[[:space:]]*"//; s/".*//')
             note=""
             [[ "$entry" == *@account-required* ]] && note="account required"
             [[ "$entry" == *@license-required* ]] && note="${note:+$note, }license required"
-            [[ "$line" == "$entry" ]] || note="${note:+$note, }dormant"
+            [[ "$line" == "$entry" ]] || note="${note:+$note, }parked"
             [[ -n "$note" ]] && note=" ($note)"
             printf '  %s\n' "$line"
             if confirm "  Include $pkg$note?"; then

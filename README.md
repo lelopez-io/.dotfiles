@@ -109,21 +109,15 @@ stow . --adopt
 ## Customization
 
 Tool selection is driven by the curated Brewfiles in `.setup/` — one per
-machine profile (`development`, `productivity`, `personal`). The installer
-parses their `## [REQUIRED]` / `## [OPTIONAL]` section headers: `[REQUIRED]`
-sections install automatically, and every `[OPTIONAL]` entry is asked on its
-own, so you can adopt only the parts of this tooling you want. To add or
-change tools, edit the Brewfiles — they are the single source of truth.
+machine profile (`development`, `productivity`, `personal`). Their
+`## [REQUIRED]` / `## [OPTIONAL]` section headers drive the prompting. To add
+or change tools, edit the Brewfiles — they are the single source of truth.
 
-Two annotations mark entries that need more than a download:
-`@account-required` (you have to sign in) and `@license-required` (paid
-license). The prompt repeats the annotation so the decision lands with you —
-whether you hold that license, or have an account to sign into on *this*
-machine, is context the repo cannot know.
-
-Commented-out entries are offered too, marked *dormant*: kept for something
-you reach for as needed, or are on the way to dropping. Accepting one never
-rewrites the Brewfile; it uncomments the copy handed to `brew bundle`.
+Three markers can appear in a prompt. `@account-required` and
+`@license-required` are annotations you write in the Brewfile; *parked* is
+derived from a commented-out entry, for something you reach for as needed or
+are on the way to dropping. Accepting a parked entry never rewrites the
+Brewfile; it uncomments the copy handed to `brew bundle`.
 
 To re-run tool installation at any time:
 
