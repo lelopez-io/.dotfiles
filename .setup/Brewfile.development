@@ -2,6 +2,7 @@
 brew "eza"
 brew "fzf"                     # fuzzy finder, gco + keybindings in dotfiles
 brew "git-delta"               # diff pager, used by 02-dotfiles.sh and 05-git.sh
+brew "jq"                      # settings clean filter (05-git.sh), git-graph
 brew "libyaml"                 # ruby build dependency (mise)
 brew "mise"
 brew "starship"
@@ -27,7 +28,6 @@ brew "modem-dev/tap/hunk"  # git-graph and git-inspect wrap it
 brew "serie"               # git-graph's graph strip; 06-forks shadows it
 
 ## [OPTIONAL] CLI Tools
-brew "jq"
 brew "pv"                 # pipe progress meter, used by verify-copy
 brew "shellcheck"         # lints ~/.local/bin scripts
 brew "the_silver_searcher"
