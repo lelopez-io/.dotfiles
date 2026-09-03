@@ -41,9 +41,26 @@ vim.filetype.add({
     },
 })
 
--- Clipboard over SSH: no pasteboard is reachable from a remote session, so
--- use OSC 52 to carry yanks back through the terminal to the client machine.
--- Local sessions keep the default pbcopy provider.
-if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
-    vim.g.clipboard = "osc52"
+-- Yanks go to both clipboards: OSC 52 reaches whatever terminal is attached
+-- now, pbcopy keeps the local pasteboard in sync so `"+p` round-trips. A herdr
+-- session outlives the shell that started it, so the birth env cannot decide
+-- this. Paste stays local, since OSC 52 reads block 10s when unanswered.
+local osc52 = require("vim.ui.clipboard.osc52")
+
+local function copy(reg)
+    local send = osc52.copy(reg)
+    return function(lines, regtype)
+        send(lines, regtype)
+        vim.fn.system({ "pbcopy" }, table.concat(lines, "\n"))
+    end
 end
+
+local function paste()
+    return vim.fn.systemlist("pbpaste")
+end
+
+vim.g.clipboard = {
+    name = "osc52+pbcopy",
+    copy = { ["+"] = copy("+"), ["*"] = copy("*") },
+    paste = { ["+"] = paste, ["*"] = paste },
+}
