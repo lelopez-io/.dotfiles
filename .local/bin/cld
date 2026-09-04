@@ -69,5 +69,6 @@ real_claude() {
 }
 
 # exec replaces this script: claude's exit status propagates, and the exported
-# key lives only in claude's own process environment.
-exec "$(real_claude)" "$@"
+# key lives only in claude's own process environment. -a keeps argv[0]
+# "claude" so herdr still names the agent; the binary carries a version.
+exec -a claude "$(real_claude)" "$@"

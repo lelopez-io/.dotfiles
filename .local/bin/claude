@@ -19,7 +19,9 @@ real_claude() {
 # from a profile-carrying directory doesn't attach a work key unnoticed.
 bare() {
   export AGENT_WRAPPER=claude AGENT_PROFILE=none
-  exec "$(real_claude)" "$@"
+  # -a: herdr names a pane's agent from argv[0], and the native
+  # installer's binary is called for its version (2.1.260), not claude.
+  exec -a claude "$(real_claude)" "$@"
 }
 
 # A resumed session keeps the profile it started under (agent-session-mark).
