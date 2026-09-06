@@ -55,7 +55,4 @@ else
     echo -e "   Then use 'stow . --restow --no-folding' to use repo versions\n"
 fi
 
-echo "Setting up additional symlinks..."
-ln -sf "$DOTFILES_ROOT/.gitignore" "$HOME/.gitignore"
-
 echo "Dotfiles setup complete!"
