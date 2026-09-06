@@ -1,9 +1,37 @@
-#!/bin/bash
-# claude — run through cld only when this directory resolves a profile
-# (agent-profile). Everything else execs the real binary bare: personal
-# OAuth needs no key.
-# Resolve the real claude: brew path first, then the native installer's
-# newest version dir (mtime). PATH lookup would recurse back into this shim.
+#!/usr/bin/env bash
+#
+# claude / cld — launch Claude Code, optionally with an API key profile from
+# 1Password.
+#
+# Usage: claude [claude args...]         profile resolved from session or cwd
+#        cld [profile] [claude args...]  profile named explicitly
+#
+# Profile resolves to a 1Password item named "cld | <profile>" with two fields:
+#   credential   the API key or OAuth token
+#   env_var      ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN
+# Without a profile, launches claude with the default config.
+
+set -euo pipefail
+
+usage() {
+    cat <<'USAGE'
+claude / cld — launch Claude Code with an optional API key profile via 1Password.
+
+Usage: claude [claude args...]         profile resolved from session or cwd
+       cld [profile] [claude args...]  profile named explicitly
+
+Profile resolves to a 1Password item named "cld | <profile>" with two fields:
+  credential   the API key or OAuth token
+  env_var      ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN
+
+Without a profile, launches claude with the default config.
+Flags (e.g. --resume) without a profile are passed through.
+USAGE
+}
+
+# herdr resumes a pane by running `claude`, so this file owns that name and
+# reaches the real binary by path: brew first, then the native installer's
+# newest version dir (mtime). A PATH lookup would recurse back into here.
 real_claude() {
   if [ -x /opt/homebrew/bin/claude ]; then
     echo /opt/homebrew/bin/claude
@@ -24,38 +52,65 @@ shared_settings() {
   printf '%s' "$f"
 }
 
-# Launch bare, recording that the session is keyless on purpose so a resume
-# from a profile-carrying directory doesn't attach a work key unnoticed.
-bare() {
-  export AGENT_WRAPPER=claude AGENT_PROFILE=none
-  # -a: herdr names a pane's agent from argv[0], and the native
-  # installer's binary is called for its version (2.1.260), not claude.
-  shared=$(shared_settings "$@")
-  if [ -n "$shared" ]; then
-    exec -a claude "$(real_claude)" --settings "$shared" "$@"
-  fi
-  exec -a claude "$(real_claude)" "$@"
-}
-
-# A resumed session keeps the profile it started under (agent-session-mark).
-# The resuming shell's cwd may belong to another org, or to none. Only an
-# explicit --resume id consults the record. -c and the picker stay on cwd.
-session_id=""
-prev=""
-for arg in "$@"; do
-  case $arg in
-    --resume=*) session_id=${arg#--resume=}; break ;;
-  esac
-  case $prev in
-    --resume|-r) session_id=$arg; break ;;
-  esac
-  prev=$arg
-done
-
+wrapper=${0##*/}
 profile=""
-[ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null)
-[ "$profile" = none ] && bare "$@"
 
-[ -n "$profile" ] || profile=$(agent-profile claude || true)
-[ -n "$profile" ] && exec cld "$profile" "$@"
-bare "$@"
+if [ "$wrapper" = cld ]; then
+    profile=${1:-}
+    case "$profile" in
+        -h|--help) usage; exit 0 ;;
+        -*) profile="" ;;    # flag for claude, not a profile — pass through
+        ?*) shift ;;         # profile name consumed
+    esac
+else
+    # A resumed session keeps the profile it started under (agent-session-mark).
+    # The resuming shell's cwd may belong to another org, or to none. Only an
+    # explicit --resume id consults the record. -c and the picker stay on cwd.
+    session_id=""
+    prev=""
+    for arg in "$@"; do
+        case $arg in
+            --resume=*) session_id=${arg#--resume=}; break ;;
+        esac
+        case $prev in
+            --resume|-r) session_id=$arg; break ;;
+        esac
+        prev=$arg
+    done
+
+    [ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null || true)
+    if [ "$profile" = none ]; then
+        profile=""    # recorded keyless: the cwd does not get to override it
+    elif [ -z "$profile" ]; then
+        profile=$(agent-profile claude || true)
+    fi
+fi
+
+if [ -n "$profile" ]; then
+    op_item="cld | $profile"
+    key=$(op item get "$op_item" --fields credential --reveal) \
+        || { echo "$wrapper: failed to read credential from 1Password item '$op_item'" >&2; exit 1; }
+    key_var=$(op item get "$op_item" --fields env_var --reveal) \
+        || { echo "$wrapper: failed to read env_var from 1Password item '$op_item'" >&2; exit 1; }
+
+    echo "Starting Claude Code [$profile]" >&2  # status, not data: stdout is the agent's
+    export "$key_var=$key"
+fi
+
+# Published for agent-session-mark: the session_start hook stamps this
+# context onto the session id, so a later resume replays it instead of
+# re-deriving a profile from wherever the resuming shell happens to be.
+export AGENT_WRAPPER="$wrapper" AGENT_PROFILE="${profile:-none}"
+
+# Strip OP_SESSION_* so the agent can't ride this shell's op session into the
+# whole vault (backstop for "don't opsignin in agent-launching shells").
+for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
+
+# exec replaces this script: claude's exit status propagates, and the exported
+# key lives only in claude's own process environment. -a keeps argv[0]
+# "claude" so herdr still names the agent; the binary carries a version.
+shared=$(shared_settings "$@")
+if [ -n "$shared" ]; then
+  exec -a claude "$(real_claude)" --settings "$shared" "$@"
+fi
+exec -a claude "$(real_claude)" "$@"
