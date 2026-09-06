@@ -3,10 +3,11 @@
 # toolchain-check — report whether a macOS developer toolchain has an SDK that
 # zig 0.15.2 can link against, and name one that does.
 #
-# Usage: toolchain-check [-q | --developer-dir]
+# Usage: toolchain-check [-q | --developer-dir | --usable-sdk]
 #
 #   -q                print only problems, no report
 #   --developer-dir   print a DEVELOPER_DIR whose SDK links, nothing else
+#   --usable-sdk      print a linkable SDK beside the default, nothing else
 #
 # Exit: 0 usable, 1 unusable, 2 undetermined.
 #
@@ -20,13 +21,14 @@ mode=report
 case "${1:-}" in
     -q|--quiet) mode=quiet ;;
     --developer-dir) mode=devdir ;;
-    -h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    --usable-sdk) mode=sdkpath ;;
+    -h|--help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     "") ;;
     *) echo "toolchain-check: unknown option '$1'" >&2; exit 2 ;;
 esac
 
 say() { [ "$mode" = report ] && echo "$@"; return 0; }
-warn() { [ "$mode" = devdir ] || echo "$@" >&2; return 0; }
+warn() { case "$mode" in devdir|sdkpath) ;; *) echo "$@" >&2 ;; esac; return 0; }
 
 [ "$(uname -s)" = Darwin ] || { say "not macOS, nothing to check"; exit 0; }
 
@@ -86,6 +88,12 @@ if [ "$mode" = devdir ]; then
 fi
 
 sdk=$(sdk_for "$selected")
+
+if [ "$mode" = sdkpath ]; then
+    [ -n "$sdk" ] || exit 1
+    usable_sibling "$sdk" || exit 1
+    exit 0
+fi
 say "selected:  ${selected:-<none>}"
 say "sdk:       ${sdk:-<none>}"
 
