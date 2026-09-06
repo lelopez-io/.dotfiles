@@ -114,3 +114,38 @@ for brewfile in "$SETUP_DIR"/Brewfile.*; do
     echo "--- $category ---"
     install_brewfile "$brewfile" "$category"
 done
+
+# brew ships compose and buildx as docker CLI plugins, in a directory the
+# docker binary does not search, so `docker compose` silently does not exist
+# until it is registered. Merge: this file also holds registry credentials.
+plugin_dir="$(brew --prefix)/lib/docker/cli-plugins"
+if [ -d "$plugin_dir" ]; then
+    python3 - "$plugin_dir" <<'PY'
+import json, os, sys
+
+path = os.path.expanduser("~/.docker/config.json")
+plugin_dir = sys.argv[1]
+
+if os.path.exists(path):
+    try:
+        with open(path) as fh:
+            cfg = json.load(fh)
+    except ValueError:
+        print(f"Warning: {path} is not valid JSON, leaving it alone.", file=sys.stderr)
+        sys.exit(0)
+else:
+    cfg = {}
+
+dirs = cfg.setdefault("cliPluginsExtraDirs", [])
+if plugin_dir in dirs:
+    sys.exit(0)
+
+dirs.append(plugin_dir)
+os.makedirs(os.path.dirname(path), exist_ok=True)
+tmp = f"{path}.tmp"
+with open(tmp, "w") as fh:
+    json.dump(cfg, fh, indent=2)
+os.replace(tmp, path)
+print(f"docker: registered {plugin_dir} for CLI plugins")
+PY
+fi
