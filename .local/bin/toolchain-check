@@ -52,6 +52,18 @@ links() {
     [ -f "$1/usr/lib/libSystem.tbd" ] && declares_arm64 "$1/usr/lib/libSystem.tbd"
 }
 
+canon() { readlink -f "$1" 2>/dev/null || echo "$1"; }
+
+# A MacOSX.sdk aimed away from the SDK xcrun reports does nothing for zig and
+# only moves what every other compiler defaults to. Report it so it can go back.
+inert_repoint() {
+    local link; link="$(dirname "$1")/MacOSX.sdk"
+    [ -L "$link" ] || return 1
+    [ "$(canon "$link")" != "$(canon "$1")" ] || return 1
+    links "$link" || return 1
+    echo "$link"
+}
+
 selected=$(xcode-select -p 2>/dev/null || true)
 active=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
 
@@ -100,6 +112,11 @@ warn "  zig 0.15.2 cannot link against it (ziglang/zig#31658)."
 if sdk=$(usable_sdk); then
     warn "  This one links: $sdk"
     warn "  The fork builds shim xcrun at it; no machine change is needed."
+    if repoint=$(inert_repoint "$active"); then
+        warn "  $(basename "$repoint") points at $(basename "$(readlink "$repoint")"),"
+        warn "  which xcrun ignores. Put it back with:"
+        warn "    sudo ln -sfn $(basename "$active") $repoint"
+    fi
     exit 1
 fi
 warn "  No installed SDK declares arm64-macos. Reinstalling Command Line"
