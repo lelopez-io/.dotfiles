@@ -25,3 +25,16 @@ if ! scutil --get HostName &>/dev/null; then
     hn=${hn:-$(scutil --get LocalHostName)}
     [ -n "$hn" ] && sudo scutil --set HostName "$hn" && echo "HostName pinned to: $hn"
 fi
+
+# The SDK a compiler sees comes from the selected developer directory, and
+# installing Xcode does not select it. 06-forks needs an SDK zig can link
+# against, so settle it before anything consumes it.
+if [ -d /Applications/Xcode.app ] &&
+   [ "$(xcode-select -p 2>/dev/null)" = /Library/Developer/CommandLineTools ]; then
+    echo "Xcode is installed but Command Line Tools are selected."
+    read -p "Switch xcode-select to Xcode? (needs sudo) [y/N] " ans
+    if [[ "$ans" =~ ^[Yy]$ ]]; then
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer \
+            && echo "Now using: $(xcode-select -p)"
+    fi
+fi
