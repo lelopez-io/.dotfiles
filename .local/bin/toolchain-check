@@ -45,6 +45,20 @@ declares_arm64() {
         grep -Eq '(^|[[:space:],[])arm64-macos([[:space:],]|\]|$)'
 }
 
+# Apple's Command Line Tools ship the previous major macOS SDK beside the
+# default. zig only follows the default symlink, so a usable one sitting there
+# is a repoint rather than a download.
+usable_sibling() {
+    local dir; dir=$(dirname "$1")
+    for s in "$dir"/MacOSX*.sdk; do
+        [ -d "$s" ] || continue
+        if [ "$(basename "$s")" = MacOSX.sdk ]; then continue; fi
+        [ -f "$s/usr/lib/libSystem.tbd" ] || continue
+        if declares_arm64 "$s/usr/lib/libSystem.tbd"; then echo "$s"; return 0; fi
+    done
+    return 1
+}
+
 sdk_for() { DEVELOPER_DIR="$1" xcrun --sdk macosx --show-sdk-path 2>/dev/null || true; }
 
 devdir_works() {
@@ -93,8 +107,13 @@ if [ -n "$working" ]; then
     warn "  This one works: $working"
     warn "  The fork builds set DEVELOPER_DIR to it themselves; to switch the"
     warn "  whole machine: sudo xcode-select -s $working"
+elif sibling=$(usable_sibling "$sdk"); then
+    warn "  $(basename "$sibling") beside it does declare arm64-macos, and zig"
+    warn "  only ever follows the default symlink:"
+    warn "    sudo ln -sfn $(basename "$sibling") $(dirname "$sdk")/MacOSX.sdk"
 else
-    warn "  No installed SDK declares arm64-macos. Command Line Tools ship one;"
-    warn "  try 'softwareupdate --list' for a CLT update."
+    warn "  No installed SDK declares arm64-macos. Reinstalling Command Line"
+    warn "  Tools brings the previous major macOS SDK, which does; failing that,"
+    warn "  developer.apple.com/download/all has the standalone packages."
 fi
 exit 1
