@@ -43,10 +43,17 @@ if [ "$rc" -eq 1 ]; then
         # Nothing is missing here, only the default symlink points at the
         # arm64e-only SDK. A CLT update can point it back.
         sdks=$(dirname "$sdk")
-        read -p "Point the default SDK at $(basename "$sdk")? (needs sudo) [y/N] " ans
-        if [[ "$ans" =~ ^[Yy]$ ]]; then
-            sudo ln -sfn "$(basename "$sdk")" "$sdks/MacOSX.sdk" \
-                && echo "Default SDK now: $(readlink "$sdks/MacOSX.sdk")"
+        if [ ! -L "$sdks/MacOSX.sdk" ]; then
+            # ln -sfn would land inside a real directory rather than replace it.
+            echo "Default SDK is not a symlink; leaving $sdks/MacOSX.sdk alone."
+        else
+            # Name the current target: it is what restores this.
+            echo "Default SDK is $(readlink "$sdks/MacOSX.sdk"), which zig cannot link."
+            read -p "Point it at $(basename "$sdk")? (needs sudo) [y/N] " ans
+            if [[ "$ans" =~ ^[Yy]$ ]]; then
+                sudo ln -sfn "$(basename "$sdk")" "$sdks/MacOSX.sdk" \
+                    && echo "Default SDK now: $(readlink "$sdks/MacOSX.sdk")"
+            fi
         fi
     fi
 fi
