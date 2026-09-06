@@ -9,16 +9,16 @@
 #
 # Exit: 0 usable, 1 unusable, 2 undetermined.
 #
-# zig 0.15.2 targets plain arm64-macos, so the active SDK's libSystem stub has
-# to declare it. Which SDK is active comes from xcode-select, and installing
-# Xcode does not select it.
+# zig 0.15.2 matches the link target exactly against the libSystem stub's first
+# document, where the macOS 26 SDK declares only arm64e (ziglang/zig#31658).
+# Re-exports below it declare arm64-macos, so a whole-file grep is fooled.
 
 set -euo pipefail
 
 quiet=false
 case "${1:-}" in
     -q|--quiet) quiet=true ;;
-    -h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     "") ;;
     *) echo "toolchain-check: unknown option '$1'" >&2; exit 2 ;;
 esac
@@ -28,30 +28,37 @@ warn() { echo "$@" >&2; }
 
 [ "$(uname -s)" = Darwin ] || { say "not macOS, nothing to check"; exit 0; }
 
+# The first document ends at the second '--- !tapi-tbd'; its targets list wraps.
+umbrella_targets() {
+    awk '
+        /^--- !tapi-tbd/ { if (++doc > 1) exit }
+        /^targets:/      { in_t = 1 }
+        in_t             { print; if (/\]/) exit }
+    ' "$1"
+}
+
+# Bounded so arm64e-macos cannot match.
+declares_arm64() {
+    umbrella_targets "$1" |
+        grep -Eq '(^|[[:space:],[])arm64-macos([[:space:],]|\]|$)'
+}
+
 selected=$(xcode-select -p 2>/dev/null || true)
 sdk=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
 tbd="$sdk/usr/lib/libSystem.tbd"
-xcode_app=$(/bin/ls -d /Applications/Xcode*.app 2>/dev/null | head -1 || true)
 
 say "selected:  ${selected:-<none>}"
-say "xcode.app: ${xcode_app:-<not installed>}"
 say "sdk:       ${sdk:-<none>}"
-
-if [ -n "$xcode_app" ] && [ "$selected" = /Library/Developer/CommandLineTools ]; then
-    warn "toolchain-check: Xcode is installed but Command Line Tools are selected."
-    warn "  sudo xcode-select -s $xcode_app/Contents/Developer"
-fi
 
 if [ -z "$sdk" ] || [ ! -f "$tbd" ]; then
     warn "toolchain-check: no libSystem.tbd under '${sdk:-<no sdk>}', cannot verify."
     exit 2
 fi
 
-if grep -q arm64-macos "$tbd"; then
-    say "stub:      declares arm64-macos"
+if declares_arm64 "$tbd"; then
+    say "stub:      declares arm64-macos, zig 0.15.2 can link against it"
     say ""
-    say "This checks the SDK can be linked against, not that every build works."
-    say "zig 0.15.2 fails on macOS 26.5.1 regardless, on __availability_version_check."
+    say "This checks the SDK links, not that any particular build succeeds."
     exit 0
 fi
 
