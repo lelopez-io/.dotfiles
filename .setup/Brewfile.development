@@ -10,6 +10,7 @@ brew "stow"
 brew "herdr"                  # terminal workspace manager, the daily driver
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
+cask "font-anonymice-nerd-font"  # ghostty font-family names this exactly
 cask "ghostty"
 
 ## [REQUIRED] Neovim

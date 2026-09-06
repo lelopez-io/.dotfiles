@@ -34,27 +34,4 @@ if command -v tmux &> /dev/null; then
     echo "- Note: press CTRL+A then SHIFT+I inside tmux to install its plugins"
 fi
 
-# Install nerd fonts
-echo "Installing nerd fonts..."
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    FONT_DIR="$HOME/Library/Fonts"
-else
-    FONT_DIR="$HOME/.local/share/fonts"
-    mkdir -p "$FONT_DIR"
-fi
-
-if [ ! -f "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" ]; then
-    echo "- Downloading Anonymous Pro Nerd Font..."
-    curl -fLo "$FONT_DIR/AnonymiceProNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFontMono-Regular.ttf
-
-    # Refresh font cache on Linux
-    if [[ "$OSTYPE" != "darwin"* ]]; then
-        echo "- Refreshing font cache..."
-        fc-cache -f -v
-    fi
-
-    echo "- Font installed. You may need to configure your terminal to use this font."
-    echo "  Font name: AnonymiceProNerdFontMono-Regular"
-fi
-
 echo "Shell configuration complete!"
