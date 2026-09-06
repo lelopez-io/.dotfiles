@@ -3,12 +3,12 @@
 # Per-project env belongs in that repo's mise.toml [env] section, not here.
 # Self-contained programs live in ~/.local/bin/.
 #
-# Secrets never persist here by design: sopsx/opx/cld/pie resolve them
+# Secrets never persist here by design: sopsx/opx/claude/pi resolve them
 # per-invocation into a child's env only.
 
 # Biometric unlock misbehaves in some terminal contexts — disable before signin.
 # OP_SESSION_* is the one sanctioned session-persistent credential; never
-# launch an agent from a shell that has it (cld/pie strip it as a backstop).
+# launch an agent from a shell that has it. Launches strip it as a backstop.
 opsignin() {
     export OP_BIOMETRIC_UNLOCK_ENABLED=false
     local session

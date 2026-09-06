@@ -156,10 +156,13 @@ item names, project layouts. Those live at the call site (typed per session)
 or in the project's `mise.local.toml` (globally git-ignored).
 
 Secrets never persist in the session env either: wrappers resolve them
-per-invocation into the *child's* env only (`sopsx`, `opx`, `cld`, `pie`).
+per-invocation into the *child's* env only (`sopsx`, `opx`, `claude`, `pi`).
 `OP_SESSION_*` from `opsignin` is the one sanctioned exception — but never
-launch an agent from a shell that has it; `cld` and `pie` strip it before
-exec as a backstop.
+launch an agent from a shell that has it; every agent launch strips it before
+exec as a backstop. That backstop only closes the CLI-session path: with the
+1Password desktop app running, `op` reaches the vault over `op-daemon.sock`
+regardless, so the control that actually holds is `op` staying out of the
+agent's permission allowlist.
 
 Script conventions:
 
