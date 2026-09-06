@@ -15,6 +15,11 @@ mise x bun -- bun add -g @earendil-works/pi-coding-agent \
 herdr_bin="$HOME/.local/bin/herdr"
 [ -x "$herdr_bin" ] || herdr_bin=$(command -v herdr || true)
 
+# herdr installs the claude hooks into ~/.claude, which Claude Code creates on
+# first launch. Setup runs before anyone has opened it, so make the directory:
+# the hooks are read whenever that first launch happens.
+command -v claude &> /dev/null && mkdir -p "$HOME/.claude"
+
 if [ -n "$herdr_bin" ]; then
     for target in claude pi; do
         "$herdr_bin" integration install "$target" \
