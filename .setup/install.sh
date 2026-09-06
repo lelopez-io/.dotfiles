@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eE
+set -e
 
 SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPTS_DIR="$SETUP_DIR/scripts"
@@ -36,10 +36,11 @@ done
 
 echo "=== Starting Development Environment Setup ==="
 
-# Stages are sourced and each runs set -e, so one failure ends the whole run.
-# Without this the later stages just never appear and nothing says why.
+# Stages are sourced and each runs set -e, so one failure ends the whole run,
+# and the later stages then never appear with nothing saying why. EXIT rather
+# than ERR: ERR also fires inside substitutions set -e tolerates, so it lied.
 stage=""
-trap 'echo "=== Setup stopped in ${stage:-startup}. Later stages did not run. ==="' ERR
+trap 'rc=$?; [ "$rc" -eq 0 ] || echo "=== Setup stopped in ${stage:-startup}. Later stages did not run. ==="' EXIT
 
 resuming=0
 run() {
