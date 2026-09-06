@@ -21,17 +21,18 @@ if command -v kubectl >/dev/null 2>&1; then
     kubectl completion zsh > "$HOME/.zsh/completions/_kubectl" 2>/dev/null || echo "Warning: Failed to cache kubectl completions. Continuing..."
 fi
 
-# Setup tmux configuration
-echo "Setting up tmux..."
+# tmux is optional now that herdr is the daily driver, so its plugin manager
+# only bootstraps when tmux was actually selected.
+if command -v tmux &> /dev/null; then
+    echo "Setting up tmux..."
 
-# Install tmux plugin manager
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-    echo "- Installing tmux plugin manager..."
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+        echo "- Installing tmux plugin manager..."
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    fi
+
+    echo "- Note: press CTRL+A then SHIFT+I inside tmux to install its plugins"
 fi
-
-# Install recommended tmux plugins
-echo "- Note: To install tmux plugins after setup, press CTRL+A then SHIFT+I within a tmux session"
 
 # Install nerd fonts
 echo "Installing nerd fonts..."
