@@ -27,8 +27,6 @@ if (( $+commands[kubectl] )); then
     mkdir -p "${_kubectl_comp:h}" && kubectl completion zsh > "$_kubectl_comp"
   fi
   compdef k=kubectl
-else
-  echo "warning: kubectl not found"
 fi
 
 # gco - disable file completion, arg is an fzf query
