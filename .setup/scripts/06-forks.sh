@@ -10,10 +10,3 @@ for updater in serie-fork-update herdr-fork-update; do
         echo "Warning: $updater failed — the stock brew binary stays active. Continuing..."
     fi
 done
-
-# Agent-state hooks are herdr-versioned assets, not stowable files. The
-# absolute path skips PATH, which lacks ~/.local/bin during setup.
-for target in claude pi; do
-    "$HOME/.local/bin/herdr" integration install "$target" \
-        || echo "Warning: herdr integration install $target failed. Continuing..."
-done

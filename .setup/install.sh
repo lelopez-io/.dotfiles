@@ -27,5 +27,8 @@ source "$SCRIPTS_DIR/05-git.sh"
 echo "Building patched forks..."
 source "$SCRIPTS_DIR/06-forks.sh"
 
+echo "Setting up agents..."
+source "$SCRIPTS_DIR/07-agents.sh"
+
 echo "=== Setup Complete! ==="
 echo "NOTE: You may need to restart your terminal for all changes to take effect."
