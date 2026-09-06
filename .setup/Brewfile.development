@@ -30,10 +30,10 @@ brew "serie"               # git-graph's graph strip; 06-forks shadows it
 brew "pv"                 # pipe progress meter, used by verify-copy
 brew "shellcheck"         # lints ~/.local/bin scripts
 brew "the_silver_searcher"
-brew "tmux"                # fallback multiplexer; herdr replaced it
 brew "tree"
 # brew "atuin"             # shell history w/ sync, evaluate
 # brew "telnet"
+# brew "tmux"              # herdr replaced it; fallback multiplexer
 # brew "watch"
 # brew "wget"
 # brew "yamllint"
