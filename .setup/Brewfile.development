@@ -61,12 +61,18 @@ brew "hashicorp/tap/terraform"
 brew "awscli"  # @account-required
 cask "gcloud-cli"  # @account-required
 
+## [OPTIONAL] Containers
+brew "colima"  # dockerd in a lima VM: no GUI, and no Kubernetes unless asked
+brew "docker"
+brew "docker-buildx"
+brew "docker-compose"
+
 ## [OPTIONAL] Kubernetes
 brew "fluxcd/tap/flux"
+brew "helm"
 brew "kubectx"
-brew "kubernetes-cli"  # kubectl in its own right; it otherwise ships with rancher
+brew "kubernetes-cli"
 brew "talhelper"
-cask "rancher"
 
 ## [OPTIONAL] Secrets & Auth
 brew "age"
