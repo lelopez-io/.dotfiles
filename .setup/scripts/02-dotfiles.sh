@@ -26,9 +26,22 @@ cd "$DOTFILES_ROOT"
 # when the repo sits directly beneath it.
 STOW_FLAGS=(--no-folding --target="$HOME")
 
+# stow --adopt absorbs a conflicting regular file, but a symlink stow did not
+# create is a hard conflict it refuses, so forcing has to clear those itself.
+clear_foreign_links() {
+    stow . -n "${STOW_FLAGS[@]}" 2>&1 \
+        | sed -n 's/^ *\* existing target is not owned by stow: //p' \
+        | while IFS= read -r target; do
+            [ -L "$HOME/$target" ] || continue
+            echo "- Replacing foreign symlink: ~/$target"
+            rm "$HOME/$target"
+        done
+}
+
 # Ask user how to handle existing configs
 if confirm "Would you like to force repo versions of all dotfiles? (This will overwrite your current configs)"; then
     echo "Force installing dotfiles from repo..."
+    clear_foreign_links
     stow . --adopt "${STOW_FLAGS[@]}"  # First adopt to handle any new files
     git restore .    # Discard any adopted changes
     stow . --restow "${STOW_FLAGS[@]}" # Reinstall all symlinks
