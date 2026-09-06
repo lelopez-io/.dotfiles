@@ -27,15 +27,26 @@ if ! scutil --get HostName &>/dev/null; then
 fi
 
 # 06-forks needs an SDK zig can link against. The fork builds override
-# DEVELOPER_DIR per build, so this only offers the machine-wide switch, which
-# needs sudo. Repo path: nothing is stowed until 02-dotfiles.
+# DEVELOPER_DIR per build, so this offers only the machine-wide fixes, which
+# need sudo. Repo path: nothing is stowed until 02-dotfiles.
 toolchain_check="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/.local/bin/toolchain-check"
 rc=0
 "$toolchain_check" || rc=$?
 
-if [ "$rc" -eq 1 ] && dd=$("$toolchain_check" --developer-dir 2>/dev/null); then
-    read -p "Switch xcode-select to $dd? (needs sudo) [y/N] " ans
-    if [[ "$ans" =~ ^[Yy]$ ]]; then
-        sudo xcode-select -s "$dd" && echo "Now using: $(xcode-select -p)"
+if [ "$rc" -eq 1 ]; then
+    if dd=$("$toolchain_check" --developer-dir 2>/dev/null); then
+        read -p "Switch xcode-select to $dd? (needs sudo) [y/N] " ans
+        if [[ "$ans" =~ ^[Yy]$ ]]; then
+            sudo xcode-select -s "$dd" && echo "Now using: $(xcode-select -p)"
+        fi
+    elif sdk=$("$toolchain_check" --usable-sdk 2>/dev/null); then
+        # Nothing is missing here, only the default symlink points at the
+        # arm64e-only SDK. A CLT update can point it back.
+        sdks=$(dirname "$sdk")
+        read -p "Point the default SDK at $(basename "$sdk")? (needs sudo) [y/N] " ans
+        if [[ "$ans" =~ ^[Yy]$ ]]; then
+            sudo ln -sfn "$(basename "$sdk")" "$sdks/MacOSX.sdk" \
+                && echo "Default SDK now: $(readlink "$sdks/MacOSX.sdk")"
+        fi
     fi
 fi
