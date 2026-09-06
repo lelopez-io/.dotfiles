@@ -28,7 +28,8 @@ if command -v tmux &> /dev/null; then
 
     if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
         echo "- Installing tmux plugin manager..."
-        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
+            || echo "Warning: tpm clone failed. Continuing..."
     fi
 
     echo "- Note: press CTRL+A then SHIFT+I inside tmux to install its plugins"

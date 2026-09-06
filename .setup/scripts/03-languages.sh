@@ -17,4 +17,7 @@ fi
 # Versions are declared in the stowed global config (.config/mise/config.toml),
 # so this must run after 02-dotfiles.sh
 echo "Installing language runtimes from mise config..."
-mise install --yes
+# One runtime failing to build should not cost the stages after this. 06 and
+# 07 already warn when a toolchain is missing, so they report it in context.
+mise install --yes \
+    || echo "Warning: some runtimes failed to install. Later stages may lack them."

@@ -77,7 +77,8 @@ GH_EXTENSIONS=(
 if command -v gh &> /dev/null && gh auth status &> /dev/null; then
     installed=$(gh extension list 2>/dev/null)
     for ext in "${GH_EXTENSIONS[@]}"; do
-        echo "$installed" | grep -q "$ext" || gh extension install "$ext"
+        echo "$installed" | grep -q "$ext" || gh extension install "$ext" \
+            || echo "Warning: gh extension install $ext failed. Continuing..."
     done
 else
     echo "Skipping gh extensions (gh not installed or not authenticated)"
