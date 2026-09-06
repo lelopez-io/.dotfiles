@@ -9,9 +9,17 @@ echo "Installing pi..."
 mise x bun -- bun add -g @earendil-works/pi-coding-agent \
     || echo "Warning: pi install failed. Continuing..."
 
-# Agent-state hooks are herdr-versioned assets, not stowable files. The
-# absolute path skips PATH, which lacks ~/.local/bin during setup.
-for target in claude pi; do
-    "$HOME/.local/bin/herdr" integration install "$target" \
-        || echo "Warning: herdr integration install $target failed. Continuing..."
-done
+# Agent-state hooks are herdr-versioned assets, not stowable files. Prefer the
+# fork, since PATH may not carry ~/.local/bin during setup, but fall back to
+# brew's herdr: a failed fork build leaves that path absent entirely.
+herdr_bin="$HOME/.local/bin/herdr"
+[ -x "$herdr_bin" ] || herdr_bin=$(command -v herdr || true)
+
+if [ -n "$herdr_bin" ]; then
+    for target in claude pi; do
+        "$herdr_bin" integration install "$target" \
+            || echo "Warning: herdr integration install $target failed. Continuing..."
+    done
+else
+    echo "Warning: no herdr binary found; skipping agent integrations."
+fi
