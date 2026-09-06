@@ -54,5 +54,6 @@ fi
 
 warn "toolchain-check: the active SDK's libSystem stub is arm64e-only."
 warn "  zig 0.15.2 cannot link against it; builds fail on undefined symbols."
-warn "  Select an SDK that declares arm64-macos, or install Xcode."
+warn "  Any SDK declaring arm64-macos works, and Command Line Tools ship one,"
+warn "  so try 'softwareupdate --list' for a CLT update before reaching for Xcode."
 exit 1
