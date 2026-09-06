@@ -1,37 +1,98 @@
-#!/bin/bash
-# pi — route every invocation through pie so non-interactive launchers
-# (herdr runs bare `pi --session ...`) authenticate like interactive ones.
-# The profile is per-machine (agent-profile), unset here so no identity
-# lives in the repo.
+#!/usr/bin/env bash
+#
+# pi / pie — launch pi with an API key profile from 1Password.
+#
+# Usage: pi [pi args...]            profile resolved from session or cwd
+#        pie [profile] [pi args...] profile named explicitly
+#
+# Profile resolves to a 1Password item named "pi | <profile>" with two fields:
+#   credential   the API key
+#   env_var      the provider's env var name
+# pi selects the provider from whichever key is set; switch models in-session
+# via /model. Without a profile, launches pi with the default config.
 
-# A resume names its session, and that id outranks the cwd: it may have
-# started under another org, or none (agent-session-mark). Fresh starts,
-# pickers, and partial ids name no exact session, so cwd decides for them.
-session_id=""
-prev=""
-for arg in "$@"; do
-  case $prev in
-    --session-id) session_id=$arg; break ;;
-    --session)
-      # The id is the trailing _<uuid> of the session filename. The marker
-      # extension derives it the same way, and the two must stay in sync.
-      f=${arg##*/}; f=${f%.jsonl}; session_id=${f##*_}
-      break
-      ;;
-  esac
-  prev=$arg
-done
+set -euo pipefail
 
-profile=""
-[ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null)
+usage() {
+    cat <<'USAGE'
+pi / pie — launch pi with an API key profile via 1Password.
 
-# none is a recorded answer, not a missing one: stay keyless.
-[ "$profile" = none ] && exec pie "$@"
+Usage: pi [pi args...]             profile resolved from session or cwd
+       pie [profile] [pi args...]  profile named explicitly
 
-[ -n "$profile" ] || profile=$(agent-profile pi || true)
-[ -n "$profile" ] || {
-  echo "pi: no profile resolved. Set 'git config agent.pi.profile <name>' or" >&2
-  echo "    create ~/.config/agent-profiles/pi (machine-local, uncommitted)" >&2
-  exit 1
+Profile resolves to a 1Password item named "pi | <profile>" with two fields:
+  credential   the API key
+  env_var      the provider's env var name
+
+pi selects the provider from whichever key is set; switch models in-session
+via /model. Without a profile, launches pi with the default config.
+USAGE
 }
-exec pie "$profile" "$@"
+
+wrapper=${0##*/}
+profile=""
+
+if [ "$wrapper" = pie ]; then
+    profile=${1:-}
+    case "$profile" in
+        -h|--help) usage; exit 0 ;;
+        -*) profile="" ;;    # flag for pi, not a profile — pass through
+        ?*) shift ;;         # profile name consumed
+    esac
+else
+    # A resume names its session, and that id outranks the cwd: it may have
+    # started under another org, or none (agent-session-mark). Fresh starts,
+    # pickers, and partial ids name no exact session, so cwd decides for them.
+    session_id=""
+    prev=""
+    for arg in "$@"; do
+        case $prev in
+            --session-id) session_id=$arg; break ;;
+            --session)
+                # The id is the trailing _<uuid> of the session filename. The
+                # marker extension derives it the same way, and the two must
+                # stay in sync.
+                f=${arg##*/}; f=${f%.jsonl}; session_id=${f##*_}
+                break
+                ;;
+        esac
+        prev=$arg
+    done
+
+    [ -n "$session_id" ] && profile=$(agent-session-profile "$session_id" 2>/dev/null || true)
+    if [ "$profile" = none ]; then
+        profile=""    # recorded keyless: the cwd does not get to override it
+    elif [ -z "$profile" ]; then
+        profile=$(agent-profile pi || true)
+        [ -n "$profile" ] || {
+            echo "pi: no profile resolved. Set 'git config agent.pi.profile <name>' or" >&2
+            echo "    create ~/.config/agent-profiles/pi (machine-local, uncommitted)" >&2
+            exit 1
+        }
+    fi
+fi
+
+if [ -n "$profile" ]; then
+    op_item="pi | $profile"
+    key=$(op item get "$op_item" --fields credential --reveal) \
+        || { echo "$wrapper: failed to read credential from 1Password item '$op_item'" >&2; exit 1; }
+    key_var=$(op item get "$op_item" --fields env_var --reveal) \
+        || { echo "$wrapper: failed to read env_var from 1Password item '$op_item'" >&2; exit 1; }
+
+    echo "Starting pi [$profile]" >&2  # status, not data: stdout is the agent's
+    export "$key_var=$key"
+fi
+
+# Published for agent-session-mark: the session_start hook stamps this
+# context onto the session id, so a later resume replays it instead of
+# re-deriving a profile from wherever the resuming shell happens to be.
+export AGENT_WRAPPER="$wrapper" AGENT_PROFILE="${profile:-none}"
+
+# Strip OP_SESSION_* so the agent can't ride this shell's op session into the
+# whole vault (backstop for "don't opsignin in agent-launching shells").
+for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
+
+# exec replaces this script: pi's exit status propagates, and the exported key
+# lives only in pi's own process environment. Absolute path because this file
+# shadows the real pi on PATH.
+exec "$HOME/.bun/bin/pi" "$@"
