@@ -2,7 +2,7 @@
 brew "eza"
 brew "fzf"                     # fuzzy finder, gco + keybindings in dotfiles
 brew "git-delta"               # diff pager, used by 02-dotfiles.sh and 05-git.sh
-brew "jq"                      # settings clean filter (05-git.sh), git-graph
+brew "jq"                      # git-graph, herdr-fork-update
 brew "libyaml"                 # ruby build dependency (mise)
 brew "mise"
 brew "starship"

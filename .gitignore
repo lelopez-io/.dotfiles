@@ -25,7 +25,6 @@ mise.*.local.toml
 
 # claude
 .claude/*
-!.claude/settings.json
 
 # Setup generated state
 .setup/Brewfile.*.lock.json

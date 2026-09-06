@@ -4,3 +4,4 @@
 ^/README.*
 ^/\.git
 ^/\.githooks
+^/\.claude
