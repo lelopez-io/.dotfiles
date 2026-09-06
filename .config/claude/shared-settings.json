@@ -44,7 +44,7 @@
       "Bash(yarn lint:*)",
       "Bash(yarn start:*)",
       "Bash(yarn test:*)",
-      "Bash(yarn typecheck)",
+      "Bash(yarn typecheck:*)",
       "Bash(gt checkout:*)",
       "WebFetch(domain:docs.turso.tech)",
       "WebFetch(domain:fnox.jdx.dev)",
