@@ -31,13 +31,23 @@ git fetch origin "$BRANCH"
 git checkout -B "$BRANCH" -q "origin/$BRANCH"
 git reset --hard -q "origin/$BRANCH"
 
-# Preflight, via the shared check so this and 00-core cannot drift. Status 1
-# is a definite no; 2 means undetermined, which it has already warned about.
-rc=0
-"$(dirname "$0")/toolchain-check" -q || rc=$?
-if [ "$rc" -eq 1 ]; then
-  echo "herdr-fork-update: aborting, the active SDK cannot link zig 0.15.2." >&2
-  exit 1
+# zig links the build runner against the selected SDK, so the macOS 26 SDK
+# fails before -Dtarget applies (ziglang/zig#31658). Override per build rather
+# than switching the machine.
+if dd=$("$(dirname "$0")/toolchain-check" --developer-dir 2>/dev/null); then
+  if [ "$dd" != "$(xcode-select -p 2>/dev/null)" ]; then
+    echo "herdr-fork-update: selected SDK cannot link zig; building with"
+    echo "  DEVELOPER_DIR=$dd"
+  fi
+  export DEVELOPER_DIR="$dd"
+else
+  # Status 1 is a definite no; 2 means undetermined, so let the build try.
+  rc=0
+  "$(dirname "$0")/toolchain-check" -q || rc=$?
+  if [ "$rc" -eq 1 ]; then
+    echo "herdr-fork-update: aborting, no installed SDK can link zig 0.15.2." >&2
+    exit 1
+  fi
 fi
 
 echo "herdr-fork-update: building release (rust 1.96.1, zig 0.15.2)..."
