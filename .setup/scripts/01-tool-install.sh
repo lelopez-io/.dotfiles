@@ -96,6 +96,17 @@ install_brewfile() {
     rm -f "$selection"
 }
 
+# Homebrew 6 will not load a non-official tap formula until it is trusted, and
+# a REQUIRED one then fails the run. Read from the Brewfiles so a new tapped
+# entry needs no second edit here.
+if brew trust --help &> /dev/null; then
+    grep -hoE '^#?[[:space:]]*brew "[^"]+/[^"]+/[^"]+"' "$SETUP_DIR"/Brewfile.* \
+        | sed 's/.*"\(.*\)"/\1/' | sort -u | while read -r formula; do
+        brew trust --formula "$formula" \
+            || echo "Warning: brew trust $formula failed. Continuing..."
+    done
+fi
+
 for brewfile in "$SETUP_DIR"/Brewfile.*; do
     [[ "$brewfile" == *.lock.json ]] && continue
     category="${brewfile##*/Brewfile.}"
