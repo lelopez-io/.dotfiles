@@ -5,7 +5,8 @@ node = "22.15.1"
 python = "3.12"
 ruby = "3.4.4"
 # rust/zig build the serie and herdr forks; zig pinned exactly — the
-# vendored libghostty-vt build breaks on 0.16.
+# vendored libghostty-vt build breaks on 0.16. 0.15.2 needs the SDK workaround
+# in toolchain-check (ziglang/zig#31673 fixes it upstream).
 rust = "1.96.1"
 uv = "latest"
 zig = "0.15.2"
