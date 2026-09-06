@@ -26,12 +26,20 @@ mise.*.local.toml
 # claude
 .claude/*
 
+# pi runtime state (auth, trust, model store, sessions); only the herdr
+# session-marker extension is shared. --no-folding keeps ~/.pi real, so this
+# is the backstop for a stow run by hand without it.
+.pi/*
+!.pi/agent/
+.pi/agent/*
+!.pi/agent/extensions/
+
 # Setup generated state
 .setup/Brewfile.*.lock.json
 
 # herdr runtime state (sockets, session, logs) — only config.toml is shared.
 # Guards the case where stow folds ~/.config/herdr into a dir symlink on a
-# fresh machine; 02-dotfiles.sh pre-creates the real dir to prevent that.
+# fresh machine; 02-dotfiles.sh passes --no-folding to prevent that.
 .config/herdr/*
 !.config/herdr/config.toml
 
