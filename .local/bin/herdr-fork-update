@@ -35,6 +35,15 @@ git reset --hard -q "origin/$BRANCH"
 # arm64e-only, which fails linking with pages of "undefined symbol". Which
 # SDKs carry the stub varies by install, so check rather than assume.
 if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  # Installing Xcode does not select it, and CLT ships a different SDK. Name
+  # the one-line fix here rather than leaving it to a wall of link errors.
+  if [ -d /Applications/Xcode.app ] &&
+     [ "$(xcode-select -p 2>/dev/null)" = /Library/Developer/CommandLineTools ]; then
+    echo "herdr-fork-update: WARNING: Xcode is installed but Command Line Tools" >&2
+    echo "  are selected. If the zig build fails below, switch and retry:" >&2
+    echo "  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer" >&2
+  fi
+
   sdk=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
   tbd="$sdk/usr/lib/libSystem.tbd"
   if [ ! -f "$tbd" ]; then
