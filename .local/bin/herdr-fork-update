@@ -16,8 +16,9 @@ REPO="${HERDR_FORK_REPO:-$HOME/xo/lelopez-io/herdr}"
 BRANCH="${HERDR_FORK_BRANCH:-build}"
 REMOTE_URL="${HERDR_FORK_URL:-https://github.com/lelopez-io/herdr.git}"
 
-# Absolute: the build cds into the repo, so a relative $0 stops resolving.
-here=$(cd "$(dirname "$0")" && pwd)
+# Resolve through stow's symlink: the build cds away, and a sibling script may
+# not be restowed into ~/.local/bin yet.
+here=$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")" && pwd)
 
 if [ ! -d "$REPO/.git" ]; then
   echo "herdr-fork-update: cloning $REMOTE_URL into $REPO"
