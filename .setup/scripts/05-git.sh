@@ -85,7 +85,15 @@ fi
 
 # Setup SSH for GitHub if not already configured
 echo "Checking SSH configuration for Git..."
-if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
+# Secretive holds the key in the Secure Enclave, where no file exists for a
+# root agent to read. Writing a file-based key on such a machine undoes that,
+# so an IdentityAgent in ssh config means skip.
+secretive_agent="$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
+if [ -S "$secretive_agent" ] || grep -qis '^[[:space:]]*IdentityAgent' "$HOME/.ssh/config"; then
+    echo "- Enclave-backed SSH agent in use; skipping file-based key generation."
+elif compgen -G "$HOME/.ssh/id_*" > /dev/null; then
+    echo "- SSH key already present in ~/.ssh; skipping generation."
+else
     echo "No SSH key found. Would you like to generate one for Git? (Recommended)"
     read -p "Generate SSH key? (y/n) " generate_key
     
@@ -131,8 +139,6 @@ Host github.com
         echo "Please add this key to your GitHub account."
         echo "Visit: https://github.com/settings/keys"
     fi
-else
-    echo "SSH key already exists at ~/.ssh/id_ed25519"
 fi
 
 # Display git configuration summary
