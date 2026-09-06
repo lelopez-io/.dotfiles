@@ -48,7 +48,10 @@ if [ -z "$sdk" ] || [ ! -f "$tbd" ]; then
 fi
 
 if grep -q arm64-macos "$tbd"; then
-    say "stub:      declares arm64-macos, usable"
+    say "stub:      declares arm64-macos"
+    say ""
+    say "This checks the SDK can be linked against, not that every build works."
+    say "zig 0.15.2 fails on macOS 26.5.1 regardless, on __availability_version_check."
     exit 0
 fi
 
