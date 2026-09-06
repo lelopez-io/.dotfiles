@@ -11,8 +11,9 @@ export TERM=xterm-256color
 export PATH="$HOME/.bun/bin:$PATH"
 
 
-# rancher-desktop
-export PATH="$HOME/.rd/bin:$PATH"
+# rancher-desktop, on the way out: brew provides docker, compose and kubectl
+# now, so this trails them and only backstops a machine still running it.
+[ -d "$HOME/.rd/bin" ] && export PATH="$PATH:$HOME/.rd/bin"
 
 # gcloud
 export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
