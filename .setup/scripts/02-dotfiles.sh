@@ -15,12 +15,16 @@ confirm() {
     done
 }
 
-# Navigate to dotfiles directory
-cd "$HOME/.dotfiles"
+# Derived, not assumed: a clone outside $HOME made `cd ~/.dotfiles` fail and
+# set -e took the whole run with it.
+DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$DOTFILES_ROOT"
 
 # --no-folding: never collapse a directory into one symlink — tools that
 # write runtime state beside their stowed config would land it in this repo.
-STOW_FLAGS=(--no-folding)
+# --target: stow otherwise infers the package's parent, which is only $HOME
+# when the repo sits directly beneath it.
+STOW_FLAGS=(--no-folding --target="$HOME")
 
 # Ask user how to handle existing configs
 if confirm "Would you like to force repo versions of all dotfiles? (This will overwrite your current configs)"; then
@@ -52,6 +56,6 @@ else
 fi
 
 echo "Setting up additional symlinks..."
-ln -sf "$HOME/.dotfiles/.gitignore" "$HOME/.gitignore"
+ln -sf "$DOTFILES_ROOT/.gitignore" "$HOME/.gitignore"
 
 echo "Dotfiles setup complete!"

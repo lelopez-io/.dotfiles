@@ -37,7 +37,8 @@ fi
 # Dotfiles repo: use the committed hooks (pre-commit blocks hardcoded
 # /Users/<name> paths and Brewfile drift). Repo-local config, so it must be
 # set on every machine that runs this setup.
-git -C "$HOME/.dotfiles" config core.hooksPath .githooks
+git -C "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)" \
+    config core.hooksPath .githooks
 
 # git-ai-commit org blocks: each ~/.config/git-ai-commit/*.inc is
 # self-describing — [git-ai-commit] gitdir (repo tree it applies to,
