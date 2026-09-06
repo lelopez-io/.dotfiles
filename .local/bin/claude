@@ -15,12 +15,25 @@ real_claude() {
   [ -n "$latest" ] && [ -x "$latest" ] && echo "$latest"
 }
 
+# Outside ~/.claude because Claude Code rewrites anything it finds there.
+# --settings merges additively: it adds to the live file, never replaces it.
+shared_settings() {
+  local f="$HOME/.config/claude/shared-settings.json"
+  [ -f "$f" ] || return 0
+  case " $* " in *" --settings "*|*" --settings="*) return 0 ;; esac
+  printf '%s' "$f"
+}
+
 # Launch bare, recording that the session is keyless on purpose so a resume
 # from a profile-carrying directory doesn't attach a work key unnoticed.
 bare() {
   export AGENT_WRAPPER=claude AGENT_PROFILE=none
   # -a: herdr names a pane's agent from argv[0], and the native
   # installer's binary is called for its version (2.1.260), not claude.
+  shared=$(shared_settings "$@")
+  if [ -n "$shared" ]; then
+    exec -a claude "$(real_claude)" --settings "$shared" "$@"
+  fi
   exec -a claude "$(real_claude)" "$@"
 }
 
