@@ -26,9 +26,11 @@ if ! scutil --get HostName &>/dev/null; then
     [ -n "$hn" ] && sudo scutil --set HostName "$hn" && echo "HostName pinned to: $hn"
 fi
 
-# The SDK a compiler sees comes from the selected developer directory, and
-# installing Xcode does not select it. 06-forks needs an SDK zig can link
-# against, so settle it before anything consumes it.
+# 06-forks needs an SDK zig can link against, so settle it before anything
+# consumes it. toolchain-check reports; the switch is offered here because it
+# is a system change. Repo path: nothing is stowed until 02-dotfiles.
+"$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/.local/bin/toolchain-check" || true
+
 if [ -d /Applications/Xcode.app ] &&
    [ "$(xcode-select -p 2>/dev/null)" = /Library/Developer/CommandLineTools ]; then
     echo "Xcode is installed but Command Line Tools are selected."

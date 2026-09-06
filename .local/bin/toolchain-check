@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# toolchain-check — report whether the selected macOS developer toolchain can
+# build what this repo builds from source.
+#
+# Usage: toolchain-check [-q]
+#
+#   -q   print only problems, no report
+#
+# Exit: 0 usable, 1 unusable, 2 undetermined.
+#
+# zig 0.15.2 targets plain arm64-macos, so the active SDK's libSystem stub has
+# to declare it. Which SDK is active comes from xcode-select, and installing
+# Xcode does not select it.
+
+set -euo pipefail
+
+quiet=false
+case "${1:-}" in
+    -q|--quiet) quiet=true ;;
+    -h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    "") ;;
+    *) echo "toolchain-check: unknown option '$1'" >&2; exit 2 ;;
+esac
+
+say() { $quiet || echo "$@"; }
+warn() { echo "$@" >&2; }
+
+[ "$(uname -s)" = Darwin ] || { say "not macOS, nothing to check"; exit 0; }
+
+selected=$(xcode-select -p 2>/dev/null || true)
+sdk=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
+tbd="$sdk/usr/lib/libSystem.tbd"
+xcode_app=$(/bin/ls -d /Applications/Xcode*.app 2>/dev/null | head -1 || true)
+
+say "selected:  ${selected:-<none>}"
+say "xcode.app: ${xcode_app:-<not installed>}"
+say "sdk:       ${sdk:-<none>}"
+
+if [ -n "$xcode_app" ] && [ "$selected" = /Library/Developer/CommandLineTools ]; then
+    warn "toolchain-check: Xcode is installed but Command Line Tools are selected."
+    warn "  sudo xcode-select -s $xcode_app/Contents/Developer"
+fi
+
+if [ -z "$sdk" ] || [ ! -f "$tbd" ]; then
+    warn "toolchain-check: no libSystem.tbd under '${sdk:-<no sdk>}', cannot verify."
+    exit 2
+fi
+
+if grep -q arm64-macos "$tbd"; then
+    say "stub:      declares arm64-macos, usable"
+    exit 0
+fi
+
+warn "toolchain-check: the active SDK's libSystem stub is arm64e-only."
+warn "  zig 0.15.2 cannot link against it; builds fail on undefined symbols."
+warn "  Select an SDK that declares arm64-macos, or install Xcode."
+exit 1
