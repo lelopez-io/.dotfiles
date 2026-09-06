@@ -68,10 +68,13 @@ brew "docker-buildx"
 brew "docker-compose"
 
 ## [OPTIONAL] Kubernetes
-brew "fluxcd/tap/flux"
 brew "helm"
 brew "kubectx"
 brew "kubernetes-cli"
+
+## [OPTIONAL] Homelab
+# Talos cluster lifecycle, wanted only where lelopez-io/homelab is worked on.
+brew "fluxcd/tap/flux"
 brew "talhelper"
 
 ## [OPTIONAL] Secrets & Auth
