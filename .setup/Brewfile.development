@@ -64,6 +64,7 @@ cask "gcloud-cli"  # @account-required
 ## [OPTIONAL] Kubernetes
 brew "fluxcd/tap/flux"
 brew "kubectx"
+brew "kubernetes-cli"  # kubectl in its own right; it otherwise ships with rancher
 brew "talhelper"
 cask "rancher"
 
