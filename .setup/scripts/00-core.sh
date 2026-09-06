@@ -26,17 +26,16 @@ if ! scutil --get HostName &>/dev/null; then
     [ -n "$hn" ] && sudo scutil --set HostName "$hn" && echo "HostName pinned to: $hn"
 fi
 
-# 06-forks needs an SDK zig can link against, so settle it before anything
-# consumes it. toolchain-check reports; the switch is offered here because it
-# is a system change. Repo path: nothing is stowed until 02-dotfiles.
-"$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/.local/bin/toolchain-check" || true
+# 06-forks needs an SDK zig can link against. The fork builds override
+# DEVELOPER_DIR per build, so this only offers the machine-wide switch, which
+# needs sudo. Repo path: nothing is stowed until 02-dotfiles.
+toolchain_check="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/.local/bin/toolchain-check"
+rc=0
+"$toolchain_check" || rc=$?
 
-if [ -d /Applications/Xcode.app ] &&
-   [ "$(xcode-select -p 2>/dev/null)" = /Library/Developer/CommandLineTools ]; then
-    echo "Xcode is installed but Command Line Tools are selected."
-    read -p "Switch xcode-select to Xcode? (needs sudo) [y/N] " ans
+if [ "$rc" -eq 1 ] && dd=$("$toolchain_check" --developer-dir 2>/dev/null); then
+    read -p "Switch xcode-select to $dd? (needs sudo) [y/N] " ans
     if [[ "$ans" =~ ^[Yy]$ ]]; then
-        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer \
-            && echo "Now using: $(xcode-select -p)"
+        sudo xcode-select -s "$dd" && echo "Now using: $(xcode-select -p)"
     fi
 fi
