@@ -34,20 +34,27 @@ git fetch origin "$BRANCH"
 git checkout -B "$BRANCH" -q "origin/$BRANCH"
 git reset --hard -q "origin/$BRANCH"
 
-# zig links the build runner against the selected SDK, so the macOS 26 SDK
-# fails before -Dtarget applies (ziglang/zig#31658). Override per build rather
-# than switching the machine.
-if dd=$("$here/toolchain-check" --developer-dir 2>/dev/null); then
-  if [ "$dd" != "$(xcode-select -p 2>/dev/null)" ]; then
-    echo "herdr-fork-update: selected SDK cannot link zig; building with"
-    echo "  DEVELOPER_DIR=$dd"
-  fi
-  export DEVELOPER_DIR="$dd"
-else
-  # Status 1 is a definite no; 2 means undetermined, so let the build try.
-  rc=0
-  "$here/toolchain-check" -q || rc=$?
-  if [ "$rc" -eq 1 ]; then
+# zig picks its SDK by running `xcrun` from PATH and nothing else, so a shim
+# there aims it at an SDK that links, leaving the machine alone.
+# Status 1 is a definite no; 2 means undetermined, so let the build try.
+rc=0
+"$here/toolchain-check" -q || rc=$?
+if [ "$rc" -eq 1 ]; then
+  if sdk=$("$here/toolchain-check" --usable-sdk 2>/dev/null); then
+    shim=$(mktemp -d)
+    trap 'rm -rf "$shim"' EXIT
+    cat > "$shim/xcrun" <<SHIM
+#!/bin/bash
+for a in "\$@"; do
+  if [ "\$a" = --show-sdk-path ]; then echo "$sdk"; exit 0; fi
+done
+exec /usr/bin/xcrun "\$@"
+SHIM
+    chmod 755 "$shim/xcrun"
+    export PATH="$shim:$PATH"
+    echo "herdr-fork-update: the SDK xcrun hands zig cannot link; building"
+    echo "  against $sdk"
+  else
     echo "herdr-fork-update: aborting, no installed SDK can link zig 0.15.2." >&2
     exit 1
   fi

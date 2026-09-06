@@ -1,34 +1,35 @@
 #!/usr/bin/env bash
 #
-# toolchain-check — report whether a macOS developer toolchain has an SDK that
-# zig 0.15.2 can link against, and name one that does.
+# toolchain-check — report whether zig 0.15.2 can link against the SDK this
+# machine hands it, and name an installed SDK that it can.
 #
-# Usage: toolchain-check [-q | --developer-dir | --usable-sdk]
+# Usage: toolchain-check [-q | --usable-sdk]
 #
-#   -q                print only problems, no report
-#   --developer-dir   print a DEVELOPER_DIR whose SDK links, nothing else
-#   --usable-sdk      print a linkable SDK beside the default, nothing else
+#   -q             print only problems, no report
+#   --usable-sdk   print an SDK that links, nothing else
 #
 # Exit: 0 usable, 1 unusable, 2 undetermined.
 #
-# zig 0.15.2 matches the link target exactly against the libSystem stub's first
+# zig matches the link target exactly against the libSystem stub's first
 # document, where the macOS 26 SDK declares only arm64e (ziglang/zig#31658).
 # Re-exports below it declare arm64-macos, so a whole-file grep is fooled.
+#
+# zig picks its SDK by running `xcrun --show-sdk-path`, which answers with the
+# newest installed one; neither SDKROOT nor the MacOSX.sdk symlink moves it.
 
 set -euo pipefail
 
 mode=report
 case "${1:-}" in
     -q|--quiet) mode=quiet ;;
-    --developer-dir) mode=devdir ;;
     --usable-sdk) mode=sdkpath ;;
-    -h|--help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     "") ;;
     *) echo "toolchain-check: unknown option '$1'" >&2; exit 2 ;;
 esac
 
 say() { [ "$mode" = report ] && echo "$@"; return 0; }
-warn() { case "$mode" in devdir|sdkpath) ;; *) echo "$@" >&2 ;; esac; return 0; }
+warn() { [ "$mode" = sdkpath ] || echo "$@" >&2; return 0; }
 
 [ "$(uname -s)" = Darwin ] || { say "not macOS, nothing to check"; exit 0; }
 
@@ -47,81 +48,61 @@ declares_arm64() {
         grep -Eq '(^|[[:space:],[])arm64-macos([[:space:],]|\]|$)'
 }
 
-# Apple's Command Line Tools ship the previous major macOS SDK beside the
-# default. zig only follows the default symlink, so a usable one sitting there
-# is a repoint rather than a download.
-usable_sibling() {
-    local dir; dir=$(dirname "$1")
-    for s in "$dir"/MacOSX*.sdk; do
-        [ -d "$s" ] || continue
-        if [ "$(basename "$s")" = MacOSX.sdk ]; then continue; fi
-        [ -f "$s/usr/lib/libSystem.tbd" ] || continue
-        if declares_arm64 "$s/usr/lib/libSystem.tbd"; then echo "$s"; return 0; fi
-    done
-    return 1
-}
-
-sdk_for() { DEVELOPER_DIR="$1" xcrun --sdk macosx --show-sdk-path 2>/dev/null || true; }
-
-devdir_works() {
-    local sdk; sdk=$(sdk_for "$1")
-    [ -n "$sdk" ] && [ -f "$sdk/usr/lib/libSystem.tbd" ] &&
-        declares_arm64 "$sdk/usr/lib/libSystem.tbd"
+links() {
+    [ -f "$1/usr/lib/libSystem.tbd" ] && declares_arm64 "$1/usr/lib/libSystem.tbd"
 }
 
 selected=$(xcode-select -p 2>/dev/null || true)
-xcode_dir=$(/bin/ls -d /Applications/Xcode*.app/Contents/Developer 2>/dev/null | head -1 || true)
+active=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)
 
-# Active dir first, so a working one is never overridden.
-candidates=("$selected" /Library/Developer/CommandLineTools "$xcode_dir")
+# Command Line Tools keep SDKs at the top; Xcode keeps them under the platform.
+installed_sdks() {
+    local dd
+    for dd in "$selected" /Library/Developer/CommandLineTools \
+              /Applications/Xcode*.app/Contents/Developer; do
+        [ -d "$dd" ] || continue
+        /bin/ls -d "$dd"/SDKs/MacOSX*.sdk \
+            "$dd"/Platforms/MacOSX.platform/Developer/SDKs/MacOSX*.sdk 2>/dev/null || true
+    done
+}
 
-working=""
-for c in "${candidates[@]}"; do
-    [ -n "$c" ] && [ -d "$c" ] || continue
-    if devdir_works "$c"; then working="$c"; break; fi
-done
-
-if [ "$mode" = devdir ]; then
-    [ -n "$working" ] || exit 1
-    echo "$working"
-    exit 0
-fi
-
-sdk=$(sdk_for "$selected")
+usable_sdk() {
+    local s
+    while read -r s; do
+        [ -n "$s" ] || continue
+        if links "$s"; then echo "$s"; return 0; fi
+    done < <(installed_sdks)
+    return 1
+}
 
 if [ "$mode" = sdkpath ]; then
-    [ -n "$sdk" ] || exit 1
-    usable_sibling "$sdk" || exit 1
+    usable_sdk || exit 1
     exit 0
 fi
-say "selected:  ${selected:-<none>}"
-say "sdk:       ${sdk:-<none>}"
 
-if [ -z "$sdk" ] || [ ! -f "$sdk/usr/lib/libSystem.tbd" ]; then
-    warn "toolchain-check: no libSystem.tbd under '${sdk:-<no sdk>}', cannot verify."
+say "selected:  ${selected:-<none>}"
+say "sdk:       ${active:-<none>}"
+
+if [ -z "$active" ]; then
+    warn "toolchain-check: xcrun reported no SDK, cannot verify."
     exit 2
 fi
 
-if declares_arm64 "$sdk/usr/lib/libSystem.tbd"; then
+if links "$active"; then
     say "stub:      declares arm64-macos, zig 0.15.2 can link against it"
     say ""
     say "This checks the SDK links, not that any particular build succeeds."
     exit 0
 fi
 
-warn "toolchain-check: the active SDK's libSystem stub is arm64e-only, so"
+warn "toolchain-check: the SDK xcrun hands zig is arm64e-only, so"
 warn "  zig 0.15.2 cannot link against it (ziglang/zig#31658)."
-if [ -n "$working" ]; then
-    warn "  This one works: $working"
-    warn "  The fork builds set DEVELOPER_DIR to it themselves; to switch the"
-    warn "  whole machine: sudo xcode-select -s $working"
-elif sibling=$(usable_sibling "$sdk"); then
-    warn "  $(basename "$sibling") beside it does declare arm64-macos, and zig"
-    warn "  only ever follows the default symlink:"
-    warn "    sudo ln -sfn $(basename "$sibling") $(dirname "$sdk")/MacOSX.sdk"
-else
-    warn "  No installed SDK declares arm64-macos. Reinstalling Command Line"
-    warn "  Tools brings the previous major macOS SDK, which does; failing that,"
-    warn "  developer.apple.com/download/all has the standalone packages."
+if sdk=$(usable_sdk); then
+    warn "  This one links: $sdk"
+    warn "  The fork builds shim xcrun at it; no machine change is needed."
+    exit 1
 fi
+warn "  No installed SDK declares arm64-macos. Reinstalling Command Line"
+warn "  Tools brings the previous major macOS SDK, which does; failing that,"
+warn "  developer.apple.com/download/all has the standalone packages."
 exit 1
