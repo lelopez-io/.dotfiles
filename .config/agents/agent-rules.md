@@ -30,4 +30,6 @@ variable, redirect to a file, or ask the user to run it.
 
 agent-argv-guard (PreToolUse in claude, tool_call in pi) refuses the shapes
 above. Rewrite with stdin or a `<(reference)`. If a block is wrong, say so
-rather than routing around it silently.
+rather than routing around it silently. Quoted text and heredoc bodies
+written to a file count as data, so documenting a blocked shape in a note
+passes.

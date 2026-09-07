@@ -10,14 +10,17 @@ block() { printf '%s\n' "$1"; exit 1; }
 # all three stay regexes rather than the case globs one call site alone wants.
 creds='\.netrc|\.config/op/|\.aws/credentials|\.ssh/id_|\.claude/\.credentials\.json|\.config/gh/hosts\.yml'
 fwd='ForwardAgent|LocalForward|RemoteForward|DynamicForward'
-# Anything that puts file bytes on stdout belongs here: a shorter list left
-# grep, bat and awk free to print a credential file in the clear.
-readers="op +(read|item +get)|gh +auth +token|security +find-(generic|internet)-password|gopass +show|pass +show|rbw +get|(cat|less|more|head|tail|jq|grep|rg|bat|awk|sed|strings|xxd|od) +[^|]*($creds)"
+# Producers exist to print a secret; file readers print one when pointed at a
+# credential path. Anything that puts file bytes on stdout belongs in the
+# second list, or it prints a credential file in the clear.
+producers='op +(read|item +get)|gh +auth +token|security +find-(generic|internet)-password|gopass +show|pass +show|rbw +get'
+filereaders="(cat|less|more|head|tail|jq|grep|rg|bat|awk|sed|strings|xxd|od) +[^|]*($creds)"
 dq='"' sq=\'
+unquote() { sed -E "s/$dq[^$dq]*$dq//g; s/$sq[^$sq]*$sq//g"; }
 
-# One case per line, want%input. block() exits, so each shape needs its own
-# process: re-invoke rather than call the rules in a loop. Each re-invocation
-# feeds stdin the same way the adapters do.
+# One case per line, want%input; \n stands for a line break. block() exits,
+# so each shape needs its own process: re-invoke rather than call the rules
+# in a loop. Each re-invocation feeds stdin the same way the adapters do.
 if [ "$1" = --selftest ]; then
     fail=0
     while IFS='%' read -r want a b c; do
@@ -25,7 +28,7 @@ if [ "$1" = --selftest ]; then
         case $a in
             --read)   "$0" --read "$b" ;;
             --config) printf '%s' "$c" | "$0" --config "$b" ;;
-            *)        printf '%s' "$a" | "$0" ;;
+            *)        printf '%b' "$a" | "$0" ;;
         esac >/dev/null 2>&1 && got=allow || got=block
         [ "$got" = "$want" ] || { printf 'FAIL want=%s got=%s: %s %s\n' \
             "$want" "$got" "$a" "$b"; fail=1; }
@@ -61,6 +64,18 @@ allow%ps aux
 allow%arr=(a b c)
 block%diff <(sort a) =(sort b)
 allow%echo hello
+block%cat "$HOME/.netrc"
+allow%op read "op://v/a | b/f" > /tmp/f
+block%op read "op://v/i/f" | cat
+block%op read op://v/i/f "a > b"
+allow%grep -E 'op item get|op read' guard.sh
+block%sh -c "op read op://v/i/f"
+block%eval 'op read op://v/i/f'
+allow%cat > note.md <<'NOTE'\nop read op://v/i/f | pbcopy\nNOTE
+block%cat > note.md <<'NOTE'\nnothing\nNOTE\nop read op://v/i/f
+block%cat <<'EOF' | sh\nop read op://v/i/f\nEOF
+block%bash <<'EOF'\nop read op://v/i/f\nEOF
+block%cat <<<foo\nop read op://v/i/f
 block%--read%~/.ssh/id_rsa
 block%--config%~/.ssh/config%ForwardAgent yes
 block%--config%~/.ssh/config.d/work%ForwardAgent yes
@@ -122,12 +137,26 @@ if has "$cmd" '(^|[^A-Za-z0-9_])ps +(-[A-Za-z]*E|([A-Za-z-]+ +)*[a-z]*e[a-z]*( +
     block 'dumps process environments. Query the one variable instead.'
 fi
 
+# A heredoc body that cat or tee writes out is data. Any other consumer, or a
+# cat piped onward, may run it, so those bodies stay. <<< opens no body.
+nobody=$(printf '%s\n' "$cmd" | awk '
+    body { body = $0 != tag; next }
+    { print }
+    /(^|[;&|] *)(cat|tee) / && $0 !~ /<<[^|]*\|/ && match($0, / <<["'\'']?[A-Za-z_][A-Za-z0-9_]*/) {
+        tag = substr($0, RSTART, RLENGTH); sub(/^ <<["'\'']?/, "", tag); body = 1
+    }')
+
 # A capture ($(...), <(...)) keeps the value out of the transcript, so drop
-# those runs before looking for a bare print. What survives has to redirect
-# before its own command ends: a > in a later command of the list is unrelated
-# to this one, and once excused the whole check.
-unwrapped=$(printf '%s' "$cmd" | sed -E 's/[<$]\([^)]*\)//g')
-if has "$unwrapped" "($readers)[^;&|>]*($|[;&|])"; then
+# those runs before looking for a bare print.
+unwrapped=$(printf '%s' "$nobody" | sed -E 's/[<$]\([^)]*\)//g')
+# A producer name in quotes is an argument, and a | or > in quotes is neither
+# a pipe nor a redirect; sh -c and eval run their quoted string, so it keeps
+# its contents. File readers keep their quotes: a quoted path is still a path.
+bare=$(printf '%s' "$unwrapped" | sed -E "s/(-c|eval) +$dq([^$dq]*)$dq/\1 \2/g; s/(-c|eval) +$sq([^$sq]*)$sq/\1 \2/g" | unquote)
+# What survives has to redirect before its own command ends: a > in a later
+# command of the list is unrelated to this one, and once excused the whole
+# check.
+if has "$bare" "($producers)[^;&|>]*($|[;&|])" || has "$unwrapped" "($filereaders)[^;&|>]*($|[;&|])"; then
     block 'prints a credential into the session transcript. Capture it in a variable, redirect it to a file, or ask the user to run it.'
 fi
 
@@ -141,7 +170,7 @@ fi
 # than truncated at the first quote: truncating lost every flag after a quoted
 # host, while dropping still hides a quoted remote command's own flags.
 if has "$cmd" '(^|[;&|] )ssh '; then
-    unquoted=$(printf '%s' "$cmd" | sed -E "s/$dq[^$dq]*$dq//g; s/$sq[^$sq]*$sq//g")
+    unquoted=$(printf '%s' "$cmd" | unquote)
     if has "$unquoted" '(^| )-[A-Za-z]*[ADLR]' || has "$cmd" "-o ?[$dq$sq]?[A-Za-z]*($fwd)"; then
         block 'ssh forwarding (-A/-L/-R/-D or a *Forward* keyword) is disabled in this fleet. Run it without forwarding, or ask the user.'
     fi
