@@ -8,18 +8,22 @@ guard="$HOME/.local/bin/agent-argv-guard"
 [ -x "$guard" ] || exit 0                  # fail open if the guard is not stowed
 
 input=$(cat)
-case $(printf '%s' "$input" | jq -r '.tool_name // empty') in
+field() { printf '%s' "$input" | jq -r "$1 // empty"; }
+
+# The payload reaches the guard on stdin so the command never lands in a
+# child's argv, the channel the guard exists to keep clean.
+case $(field .tool_name) in
     Bash)
-        set -- "$(printf '%s' "$input" | jq -r '.tool_input.command // empty')" ;;
+        payload=$(field .tool_input.command)
+        set -- ;;
     Write | Edit)
         # Write carries .content, Edit carries .new_string.
-        set -- --config \
-            "$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')" \
-            "$(printf '%s' "$input" | jq -r '.tool_input.content // .tool_input.new_string // empty')" ;;
+        payload=$(field '.tool_input.content // .tool_input.new_string')
+        set -- --config "$(field .tool_input.file_path)" ;;
     *) exit 0 ;;
 esac
 
-reason=$("$guard" "$@"); status=$?
+reason=$(printf '%s' "$payload" | "$guard" "$@"); status=$?
 # Only exit 1 is a refusal. Any other status means the guard itself broke, and
 # a broken guard must not wedge every shell in the fleet.
 [ "$status" -eq 1 ] || exit 0

@@ -175,6 +175,11 @@ rules it enforces live in `.config/agents/agent-rules.md`, which both agents
 load globally: `~/.claude/CLAUDE.md` links to it (wired by `07-agents.sh`)
 and `~/.pi/agent/AGENTS.md` is a repo symlink to it.
 
+Commands and file content reach the detector on stdin, never argv. A checker
+that took the command as an argument would copy the secret it is hunting into
+a second process's argv, the channel these rules exist to keep clean. Paths
+stay on argv, which the filesystem gives up anyway.
+
 A guard that cannot parse would otherwise refuse every command, so both
 adapters fail open on anything but a refusal. That trades a wedged fleet for
 a silent gap, which session start closes by running `agent-argv-guard

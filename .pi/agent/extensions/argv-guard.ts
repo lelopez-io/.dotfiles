@@ -14,20 +14,22 @@ export default function (pi) {
   pi.on("tool_call", (event) => {
     try {
       const input = event.input ?? {};
-      let argv: string[] | undefined;
-      if (event.toolName === "bash") argv = [input.command ?? ""];
-      else if (PATH_TOOLS.includes(event.toolName))
-        argv = ["--read", input.path ?? ""];
-      else if (event.toolName === "write")
-        argv = ["--config", input.path ?? "", input.content ?? ""];
-      else if (event.toolName === "edit")
-        argv = [
-          "--config",
-          input.path ?? "",
-          (input.edits ?? []).map((e: any) => e.newText).join("\n"),
-        ];
-      if (!argv) return;
-      const r = spawnSync(GUARD, argv, { encoding: "utf8" });
+      const tool = event.toolName;
+      // Commands and file content go over stdin, paths over argv: checking a
+      // command for secrets in argv must not put that command into another.
+      let argv: string[] = [];
+      let payload = "";
+      if (tool === "bash") payload = input.command ?? "";
+      else if (PATH_TOOLS.includes(tool)) argv = ["--read", input.path ?? ""];
+      else if (tool === "write") {
+        argv = ["--config", input.path ?? ""];
+        payload = input.content ?? "";
+      } else if (tool === "edit") {
+        argv = ["--config", input.path ?? ""];
+        payload = (input.edits ?? []).map((e: any) => e.newText).join("\n");
+      } else return;
+
+      const r = spawnSync(GUARD, argv, { input: payload, encoding: "utf8" });
       // Only exit 1 is a refusal; any other status is a broken guard, which
       // must not wedge the agent.
       if (r.status === 1) {

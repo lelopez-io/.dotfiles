@@ -15,13 +15,18 @@ fwd='ForwardAgent|LocalForward|RemoteForward|DynamicForward'
 readers="op +(read|item +get)|gh +auth +token|security +find-(generic|internet)-password|gopass +show|pass +show|rbw +get|(cat|less|more|head|tail|jq|grep|rg|bat|awk|sed|strings|xxd|od) +[^|]*($creds)"
 dq='"' sq=\'
 
-# One case per line, want%argv. block() exits, so each shape needs its own
-# process: re-invoke rather than call the rules in a loop.
+# One case per line, want%input. block() exits, so each shape needs its own
+# process: re-invoke rather than call the rules in a loop. Each re-invocation
+# feeds stdin the same way the adapters do.
 if [ "$1" = --selftest ]; then
     fail=0
     while IFS='%' read -r want a b c; do
         [ -n "$want" ] || continue
-        if "$0" "$a" "$b" "$c" >/dev/null 2>&1; then got=allow; else got=block; fi
+        case $a in
+            --read)   "$0" --read "$b" ;;
+            --config) printf '%s' "$c" | "$0" --config "$b" ;;
+            *)        printf '%s' "$a" | "$0" ;;
+        esac >/dev/null 2>&1 && got=allow || got=block
         [ "$got" = "$want" ] || { printf 'FAIL want=%s got=%s: %s %s\n' \
             "$want" "$got" "$a" "$b"; fail=1; }
     done <<'CASES'
@@ -69,17 +74,28 @@ fi
 
 # Edits reach ssh config without ever becoming a command, so the content is
 # scanned here rather than by the shell rules below. Include files under
-# config.d are the same file for this purpose.
+# config.d are the same file for this purpose. Read stdin before the path test
+# so the writer never blocks on a pipe nothing drains.
 if [ "$1" = --config ]; then
+    content=$(cat)
     case "$2" in
         */.ssh/config|*/.ssh/config.d/*)
-            has "$3" "$fwd" \
+            has "$content" "$fwd" \
                 && block 'adds forwarding to ssh config, which is disabled in this fleet. Ask the user to make that change by hand.' ;;
     esac
     exit 0
 fi
 
-cmd=$1
+# The command crosses on stdin, never argv: a checker that took it as an
+# argument would copy the secret it is hunting into a second process's argv,
+# the exact channel these rules exist to keep clean. Paths stay on argv, which
+# the filesystem gives up anyway.
+if [ -t 0 ]; then
+    echo "usage: printf '%s' \"\$cmd\" | agent-argv-guard" >&2
+    echo "       agent-argv-guard --read PATH | --config PATH | --selftest" >&2
+    exit 2   # neither allow nor refuse, so an adapter fails open on it
+fi
+cmd=$(cat)
 
 # Secret-shaped literals anywhere in the command.
 if has "$cmd" 'sk-ant-o[A-Za-z0-9_-]{8}|gh[pousr]_[A-Za-z0-9]{16}|github_pat_[A-Za-z0-9_]{20}|glpat-[A-Za-z0-9_-]{15}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10}|-----BEGIN [A-Z ]*PRIVATE KEY'; then
