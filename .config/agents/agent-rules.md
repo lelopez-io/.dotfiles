@@ -9,6 +9,8 @@
 - `$(...)` in an argument expands the value into argv. Use `<(...)`.
 - zsh `=(...)` writes a temp file under /tmp. Use `<(...)`, which is
   pipe-backed.
+- Do not copy credential files (`cp`, `mv`, `scp`, `rsync`, `tee`).
+  Reference them in place with `<(...)`.
 - Do not dump process environments (`ps eww`). Query the one variable.
 
 ## Never print a credential to the transcript
