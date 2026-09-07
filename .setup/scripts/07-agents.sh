@@ -17,8 +17,13 @@ herdr_bin="$HOME/.local/bin/herdr"
 
 # herdr installs the claude hooks into ~/.claude, which Claude Code creates on
 # first launch. Setup runs before anyone has opened it, so make the directory:
-# the hooks are read whenever that first launch happens.
-command -v claude &> /dev/null && mkdir -p "$HOME/.claude"
+# the hooks are read whenever that first launch happens. Claude Code never
+# rewrites CLAUDE.md, so the global rules file can be a link to the stowed
+# copy while other files under ~/.claude stay machine-local.
+if command -v claude &> /dev/null; then
+    mkdir -p "$HOME/.claude"
+    ln -sfn "$HOME/.config/agents/agent-rules.md" "$HOME/.claude/CLAUDE.md"
+fi
 
 if [ -n "$herdr_bin" ]; then
     for target in claude pi; do

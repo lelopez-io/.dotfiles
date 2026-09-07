@@ -26,13 +26,14 @@ mise.*.local.toml
 # claude
 .claude/*
 
-# pi runtime state (auth, trust, model store, sessions); only the herdr
-# session-marker extension is shared. --no-folding keeps ~/.pi real, so this
-# is the backstop for a stow run by hand without it.
+# pi runtime state (auth, trust, model store, sessions); the shared pieces are
+# the extensions and the global rules file. --no-folding keeps ~/.pi real, so
+# this is the backstop for a stow run by hand without it.
 .pi/*
 !.pi/agent/
 .pi/agent/*
 !.pi/agent/extensions/
+!.pi/agent/AGENTS.md
 
 # Setup generated state
 .setup/Brewfile.*.lock.json

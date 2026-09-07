@@ -164,6 +164,23 @@ exec as a backstop. That backstop only closes the CLI-session path: with the
 regardless, so the control that actually holds is `op` staying out of the
 agent's permission allowlist.
 
+The agent-side backstop is `agent-argv-guard` (`.local/bin/`): one detector
+shared by claude (a PreToolUse hook registered in
+`.config/claude/shared-settings.json`) and pi (a `tool_call` extension in
+`.pi/agent/extensions/`), refusing command shapes that leak secrets into
+argv, environment variables, temp files, or the session transcript, and ssh
+forwarding in either flag (`-A`/`-L`/`-R`/`-D`) or `*Forward*` keyword form,
+whether issued as a command or written into `~/.ssh/config`. The
+rules it enforces live in `.config/agents/agent-rules.md`, which both agents
+load globally: `~/.claude/CLAUDE.md` links to it (wired by `07-agents.sh`)
+and `~/.pi/agent/AGENTS.md` is a repo symlink to it.
+
+A guard that cannot parse would otherwise refuse every command, so both
+adapters fail open on anything but a refusal. That trades a wedged fleet for
+a silent gap, which session start closes by running `agent-argv-guard
+--selftest` and warning when it fails. Run the same flag by hand after
+editing the detector.
+
 Script conventions:
 
 -   Shebang `#!/usr/bin/env bash`, `set -euo pipefail`, a `usage()` heredoc, and

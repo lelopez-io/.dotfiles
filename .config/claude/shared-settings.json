@@ -56,7 +56,31 @@
       "WebSearch"
     ],
     "deny": [
-      "Bash(git -C:*)"
+      "Bash(git -C:*)",
+      "Read(~/.config/op/**)",
+      "Read(~/.ssh/id_*)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.netrc)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.config/gh/hosts.yml)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          { "type": "command", "command": "\"$HOME/.local/bin/agent-argv-guard\" --selftest >/dev/null 2>&1 || echo 'WARNING: agent-argv-guard selftest failed. The secret guard fails open, so it is not enforcing until repaired.'" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "$HOME/.config/claude/hooks/pretooluse-argv-guard.sh" }
+        ]
+      }
     ]
   },
   "skipAutoPermissionPrompt": true,

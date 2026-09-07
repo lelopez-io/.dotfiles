@@ -1,0 +1,1 @@
+../../.config/agents/agent-rules.md
