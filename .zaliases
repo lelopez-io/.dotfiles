@@ -2,9 +2,11 @@
 # public key) in ~/.local/bin
 
 # git
-# review flows in panes; quick glances are the herdr popups
+# gg walks commits beside serie's graph, gr reads the branch as its PR,
+# gi watches what isn't committed yet; quick glances are the herdr popups
 alias gg='git-graph'
 alias gi='git-inspect'
+alias gr='git-review'
 
 alias hs='herdr --session'
 

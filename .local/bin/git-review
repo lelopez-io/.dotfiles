@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# git-review — hunk on the branch as a whole: every commit since the base it
+# would merge into, in one diff. The PR-shaped pass — `gg` reviews commit by
+# commit, `gi` reviews what isn't committed yet. Also `git review`.
+#
+#   git-review              base...HEAD, base auto-detected
+#   git-review <base>       explicit base (stacked branches)
+#   git-review --pr         base from the branch's open PR
+#   git-review --wip        fold in uncommitted work
+#   git-review [...] -- <pathspec>
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+git-review — review the branch as the PR it would open: every commit since
+its base, in one hunk session.
+
+Usage: git-review [--pr | <base-ref>] [--wip] [-- <pathspec>...]
+
+  <base-ref>   Branch/commit to diff against (default: origin's HEAD branch).
+  --pr         Take the base from the branch's open PR (needs gh).
+  --wip        Include uncommitted work: worktree vs the fork point.
+
+Base resolution: an explicit ref, else --pr, else origin/HEAD (origin/main or
+origin/master). On the base branch itself the range becomes its upstream, so
+the review is the unpushed commits.
+Also works as `git review` — git treats git-* on PATH as subcommands.
+EOF
+}
+
+base=""
+wip=0
+from_pr=0
+paths=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit 0 ;;
+        --wip) wip=1; shift ;;
+        --pr) from_pr=1; shift ;;
+        --) shift; paths=("$@"); break ;;
+        -*)
+            echo "git-review: unknown option: $1" >&2
+            usage >&2
+            exit 2 ;;
+        *)
+            [ -z "$base" ] || {
+                echo "git-review: unexpected argument: $1" >&2; exit 2; }
+            base=$1
+            shift ;;
+    esac
+done
+
+git rev-parse --is-inside-work-tree > /dev/null
+
+if [ "$from_pr" -eq 1 ]; then
+    [ -z "$base" ] || {
+        echo "git-review: --pr takes the base from the PR; drop the ref." >&2
+        exit 2; }
+    command -v gh > /dev/null 2>&1 || {
+        echo "git-review: --pr needs gh — brew install gh first." >&2; exit 1; }
+    # A PR base is a bare branch name, and the local copy of it may lag the
+    # remote the PR is actually measured against.
+    pr_base=$(gh pr view --json baseRefName --jq .baseRefName)
+    if git rev-parse --verify --quiet "origin/$pr_base" > /dev/null; then
+        base="origin/$pr_base"
+    else
+        base=$pr_base
+    fi
+fi
+
+if [ -z "$base" ]; then
+    base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD || true)
+    if [ -z "$base" ]; then
+        for cand in origin/main origin/master main master; do
+            git rev-parse --verify --quiet "$cand" > /dev/null && { base=$cand; break; }
+        done
+    fi
+    # Sitting on the base branch there is no fork point to measure from, so
+    # measure from upstream: the unpushed commits are the reviewable set.
+    head_branch=$(git symbolic-ref --quiet --short HEAD || true)
+    if [ -n "$head_branch" ] && [ "${base#origin/}" = "$head_branch" ]; then
+        base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' \
+            2> /dev/null || echo "$base")
+    fi
+fi
+
+[ -n "$base" ] || {
+    echo "git-review: no base ref found — pass one explicitly." >&2; exit 1; }
+git rev-parse --verify --quiet "$base" > /dev/null || {
+    echo "git-review: invalid base ref: $base" >&2; exit 1; }
+
+if [ "$wip" -eq 1 ]; then
+    # Worktree against the fork point, so uncommitted work reads as part of
+    # the branch rather than as a diff against HEAD.
+    target=$(git merge-base "$base" HEAD)
+else
+    # Three-dot: the branch's own commits, never the base's — the PR's diff.
+    target="$base...HEAD"
+    [ "$(git rev-list --count "$base..HEAD")" -gt 0 ] || {
+        echo "git-review: no commits between $base and HEAD (--wip folds in uncommitted work)." >&2
+        exit 1; }
+fi
+
+args=("$target")
+[ ${#paths[@]} -eq 0 ] || args+=(-- "${paths[@]}")
+
+if command -v hunk > /dev/null 2>&1; then
+    exec hunk diff "${args[@]}"
+fi
+
+# No hunk on this machine: a delta snapshot, no notes and no session.
+exec git -c core.pager="delta --paging=always --side-by-side --navigate" \
+    diff --color=always "${args[@]}"
