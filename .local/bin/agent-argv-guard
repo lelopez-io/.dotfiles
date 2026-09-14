@@ -62,7 +62,9 @@ allow%echo "helps every reader"
 allow%ps -ef | grep foo
 allow%ps aux
 allow%arr=(a b c)
+allow%args+=(-- "$paths")
 block%diff <(sort a) =(sort b)
+block%diff <(sort a) x =(sort b)
 allow%echo hello
 block%cat "$HOME/.netrc"
 allow%op read "op://v/a | b/f" > /tmp/f
@@ -122,10 +124,11 @@ if has "$cmd" 'sk-ant-o[A-Za-z0-9_-]{8}|gh[pousr]_[A-Za-z0-9]{16}|github_pat_[A-
     block 'literal secret in the command. Pass it by stdin or <(op read "op://...") so only a reference crosses argv.'
 fi
 
-# zsh =(...) writes a real temp file under /tmp. An array assignment has a
-# name glued to the paren (arr=(...)), so only block it at a word boundary.
+# zsh =(...) writes a real temp file under /tmp. Array set and append both
+# glue a name to the paren (arr=(...), args+=(...)), so block only at a
+# boundary neither crosses; real =(...) always starts its word.
 # The rule matches this comment too: edit this file with a tool, not a heredoc.
-if has "$cmd" '(^|[^A-Za-z0-9_])=\('; then
+if has "$cmd" '(^|[^A-Za-z0-9_+])=\('; then
     block 'zsh =(...) writes a temp file under /tmp. Use <(...) instead; it is pipe-backed.'
 fi
 
