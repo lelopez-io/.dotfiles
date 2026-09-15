@@ -15,13 +15,18 @@ set -euo pipefail
 resolve_target() {
   target=(--repo .)
   [ -n "${GIT_GRAPH_HUNK_PANE:-}" ] || return 0
-  local pids sid
+  local pids sid list
   pids=$(herdr pane process-info --pane "$GIT_GRAPH_HUNK_PANE" 2>/dev/null \
     | jq -c '[.result.process_info.foreground_processes[].pid]') || return 0
-  sid=$(hunk session list --json 2>/dev/null \
-    | jq -r --argjson pids "${pids:-[]}" \
-        '.sessions[] | select(.pid as $p | $pids | index($p)) | .sessionId' \
-    | head -1)
+  # Through a file, not a pipe: hunk's listing exits without draining
+  # stdout, so past 64K of sessions the tail is lost and jq dies on the
+  # half object, which pipefail turns into a dead follow.
+  list=$(mktemp -t git-graph-sessions) || return 0
+  hunk session list --json > "$list" 2>/dev/null || { rm -f "$list"; return 0; }
+  sid=$(jq -r --argjson pids "${pids:-[]}" \
+      '.sessions[] | select(.pid as $p | $pids | index($p)) | .sessionId' \
+      "$list" 2>/dev/null | head -1) || sid=""
+  rm -f "$list"
   [ -n "$sid" ] && target=("$sid")
   return 0
 }
