@@ -1,0 +1,42 @@
+#!/bin/bash
+# gb: git-graph for one branch of a stack. Serie shows only
+# <parent>..HEAD, so the other branches drop out, and hunk follows the
+# cursor as in gg.
+#
+#   gb            parent from git-town's record, else origin's default
+#   gb <parent>   an explicit parent
+set -euo pipefail
+
+case ${1:-} in
+  -h|--help) sed -n '2,7s/^# \{0,1\}//p' "$0"; exit 0 ;;
+  -*) echo "gb: unknown option $1" >&2; exit 2 ;;
+esac
+[ $# -le 1 ] || { echo "usage: gb [parent]" >&2; exit 2; }
+
+parent=${1:-}
+from="the argument"
+if [ -z "$parent" ]; then
+  branch=$(git symbolic-ref -q --short HEAD || true)
+  if [ -n "$branch" ]; then
+    parent=$(git config "git-town-branch.$branch.parent" || true)
+    from="git-town-branch.$branch.parent"
+  fi
+fi
+if [ -z "$parent" ]; then
+  # origin/HEAD is only set by a clone or `git remote set-head`.
+  parent=$(git symbolic-ref -q --short refs/remotes/origin/HEAD || true)
+  for ref in origin/main origin/master; do
+    [ -z "$parent" ] || break
+    if git rev-parse -q --verify "$ref^{commit}" > /dev/null; then parent=$ref; fi
+  done
+  from="origin's default branch"
+  [ -n "$parent" ] || {
+    echo "gb: no parent recorded and no origin default; pass one" >&2; exit 1; }
+fi
+
+# Checked here because a range serie rejects closes the layout before
+# its error can be read.
+git rev-parse -q --verify "$parent^{commit}" > /dev/null || {
+  echo "gb: parent $parent (from $from) is not a commit" >&2; exit 1; }
+
+exec git-graph --range "$parent..HEAD"

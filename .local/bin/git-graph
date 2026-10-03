@@ -4,9 +4,10 @@
 # split and hunk needs a real tty, so the layout is panes, synced by
 # hunk's session daemon re-pointing a live pane.
 #
-#   git-graph            hunk on the worktree in this pane, serie under
-#   git-graph --send <h> load commit <h> into the hunk pane (serie's v);
-#                        the WIP row's zero hash loads the working tree
+#   git-graph             hunk on the worktree in this pane, serie under
+#   git-graph --range <r> the same, serie showing only revisions <r> (gb)
+#   git-graph --send <h>  load commit <h> into the hunk pane (serie's v);
+#                         the WIP row's zero hash loads the working tree
 set -euo pipefail
 
 # Serie's v and i run inside the layout, where serie-follow's exported
@@ -54,6 +55,13 @@ if [ "${1:-}" = "--send" ]; then
   esac
 fi
 
+serie_cmd=serie
+if [ "${1:-}" = "--range" ]; then
+  [ -n "${2:-}" ] || { echo "git-graph: --range needs revisions" >&2; exit 2; }
+  serie_cmd="serie --range $(printf '%q' "$2")"
+  shift 2
+fi
+
 case ${1:-} in
   -*) echo "git-graph: unknown mode $1" >&2; exit 2 ;;
 esac
@@ -79,7 +87,7 @@ pane_id=$(herdr pane split --current --direction down --ratio 0.75 \
 # session, so a second hunk on the repo cannot misroute reloads. The
 # cursor-follow itself is serie's trigger = "select" command.
 herdr pane run "$pane_id" \
-    "GIT_GRAPH_HUNK_PANE=$HERDR_PANE_ID serie; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
+    "GIT_GRAPH_HUNK_PANE=$HERDR_PANE_ID $serie_cmd; git-graph --teardown $HERDR_PANE_ID $pane_id" > /dev/null
 
 # Quitting either side ends the whole layout: the strip tears this pane's
 # hunk down when serie exits, and this path closes the strip when hunk
