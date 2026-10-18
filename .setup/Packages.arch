@@ -1,0 +1,135 @@
+# 01-tool-install.sh reads this list instead of the Brewfiles on machines
+# with pacman. Repo packages install with pacman, AUR packages with yay;
+# sections and parked entries work the same as in the Brewfiles. Claude Code
+# has no entry: 07-agents.sh installs the native build the wrapper runs.
+
+## [REQUIRED] Essential
+pacman "eza"
+pacman "fzf"                     # fuzzy finder, gco + keybindings in dotfiles
+pacman "git-delta"               # diff pager, used by 02-dotfiles.sh and 05-git.sh
+pacman "jq"                      # git-graph, herdr-fork-update
+pacman "mise-bin"                # omarchy repo, the build Omarchy itself ships
+pacman "starship"
+pacman "stow"
+# herdr has no Arch package; 06-forks.sh builds the fork
+pacman "zsh-autosuggestions"
+pacman "zsh-syntax-highlighting"
+pacman "ttf-anonymouspro-nerd"   # ghostty font-family names AnonymicePro Nerd Font Mono
+pacman "ghostty"
+# ruby's build headers (openssl libyaml libffi zlib) install in 03-languages.sh
+
+## [REQUIRED] Neovim
+pacman "neovim"
+pacman "imagemagick"             # image.nvim
+pacman "mermaid-cli"             # mermaid diagram rendering
+yay "prettierd"                  # conform.nvim formatter
+pacman "ripgrep"                 # telescope.nvim live_grep
+pacman "stylua"                  # conform.nvim formatter
+pacman "tree-sitter-cli"         # nvim-treesitter parser compilation
+pacman "chromium"                # the browser mermaid-cli drives; Omarchy ships it, so --needed no-ops
+
+## [REQUIRED] Git review
+yay "hunk"                       # git-graph and git-inspect wrap it
+pacman "serie"                   # git-graph's graph strip; 06-forks shadows it
+
+## [OPTIONAL] CLI Tools
+pacman "pv"                 # pipe progress meter, used by verify-copy
+pacman "shellcheck"         # lints ~/.local/bin scripts
+pacman "the_silver_searcher"
+pacman "tree"
+# pacman "atuin"             # shell history w/ sync, evaluate
+# pacman "inetutils"         # provides telnet
+# pacman "tmux"              # herdr replaced it; fallback multiplexer
+# watch: provided by procps-ng, part of every Arch base install
+# pacman "wget"
+# pacman "yamllint"
+# pacman "yq"
+
+## [OPTIONAL] Git & GitHub
+pacman "git-town"    # stacked PR workflow, cross-platform (GitHub, Forgejo, Codeberg)
+pacman "lazygit"     # git TUI for SSH/headless sessions
+pacman "github-cli"  # provides gh; @account-required; extensions managed in 05-git.sh
+yay "gitkraken"      # @account-required
+
+## [OPTIONAL] Editors & IDEs
+pacman "zed"
+# yay "android-studio"
+# pacman "visual-studio-code-bin"  # omarchy repo
+# yay "postman-bin"                # @account-required
+
+## [OPTIONAL] Cloud & Infrastructure
+pacman "ansible"
+pacman "terraform"
+pacman "aws-cli-v2"     # provides aws; @account-required
+yay "google-cloud-cli"  # provides gcloud; @account-required
+
+## [OPTIONAL] Containers
+# colima is macOS-only: docker runs natively on Arch, no VM shim
+pacman "docker"
+pacman "docker-buildx"
+pacman "docker-compose"
+
+## [OPTIONAL] Kubernetes
+pacman "helm"
+pacman "kubectx"
+pacman "kubectl"
+
+## [OPTIONAL] Cluster Ops
+yay "flux-bin"    # brew's fluxcd/tap/flux
+yay "talhelper"
+
+## [OPTIONAL] Secrets & Auth
+pacman "age"
+pacman "gnupg"
+pacman "sops"
+pacman "1password"      # @account-required
+pacman "1password-cli"  # @account-required
+
+## [OPTIONAL] Browsers
+# pacman "firefox"
+# pacman "google-chrome"  # omarchy repo
+
+## [OPTIONAL] Media
+# iina and plexamp have no Arch package
+# pacman "ffmpeg"
+# pacman "whisper-cpp"
+# pacman "yt-dlp"
+# pacman "audacity"
+# pacman "calibre"
+
+## [OPTIONAL] Documents
+pacman "texlive-basic"  # brew's basictex
+
+## [OPTIONAL] Disk & Storage
+pacman "unarchiver"     # brew's the-unarchiver
+# daisydisk is macOS-only
+
+## [OPTIONAL] Personal Backup
+pacman "borg"
+pacman "python-pyfuse3"  # borg mount; brew's borgbackup-fuse
+pacman "vorta"
+# pacman "ddrescue"
+# yay "balena-etcher"
+# pacman "veracrypt"
+# macfuse is macOS-only
+
+## [OPTIONAL] Networking & Privacy
+yay "mullvad-browser-bin"
+pacman "mullvad-vpn"    # @account-required
+pacman "tailscale"      # @account-required; brew's tailscale-app
+# little-snitch is macOS-only
+
+## [OPTIONAL] Notes & Writing
+pacman "obsidian"
+# pacman "typora"  # @license-required; omarchy repo
+# grammarly-desktop has no Arch package
+
+## [OPTIONAL] Communication
+# pacman "discord"        # @account-required
+# pacman "slack-desktop"  # @account-required; omarchy repo
+
+## [OPTIONAL] Remote Access
+yay "anydesk-bin"
+
+# Sections with no Linux package at all, dropped rather than carried empty:
+# Window & Menubar, Meetings & Audio, Screenshots, Virtualization.
