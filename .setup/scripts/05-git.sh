@@ -88,9 +88,9 @@ fi
 echo "Checking SSH configuration for Git..."
 # Secretive holds the key in the Secure Enclave, where no file exists for a
 # root agent to read. Writing a file-based key on such a machine undoes that,
-# so an IdentityAgent in ssh config means skip.
+# so an IdentityAgent in ssh config (if one exists yet) means skip.
 secretive_agent="$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
-if [ -S "$secretive_agent" ] || grep -qis '^[[:space:]]*IdentityAgent' "$HOME/.ssh/config"; then
+if [ -S "$secretive_agent" ] || grep -qis '^[[:space:]]*IdentityAgent' "$HOME/.ssh/config" 2>/dev/null; then
     echo "- Enclave-backed SSH agent in use; skipping file-based key generation."
 elif compgen -G "$HOME/.ssh/id_*" > /dev/null; then
     echo "- SSH key already present in ~/.ssh; skipping generation."
@@ -108,22 +108,27 @@ else
         # Start SSH agent
         eval "$(ssh-agent -s)"
         
-        # Create or update SSH config
+        # Create or update SSH config. UseKeychain exists only in macOS's
+        # ssh; Linux rejects the option outright (ssh -G reports a bad
+        # configuration option), so only macs get the line.
+        github_ssh_config="Host github.com
+    AddKeysToAgent yes"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            github_ssh_config="$github_ssh_config
+    UseKeychain yes"
+        fi
+        github_ssh_config="$github_ssh_config
+    IdentityFile ~/.ssh/id_ed25519"
         mkdir -p "$HOME/.ssh"
         if [ ! -f "$HOME/.ssh/config" ]; then
-            echo "Host github.com
-    AddKeysToAgent yes
-    UseKeychain yes
-    IdentityFile ~/.ssh/id_ed25519" > "$HOME/.ssh/config"
+            echo "$github_ssh_config" > "$HOME/.ssh/config"
         else
             if ! grep -q "Host github.com" "$HOME/.ssh/config"; then
-                echo "
-Host github.com
-    AddKeysToAgent yes
-    UseKeychain yes
-    IdentityFile ~/.ssh/id_ed25519" >> "$HOME/.ssh/config"
+                echo "" >> "$HOME/.ssh/config"
+                echo "$github_ssh_config" >> "$HOME/.ssh/config"
             fi
         fi
+        unset github_ssh_config
         
         # Add key to keychain (MacOS only)
         if [[ "$OSTYPE" == "darwin"* ]]; then
