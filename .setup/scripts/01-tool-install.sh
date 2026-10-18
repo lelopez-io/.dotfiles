@@ -5,6 +5,19 @@ SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "=== Installing Applications ==="
 
+# Pacman systems offer Packages.arch and install each accepted entry on its
+# own; everywhere else the Brewfiles and brew bundle serve. The prompt loop
+# is shared, only the entry keywords and the install step differ.
+if [[ "$OSTYPE" != "darwin"* ]] && command -v pacman &>/dev/null; then
+    on_arch=1
+    entry_kinds='pacman|yay'
+    lists=("$SETUP_DIR"/Packages.arch)
+else
+    on_arch=0
+    entry_kinds='tap|brew|cask|mas'
+    lists=("$SETUP_DIR"/Brewfile.*)
+fi
+
 confirm() {
     while true; do
         # EOF means no answers left; decline rather than loop on empty input.
@@ -17,18 +30,18 @@ confirm() {
     done
 }
 
-count_entries() { grep -cE '^(tap|brew|cask|mas) ' || true; }
-count_offerable() { grep -cE '^#?[[:space:]]*(tap|brew|cask|mas) ' || true; }
+count_entries() { grep -cE "^($entry_kinds) " || true; }
+count_offerable() { grep -cE "^#?[[:space:]]*($entry_kinds) " || true; }
 
 # Whether you hold a license, or have an account to sign into on this
 # machine, is context the repo does not have, so no section-wide answer
 # stands in for it. Commented entries are opt-outs, not deletions.
-install_brewfile() {
-    local brewfile=$1 category=$2
+install_list() {
+    local list=$1 category=$2
     local -a names=() bodies=()
     local name="" body="" line
 
-    # The || guard keeps the last line when a Brewfile has no trailing newline;
+    # The || guard keeps the last line when a list has no trailing newline;
     # without it that package is dropped silently.
     while IFS= read -r line || [[ -n "$line" ]]; do
         if [[ "$line" == "## "* ]]; then
@@ -39,11 +52,11 @@ install_brewfile() {
         else
             body+="$line"$'\n'
         fi
-    done < "$brewfile"
+    done < "$list"
     names+=("$name")
     bodies+=("$body")
 
-    local selection entries display pkgs pkg note i
+    local selection entries display pkgs pkg note i entry
     selection="$(mktemp)"
 
     for i in "${!names[@]}"; do
@@ -70,7 +83,7 @@ install_brewfile() {
             # brew bundle ignores a commented line, so an accepted entry has
             # to reach the selection uncommented.
             entry=$(printf '%s' "$line" | sed 's/^#[[:space:]]*//')
-            [[ "$entry" =~ ^(tap|brew|cask|mas)\  ]] || continue
+            [[ "$entry" =~ ^($entry_kinds)\  ]] || continue
             pkg=$(printf '%s' "$entry" | sed 's/^[a-z]*[[:space:]]*"//; s/".*//')
             note=""
             [[ "$entry" == *@account-required* ]] && note="account required"
@@ -84,10 +97,27 @@ install_brewfile() {
         done 3<<< "$pkgs"
     done
 
-    if grep -qE '^(tap|brew|cask|mas) ' "$selection"; then
+    if grep -qE "^($entry_kinds) " "$selection"; then
         echo ""
         echo "Installing selected $category packages..."
-        if ! brew bundle --file="$selection"; then
+        if [[ "$on_arch" == 1 ]]; then
+            # Entry by entry, so one failed package warns and the rest still
+            # install, the contract brew bundle gives the Brewfile path.
+            # --needed leaves what the machine already ships in place.
+            # REQUIRED sections carry their comment lines into the selection;
+            # brew bundle ignores those, this loop has to skip them itself.
+            while IFS= read -r entry; do
+                [[ "$entry" =~ ^($entry_kinds)\  ]] || continue
+                pkg=$(printf '%s' "$entry" | sed 's/^[a-z]*[[:space:]]*"//; s/".*//')
+                if [[ "$entry" == yay\ * ]]; then
+                    yay -S --needed --noconfirm "$pkg" \
+                        || echo "Warning: $pkg failed to install. Continuing..."
+                else
+                    sudo pacman -S --needed --noconfirm "$pkg" \
+                        || echo "Warning: $pkg failed to install. Continuing..."
+                fi
+            done < "$selection"
+        elif ! brew bundle --file="$selection"; then
             echo "Warning: Some $category packages failed to install. Check the output above."
         fi
     else
@@ -107,19 +137,25 @@ if brew trust --help &> /dev/null; then
     done
 fi
 
-for brewfile in "$SETUP_DIR"/Brewfile.*; do
-    [[ "$brewfile" == *.lock.json ]] && continue
-    category="${brewfile##*/Brewfile.}"
+for list in "${lists[@]}"; do
+    [[ "$list" == *.lock.json ]] && continue
+    category="${list##*/}"
+    category="${category#*.}"
     echo ""
     echo "--- $category ---"
-    install_brewfile "$brewfile" "$category"
+    install_list "$list" "$category"
 done
 
 # brew ships compose and buildx as docker CLI plugins, in a directory the
 # docker binary does not search, so `docker compose` silently does not exist
-# until it is registered. Merge: this file also holds registry credentials.
-plugin_dir="$(brew --prefix)/lib/docker/cli-plugins"
-if [ -d "$plugin_dir" ]; then
+# until it is registered. Only brew's docker needs this; distro packages land
+# the plugins where the CLI already looks. Merge: this file also holds
+# registry credentials.
+plugin_dir=""
+if command -v brew &>/dev/null; then
+    plugin_dir="$(brew --prefix)/lib/docker/cli-plugins"
+fi
+if [ -n "$plugin_dir" ] && [ -d "$plugin_dir" ]; then
     python3 - "$plugin_dir" <<'PY'
 import json, os, sys
 
