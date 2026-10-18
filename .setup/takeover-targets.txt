@@ -1,0 +1,10 @@
+# Tool configs Omarchy ships that this repo replaces. 02-dotfiles.sh moves
+# each into a dated backup before stowing on Linux; a stow conflict outside
+# this list stops the stage instead of replacing anything silently.
+.config/herdr
+.config/lazygit
+.config/mise
+.config/nvim
+.config/starship.toml
+.local/bin/claude
+.local/bin/pi
