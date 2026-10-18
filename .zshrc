@@ -19,10 +19,19 @@ autoload -Uz compinit && compinit
 # prompt
 eval "$(starship init zsh)"
 
-# plugins
+# fzf
 source <(fzf --zsh)
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# plugins: brew puts them under /opt/homebrew/share, pacman under
+# /usr/share/zsh/plugins; source the first prefix that has each one.
+for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+    for prefix in /opt/homebrew/share /usr/share/zsh/plugins; do
+        [[ -f $prefix/$plugin/$plugin.zsh ]] || continue
+        source "$prefix/$plugin/$plugin.zsh"
+        break
+    done
+done
+unset plugin prefix
 
 # config-files
 source $HOME/.zaliases
