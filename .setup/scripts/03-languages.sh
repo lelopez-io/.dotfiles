@@ -8,6 +8,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     if [ -d "$(brew --prefix)/opt/libyaml" ]; then
         export RUBY_CONFIGURE_OPTS="--with-libyaml-dir=$(brew --prefix)/opt/libyaml"
     fi
+elif command -v pacman &>/dev/null; then
+    # ruby-build links Arch's system libraries without a configure flag; the
+    # headers just have to be installed before mise compiles ruby.
+    sudo pacman -S --needed --noconfirm openssl libyaml libffi zlib
 else
     if [ -d "$(brew --prefix)/opt/openssl@3.0" ]; then
         export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix)/opt/openssl@3.0"
