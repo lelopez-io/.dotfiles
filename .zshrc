@@ -16,11 +16,11 @@ setopt no_flow_control
 fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit && compinit
 
-# prompt
-eval "$(starship init zsh)"
+# prompt; where starship is not installed, lose the prompt, not the login
+(( $+commands[starship] )) && eval "$(starship init zsh)"
 
-# fzf
-source <(fzf --zsh)
+# fzf; same trade: no fzf means no fzf keybinds, not a login-time error
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 # plugins: brew puts them under /opt/homebrew/share, pacman under
 # /usr/share/zsh/plugins; source the first prefix that has each one.
