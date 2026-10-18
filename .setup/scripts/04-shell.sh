@@ -35,4 +35,19 @@ if command -v tmux &> /dev/null; then
     echo "- Note: press CTRL+A then SHIFT+I inside tmux to install its plugins"
 fi
 
+# Omarchy logs in to bash, so offer zsh as the login shell: without this
+# none of the zsh config ever loads. chsh asks for the user's password, and
+# a yes takes effect at the next login.
+zsh_path=$(command -v zsh || true)
+if [ -n "$zsh_path" ] && [ "$SHELL" != "$zsh_path" ]; then
+    read -p "Change login shell to zsh? (y/n) " change_shell
+    if [[ "$change_shell" =~ ^[Yy]$ ]]; then
+        if chsh -s "$zsh_path"; then
+            echo "- Login shell set to zsh; it takes effect at the next login"
+        else
+            echo "Warning: chsh failed; re-run this stage to try again. Continuing..."
+        fi
+    fi
+fi
+
 echo "Shell configuration complete!"
