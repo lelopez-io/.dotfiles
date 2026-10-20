@@ -26,12 +26,13 @@ const palette: Record<string, string> = {
 };
 
 // The scale the mmdc renderer used, shrunk for a large diagram so it stays
-// within MAX_PIXELS. image.nvim resizes and crops the PNG on every redraw,
-// and a 30-megapixel tall flowchart froze a remote session. An area cap
+// within MAX_PIXELS. herdr relays an image to its client as base64 RGBA and
+// skips one whose upload passes about 30 MB, which a 6-megapixel diagram
+// does (6M x 4 bytes x 4/3); 4 megapixels comes to about 21 MB. An area cap
 // rather than a side cap keeps a tall diagram wide enough to read at the
 // preview's column width.
 const ZOOM = 3;
-const MAX_PIXELS = 6_000_000;
+const MAX_PIXELS = 4_000_000;
 
 const [input, output] = process.argv.slice(2);
 if (!input || !output) {
