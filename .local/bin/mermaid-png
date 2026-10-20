@@ -25,8 +25,12 @@ const palette: Record<string, string> = {
     "--pele-accent": "#c4a7e7",
 };
 
-// The scale the mmdc renderer used.
-const ZOOM = "3";
+// The scale the mmdc renderer used, shrunk for a large diagram so its
+// longest side stays within MAX_SIDE pixels. image.nvim resizes the PNG
+// and streams it to the terminal on every redraw, and a 30-megapixel tall
+// flowchart froze a remote session.
+const ZOOM = 3;
+const MAX_SIDE = 3000;
 
 const [input, output] = process.argv.slice(2);
 if (!input || !output) {
@@ -34,7 +38,9 @@ if (!input || !output) {
     process.exit(2);
 }
 
-let svg = render(await Bun.file(input).text()).svg;
+const result = render(await Bun.file(input).text());
+let svg = result.svg;
+const zoom = Math.min(ZOOM, MAX_SIDE / Math.max(result.width, result.height));
 
 // pele declares its internal variables on the root element's style, as
 // --_fg:var(--pele-fg,#1f1f1f); collect those, then resolve every var()
@@ -49,7 +55,7 @@ for (let i = 0; i < 10 && svg.includes("var("); i++) {
 }
 
 const rsvg = Bun.spawnSync(
-    ["rsvg-convert", "--zoom", ZOOM, "--format", "png", "--output", output],
+    ["rsvg-convert", "--zoom", zoom.toFixed(3), "--format", "png", "--output", output],
     { stdin: new TextEncoder().encode(svg), stderr: "pipe" },
 );
 if (rsvg.exitCode !== 0) {
