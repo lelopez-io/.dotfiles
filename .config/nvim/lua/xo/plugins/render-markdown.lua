@@ -281,13 +281,17 @@ local function display_single_image(png_path, end_line, bufnr, winid)
 
     if ok_img and img then
         -- Width sets the size: the PNG's own width in cells, at most
-        -- MAX_COLUMNS and the window, with the height following. image.nvim's
-        -- global caps fit the height to the window instead, which shrinks a
-        -- tall flowchart until its text is unreadable.
+        -- MAX_COLUMNS and the window's text area, with the height following.
+        -- image.nvim's global caps fit the height to the window instead,
+        -- which shrinks a tall flowchart until its text is unreadable.
+        -- image.nvim crops at the window's top and bottom but not its right
+        -- edge, so the gutter comes off the width here.
         local term = require("image.utils.term").get_size()
-        if term and term.cell_width > 0 then
+        local info = vim.fn.getwininfo(winid)[1]
+        if term and term.cell_width > 0 and info then
             local columns = math.floor(img.image_width / term.cell_width)
-            img.geometry.width = math.min(columns, MAX_COLUMNS, vim.api.nvim_win_get_width(winid))
+            local text_width = info.width - info.textoff
+            img.geometry.width = math.max(1, math.min(columns, MAX_COLUMNS, text_width))
             img.ignore_global_max_size = true
         end
         pcall(function() img:render() end)
