@@ -21,12 +21,11 @@ pacman "ghostty"
 ## [REQUIRED] Neovim
 pacman "neovim"
 pacman "imagemagick"             # image.nvim
-pacman "mermaid-cli"             # mermaid diagram rendering
+pacman "librsvg"                 # rsvg-convert, mermaid-png's rasterizer
 yay "prettierd"                  # conform.nvim formatter
 pacman "ripgrep"                 # telescope.nvim live_grep
 pacman "stylua"                  # conform.nvim formatter
 pacman "tree-sitter-cli"         # nvim-treesitter parser compilation
-pacman "chromium"                # the browser mermaid-cli drives; Omarchy ships it, so --needed no-ops
 
 ## [REQUIRED] Git review
 yay "hunk"                       # git-graph and git-inspect wrap it

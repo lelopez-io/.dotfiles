@@ -28,24 +28,10 @@ end
 
 local DEBOUNCE_MS = 300
 local CACHE_DIR = "/tmp"
-local MMDC_PATH = "/opt/homebrew/bin/mmdc"
-
--- Resolve Chromium dynamically so brew upgrades don't break rendering.
--- Mirrors the .zprofile pattern that sets PUPPETEER_EXECUTABLE_PATH from a
--- versioned glob; falls back to globbing directly when launched outside a
--- shell that sourced .zprofile (e.g., from a GUI launcher).
-local function find_chromium()
-    local env_path = vim.env.PUPPETEER_EXECUTABLE_PATH
-    if env_path and env_path ~= "" and vim.fn.executable(env_path) == 1 then
-        return env_path
-    end
-    local matches = vim.fn.glob(
-        "/opt/homebrew/Caskroom/ungoogled-chromium/*/Chromium.app/Contents/MacOS/Chromium",
-        true, true
-    )
-    return matches[1]
-end
-local CHROMIUM_PATH = find_chromium()
+-- mermaid-png (.local/bin) renders with pele and rsvg-convert, no browser.
+-- Rendering stays off where it or rsvg-convert is missing.
+local RENDERER = vim.fn.exepath("mermaid-png")
+local RENDER_ENABLED = RENDERER ~= "" and vim.fn.executable("rsvg-convert") == 1
 
 local preview_enabled = false
 local preview_focused = true
@@ -178,6 +164,11 @@ local function render_mermaid_async(content, hash, callback)
         return
     end
 
+    if not RENDER_ENABLED then
+        callback(nil)
+        return
+    end
+
     local mmd_path = string.format("%s/mermaid_%s.mmd", CACHE_DIR, hash)
     local f = io.open(mmd_path, "w")
     if not f then
@@ -193,9 +184,8 @@ local function render_mermaid_async(content, hash, callback)
     local log_path = string.format("%s/mermaid_%s.log", CACHE_DIR, hash)
 
     vim.fn.jobstart({
-        MMDC_PATH, "-i", mmd_path, "-o", png_path, "-b", "transparent", "-t", "dark", "-s", "3", "-w", "800", "-H", "3000"
+        RENDERER, mmd_path, png_path
     }, {
-        env = { PUPPETEER_EXECUTABLE_PATH = CHROMIUM_PATH },
         stdout_buffered = true,
         stderr_buffered = true,
         on_stdout = function(_, data)

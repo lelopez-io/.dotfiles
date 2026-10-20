@@ -16,12 +16,11 @@ cask "ghostty"
 ## [REQUIRED] Neovim
 brew "neovim"
 brew "imagemagick"        # image.nvim
-brew "mermaid-cli"        # mermaid diagram rendering
+brew "librsvg"            # rsvg-convert, mermaid-png's rasterizer
 brew "prettierd"          # conform.nvim formatter
 brew "ripgrep"            # telescope.nvim live_grep
 brew "stylua"             # conform.nvim formatter
 brew "tree-sitter-cli"    # nvim-treesitter parser compilation
-cask "ungoogled-chromium" # mermaid-cli puppeteer backend
 
 ## [REQUIRED] Git review
 brew "modem-dev/tap/hunk"  # git-graph and git-inspect wrap it
