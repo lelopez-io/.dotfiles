@@ -12,8 +12,10 @@ alias hs='herdr --session'
 
 # neovim
 alias vim='nvim'
-alias obs='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/. && nvim . && cd -'
 alias dot='cd $HOME/.dotfiles/. && nvim . && cd -'
+
+# obs opens the vault ~/.zshrc.local names, the one obsidian.nvim uses.
+alias obs='cd "${OBSIDIAN_VAULT:?set it in ~/.zshrc.local}" && nvim . && cd -'
 
 # directory/navigation
 alias ls='eza --group-directories-first --icons'
