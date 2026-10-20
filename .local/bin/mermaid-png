@@ -25,12 +25,13 @@ const palette: Record<string, string> = {
     "--pele-accent": "#c4a7e7",
 };
 
-// The scale the mmdc renderer used, shrunk for a large diagram so its
-// longest side stays within MAX_SIDE pixels. image.nvim resizes the PNG
-// and streams it to the terminal on every redraw, and a 30-megapixel tall
-// flowchart froze a remote session.
+// The scale the mmdc renderer used, shrunk for a large diagram so it stays
+// within MAX_PIXELS. image.nvim resizes and crops the PNG on every redraw,
+// and a 30-megapixel tall flowchart froze a remote session. An area cap
+// rather than a side cap keeps a tall diagram wide enough to read at the
+// preview's column width.
 const ZOOM = 3;
-const MAX_SIDE = 3000;
+const MAX_PIXELS = 6_000_000;
 
 const [input, output] = process.argv.slice(2);
 if (!input || !output) {
@@ -40,7 +41,7 @@ if (!input || !output) {
 
 const result = render(await Bun.file(input).text());
 let svg = result.svg;
-const zoom = Math.min(ZOOM, MAX_SIDE / Math.max(result.width, result.height));
+const zoom = Math.min(ZOOM, Math.sqrt(MAX_PIXELS / (result.width * result.height)));
 
 // pele declares its internal variables on the root element's style, as
 // --_fg:var(--pele-fg,#1f1f1f); collect those, then resolve every var()

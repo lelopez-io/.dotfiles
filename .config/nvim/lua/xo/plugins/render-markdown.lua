@@ -32,6 +32,8 @@ local CACHE_DIR = "/tmp"
 -- Rendering stays off where it or rsvg-convert is missing.
 local RENDERER = vim.fn.exepath("mermaid-png")
 local RENDER_ENABLED = RENDERER ~= "" and vim.fn.executable("rsvg-convert") == 1
+-- The widest a diagram is drawn, in columns.
+local MAX_COLUMNS = 90
 
 local preview_enabled = false
 local preview_focused = true
@@ -268,14 +270,6 @@ local function display_single_image(png_path, end_line, bufnr, winid)
     local ok, image_api = pcall(require, "image")
     if not ok then return end
 
-    -- Calculate max height to prevent overflow into other panes
-    local win_height = vim.api.nvim_win_get_height(winid)
-    local win_info = vim.fn.getwininfo(winid)[1]
-    local topline = win_info and win_info.topline or 1
-    local lines_from_top = end_line - topline + 1
-    local available_lines = win_height - lines_from_top
-    local max_height = math.max(5, available_lines - 1)  -- Leave 1 line buffer, min 5 lines
-
     local ok_img, img = pcall(image_api.from_file, png_path, {
         buffer = bufnr,
         window = winid,
@@ -283,10 +277,19 @@ local function display_single_image(png_path, end_line, bufnr, winid)
         inline = true,
         x = 0,
         y = end_line,
-        max_height = max_height,
     })
 
     if ok_img and img then
+        -- Width sets the size: the PNG's own width in cells, at most
+        -- MAX_COLUMNS and the window, with the height following. image.nvim's
+        -- global caps fit the height to the window instead, which shrinks a
+        -- tall flowchart until its text is unreadable.
+        local term = require("image.utils.term").get_size()
+        if term and term.cell_width > 0 then
+            local columns = math.floor(img.image_width / term.cell_width)
+            img.geometry.width = math.min(columns, MAX_COLUMNS, vim.api.nvim_win_get_width(winid))
+            img.ignore_global_max_size = true
+        end
         pcall(function() img:render() end)
         table.insert(mermaid_images, img)
     end
