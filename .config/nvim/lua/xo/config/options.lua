@@ -42,25 +42,37 @@ vim.filetype.add({
 })
 
 -- Yanks go to both clipboards: OSC 52 reaches whatever terminal is attached
--- now, pbcopy keeps the local pasteboard in sync so `"+p` round-trips. A herdr
--- session outlives the shell that started it, so the birth env cannot decide
--- this. Paste stays local, since OSC 52 reads block 10s when unanswered.
+-- now, the local clipboard tool keeps this machine's clipboard in sync so
+-- `"+p` round-trips. A herdr session outlives the shell that started it, so
+-- the birth env cannot decide this. Paste stays local, since OSC 52 reads
+-- block 10s when unanswered. pbcopy on macOS, wl-clipboard on Wayland; with
+-- neither, yanks still reach the terminal and paste returns nothing.
 local osc52 = require("vim.ui.clipboard.osc52")
+
+local local_copy, local_paste
+if vim.fn.executable("pbcopy") == 1 then
+    local_copy, local_paste = { "pbcopy" }, { "pbpaste" }
+elseif vim.fn.executable("wl-copy") == 1 then
+    local_copy, local_paste = { "wl-copy" }, { "wl-paste", "--no-newline" }
+end
 
 local function copy(reg)
     local send = osc52.copy(reg)
     return function(lines, regtype)
         send(lines, regtype)
-        vim.fn.system({ "pbcopy" }, table.concat(lines, "\n"))
+        if local_copy then
+            vim.fn.system(local_copy, table.concat(lines, "\n"))
+        end
     end
 end
 
 local function paste()
-    return vim.fn.systemlist("pbpaste")
+    if not local_paste then return {} end
+    return vim.fn.systemlist(local_paste)
 end
 
 vim.g.clipboard = {
-    name = "osc52+pbcopy",
+    name = "osc52+local",
     copy = { ["+"] = copy("+"), ["*"] = copy("*") },
     paste = { ["+"] = paste, ["*"] = paste },
 }
