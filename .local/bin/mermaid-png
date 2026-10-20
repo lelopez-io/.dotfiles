@@ -1,0 +1,58 @@
+#!/usr/bin/env bun
+//
+// mermaid-png — render a Mermaid file to a PNG for nvim's markdown preview.
+//
+// Usage: mermaid-png <in.mmd> <out.png>
+//
+// pele draws the SVG with no browser; bun fetches the pinned version on
+// first use. pele colors through CSS variables, so each var() is filled in
+// from the dark palette below, then rsvg-convert (librsvg) rasterizes it.
+// brew's ImageMagick renders SVG itself and drops stroked paths, so it is
+// not a substitute.
+
+import { render } from "pele@1.7.0";
+
+// rose-pine, the nvim colorscheme. Anything pele uses that is not listed
+// keeps the fallback pele wrote beside it.
+const palette: Record<string, string> = {
+    "--pele-bg": "#191724",
+    "--pele-fg": "#e0def4",
+    "--pele-muted": "#908caa",
+    "--pele-line": "#908caa",
+    "--pele-surface": "#1f1d2e",
+    "--pele-surface-alt": "#26233a",
+    "--pele-border": "#6e6a86",
+    "--pele-accent": "#c4a7e7",
+};
+
+// The scale the mmdc renderer used.
+const ZOOM = "3";
+
+const [input, output] = process.argv.slice(2);
+if (!input || !output) {
+    console.error("usage: mermaid-png <in.mmd> <out.png>");
+    process.exit(2);
+}
+
+let svg = render(await Bun.file(input).text()).svg;
+
+// pele declares its internal variables on the root element's style, as
+// --_fg:var(--pele-fg,#1f1f1f); collect those, then resolve every var()
+// innermost first until none is left.
+const vars: Record<string, string> = { ...palette };
+for (const [, name, value] of svg.matchAll(/(--_[\w-]+):([^;"]+)/g)) {
+    vars[name] ??= value;
+}
+const VAR = /var\(\s*(--[\w-]+)\s*(?:,([^()]*))?\)/g;
+for (let i = 0; i < 10 && svg.includes("var("); i++) {
+    svg = svg.replace(VAR, (_, name, fallback) => vars[name] ?? fallback ?? "");
+}
+
+const rsvg = Bun.spawnSync(
+    ["rsvg-convert", "--zoom", ZOOM, "--format", "png", "--output", output],
+    { stdin: new TextEncoder().encode(svg), stderr: "pipe" },
+);
+if (rsvg.exitCode !== 0) {
+    console.error(rsvg.stderr.toString());
+    process.exit(1);
+}
