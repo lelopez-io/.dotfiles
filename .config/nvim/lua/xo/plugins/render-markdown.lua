@@ -282,16 +282,33 @@ local function display_single_image(png_path, end_line, bufnr, winid)
     if ok_img and img then
         -- Width sets the size: the PNG's own width in cells, at most
         -- MAX_COLUMNS and the window's text area, with the height following.
-        -- image.nvim's global caps fit the height to the window instead,
-        -- which shrinks a tall flowchart until its text is unreadable.
         -- image.nvim crops at the window's top and bottom but not its right
         -- edge, so the gutter comes off the width here.
+        --
+        -- Height is capped at the pane, which shrinks a tall diagram. The
+        -- image sits in virtual lines below the code block, and nvim keeps
+        -- the cursor on a visible real line, so a virtual block taller than
+        -- the window cannot be scrolled through: Ctrl-E and j both jump past
+        -- the part that does not fit. Kept within the window less scrolloff,
+        -- every diagram scrolls one row at a time. A flow too tall to read
+        -- at that size should be split into several diagrams.
         local term = require("image.utils.term").get_size()
         local info = vim.fn.getwininfo(winid)[1]
-        if term and term.cell_width > 0 and info then
+        if term and term.cell_width > 0 and term.cell_height > 0 and info then
             local columns = math.floor(img.image_width / term.cell_width)
             local text_width = info.width - info.textoff
-            img.geometry.width = math.max(1, math.min(columns, MAX_COLUMNS, text_width))
+            local width = math.max(1, math.min(columns, MAX_COLUMNS, text_width))
+            local scrolloff = vim.api.nvim_get_option_value("scrolloff", { win = winid })
+            if scrolloff < 0 then scrolloff = vim.o.scrolloff end
+            local max_rows = math.max(1, info.height - 1 - scrolloff)
+            local aspect = img.image_height / img.image_width
+            local rows = math.ceil(width * term.cell_width * aspect / term.cell_height)
+            if rows > max_rows then
+                rows = max_rows
+                width = math.max(1, math.floor(rows * term.cell_height / aspect / term.cell_width))
+            end
+            img.geometry.width = width
+            img.geometry.height = rows
             img.ignore_global_max_size = true
         end
         pcall(function() img:render() end)
