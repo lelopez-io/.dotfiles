@@ -10,6 +10,9 @@ alias gr='git-review'
 
 alias hs='herdr --session'
 
+# The trailing space makes zsh expand the next word too, so sudo vim runs nvim.
+alias sudo='sudo '
+
 # neovim
 alias vim='nvim'
 alias dot='cd $HOME/.dotfiles/. && nvim . && cd -'
