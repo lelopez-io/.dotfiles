@@ -520,6 +520,20 @@ return {
         { "<leader>mp", toggle_preview, desc = "Toggle markdown preview" },
     },
     config = function()
+        -- Wrapped table rows have no border between them and run together, so
+        -- each one but the last gets a blank line below it.
+        -- shortcut: wraps a private render-markdown method; recheck on update.
+        local Table = require("render-markdown.render.markdown.table")
+        local wrapped_row = Table.wrapped_row
+        Table.wrapped_row = function(self, row)
+            local lines = wrapped_row(self, row)
+            local rows = self.data.rows
+            if row.node.type == "pipe_table_header" or row == rows[#rows] then return lines end
+            -- Empty cells render as one bordered blank line.
+            local blank = vim.tbl_map(function() return { units = {} } end, row.cells)
+            return vim.list_extend(lines, wrapped_row(self, { node = row.node, cells = blank }))
+        end
+
         require("render-markdown").setup({
             enabled = true,
             render_modes = { "n", "c", "t", "i" },
