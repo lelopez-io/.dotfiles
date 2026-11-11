@@ -16,6 +16,9 @@ bindkey "^[[B"  history-beginning-search-forward  # Down (prefix search)
 
 # mise - interactive shell support
 eval "$(mise activate zsh)"
+# Omarchy 4.5 puts mise's command wrappers first, which hides the claude and
+# pi wrappers in ~/.local/bin; mise's prompt hook keeps this order.
+path=("$HOME/.local/bin" ${path:#$HOME/.local/bin})
 
 # tmux/venv
 [ -n "$VIRTUAL_ENV" ] && \. "$VIRTUAL_ENV/bin/activate"
