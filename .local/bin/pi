@@ -94,5 +94,9 @@ for v in $(env | sed -n 's/^\(OP_SESSION_[^=]*\)=.*/\1/p'); do unset "$v"; done
 
 # exec replaces this script: pi's exit status propagates, and the exported key
 # lives only in pi's own process environment. Absolute path because this file
-# shadows the real pi on PATH.
-exec "$HOME/.bun/bin/pi" "$@"
+# shadows the real pi on PATH. Bun has put global installs in either directory.
+for real_pi in "$HOME/.bun/bin/pi" "$HOME/.cache/.bun/bin/pi"; do
+  [ -x "$real_pi" ] && exec "$real_pi" "$@"
+done
+echo "$wrapper: pi is not installed under ~/.bun or ~/.cache/.bun" >&2
+exit 1
